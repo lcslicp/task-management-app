@@ -1,0 +1,31 @@
+{
+  "name": "doowit-app",
+  "version": "1.0.0",
+  "description": "task management app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lcslicp/task-management-app.git"
+  },
+  "keywords": [
+    "todo",
+    "app"
+  ],
+  "author": "Leslie Pino",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lcslicp/task-management-app/issues"
+  },
+  "homepage": "https://github.com/lcslicp/task-management-app#readme",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
