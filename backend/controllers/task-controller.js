@@ -1,9 +1,14 @@
 import Task from '../models/Task.js';
 
 //Create New Task
-const addTask = async ({ value }, res) =>{
+const addTask = async (req, res) =>{
+    const { title, description, createdAt } = req.body;
     try {
-        const task = new Task({ ...value.body });
+        const task = new Task({
+            title,
+            description,
+            createdAt
+        });
         await task.save();
 
         res.status(201).json(task);
@@ -17,22 +22,19 @@ const addTask = async ({ value }, res) =>{
 };
 
 //Update existing Task
-const editTask = async ({ params, value }, res) => {
-    const { title, description, createdAt } = value.body;
+const editTask = async (req, res) => {
+    const { title, description, createdAt } = req.body;
 
     try {
-        const task = await Task.findOne({ _id: params.id });
+        const task = await Task.findByIdAndUpdate(req.params.id, {$set: req.body});
 
         if (task === null) {
             throw new Error('Task not found.');
         }
         task.title = title || task.title;
         task.description = description || task.description;
-        task.createdAt = createdAt || task.createdAt;
 
-        const updatedTask = await task.save();
-
-        res.json(updatedTask);
+        res.status(200).json('Task updated.');
     } catch(error) {
         res.status(400).json({
             error: 'Edit unsuccessful, please try again.',
@@ -42,11 +44,13 @@ const editTask = async ({ params, value }, res) => {
 };
 
 //Delete existing task
-const deleteTask = async ({ params }, res) => {
+const deleteTask = async (req, res) => {
     try {
-        await Task.findOneAndDelete({ _id:params.id });
+        await Task.findOneAndDelete(req.params.id);
 
-        res.redirect('dashboard/:status');
+        res.status(200).json('Task successfully deleted.');
+
+        res.redirect('dashboard/:taskstatus');
     } catch(error) {
         res.status(400).json({
             error: 'Something went wrong, please try again.',
@@ -54,6 +58,20 @@ const deleteTask = async ({ params }, res) => {
         });
     }
 };
+
+//GET all tasks
+const getAllTasks = async (req, res) => {
+    try {
+       const tasks = await Task.find();
+       res.json(tasks);
+    } catch (error) {
+        res.status(400).json({
+            error: 'No tasks found.',
+      message: error.message,
+        })
+    }
+
+}
 
 //Batch update task status
 const batchEditTasks = async ({ params, value }, res) => {
@@ -99,6 +117,7 @@ const batchEditTasks = async ({ params, value }, res) => {
     addTask,
     editTask,
     deleteTask,
+    getAllTasks,
     batchEditTasks,
     batchDeleteTasks,
   };

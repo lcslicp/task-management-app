@@ -17,7 +17,7 @@ app.use(express.json());
 mongoose.connect(process.env.DB_HOST, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-}).then(() => console.log('Established connection to MongoDB.')).catch(console.error);
+}).then(() => console.log('Established connection with MongoDB.')).catch(console.error);
 
 app.use('/', taskRoutes);
 
