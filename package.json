@@ -2,9 +2,14 @@
   "name": "doowit-app",
   "version": "1.0.0",
   "description": "task management app",
-  "main": "app.js",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+
   },
   "repository": {
     "type": "git",
@@ -21,11 +26,14 @@
   },
   "homepage": "https://github.com/lcslicp/task-management-app#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "mongoose": "^6.4.0"
+    "mongoose": "^6.4.0",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "concurrently": "^7.2.2",
     "nodemon": "^2.0.16"
   }
 }
