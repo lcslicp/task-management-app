@@ -23,7 +23,7 @@ const addTask = async (req, res) =>{
 
 //Update existing Task
 const editTask = async (req, res) => {
-    const { title, description, createdAt } = req.body;
+    const { title, description } = req.body;
 
     try {
         const task = await Task.findByIdAndUpdate(req.params.id, {$set: req.body});
