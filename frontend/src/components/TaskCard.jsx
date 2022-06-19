@@ -1,13 +1,17 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const TaskCard = ({title, description, createdAt}) => {
+const TaskCard = ({ id, title, description, status, priority, dueDate, createdAt }) => {
   return (
-    <div>
-        <h1>{title}</h1>
-        <p>{description}</p>
-        <p>Date Added: {createdAt}</p>
-    </div>
-  )
-}
+    <Link to={`/edit/${id}`}>
+      <h1>{title}</h1>
+      <p>{status}</p>
+      <p>{priority}</p>
+      <p>{dueDate}</p>
+      <p>{description}</p>
+      <p>Date Added: {createdAt}</p>
+    </Link>
+  );
+};
 
-export default TaskCard
+export default TaskCard;

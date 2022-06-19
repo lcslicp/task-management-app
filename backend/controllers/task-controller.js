@@ -2,11 +2,14 @@ import Task from '../models/Task.js';
 
 //Create New Task
 const addTask = async (req, res) =>{
-    const { title, description, createdAt } = req.body;
+    const { title, description, status, priority, dueDate, createdAt } = req.body;
     try {
         const task = new Task({
             title,
             description,
+            status,
+            priority,
+            dueDate,
             createdAt
         });
         await task.save();
@@ -23,7 +26,7 @@ const addTask = async (req, res) =>{
 
 //Update existing Task
 const editTask = async (req, res) => {
-    const { title, description } = req.body;
+    const { title, description, status, priority, dueDate } = req.body;
 
     try {
         const task = await Task.findByIdAndUpdate(req.params.id, {$set: req.body});
@@ -33,6 +36,9 @@ const editTask = async (req, res) => {
         }
         task.title = title || task.title;
         task.description = description || task.description;
+        task.status = status || task.status;
+        task.priority = priority || task.priority;
+        task.dueDate = dueDate || task.dueDate;
 
         res.status(200).json('Task updated.');
     } catch(error) {
