@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import TaskCard from '../components/TaskCard';
 import TaskInput from '../components/TaskInput';
+import Header from '../components/Header';
 
 const Dashboard = () => {
     const [tasks, setTasks] = useState([]);
@@ -20,6 +21,7 @@ const Dashboard = () => {
 
   return (
     <div>
+       <Header />
        <TaskInput />
         {tasks.map((task) => (
            <TaskCard
@@ -27,7 +29,6 @@ const Dashboard = () => {
            key={task._id}
            title={task.title}
            description={task.description}
-           status={task.status}
            priority={task.priority}
            dueDate={task.dueDate}
            createdAt={task.createdAt}></TaskCard> 

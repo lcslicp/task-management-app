@@ -55,8 +55,6 @@ const deleteTask = async (req, res) => {
         await Task.findOneAndDelete(req.params.id);
 
         res.status(200).json('Task successfully deleted.');
-
-        res.redirect('dashboard/:taskstatus');
     } catch(error) {
         res.status(400).json({
             error: 'Something went wrong, please try again.',
