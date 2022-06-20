@@ -1,38 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 
-import TaskCard from '../components/TaskCard';
 import TaskInput from '../components/TaskInput';
 import Header from '../components/Header';
+import TabNavigation from '../components/tabcomponents/TabNavigation';
+import Sidebar from '../components/Sidebar';
+// import ToDoTab from '../components/tabcomponents/ToDoTab';
+// import InProgressTab from '../components/tabcomponents/InProgressTab';
 
 const Dashboard = () => {
-    const [tasks, setTasks] = useState([]);
-
-    const fetchTasksData = async () => {
-        await axios.get('http://localhost:5000/tasks').then((response) => {
-          setTasks(response.data);
-        })        
-    };
-
-    useEffect(() => {
-        fetchTasksData();
-    }, []);
-
 
   return (
-    <div>
-       <Header />
+    <div className='flex flex-row'>
+      <Sidebar />
+      <div className='flex flex-col w-full'>
+      <Header />
+       <TabNavigation />
        <TaskInput />
-        {tasks.map((task) => (
-           <TaskCard
-           id={task._id}
-           key={task._id}
-           title={task.title}
-           description={task.description}
-           priority={task.priority}
-           dueDate={task.dueDate}
-           createdAt={task.createdAt}></TaskCard> 
-        ))}
+      </div>
+      
     </div>
   )
 }

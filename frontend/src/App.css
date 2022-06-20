@@ -41,6 +41,6 @@ button {
   font-size: calc(10px + 2vmin);
 }
 
-.active-content, .active-tabs {
+.active-tabs {
   display: block;
 }

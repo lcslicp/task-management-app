@@ -5,10 +5,8 @@ import TaskCard from '../TaskCard';
 import EmptyState from '../EmptyState';
 
 const ToDoTab = () => {
-  // const [tasksApi, setTasksApi] = useState();
   const [todoTasks, setTodoTasks] = useState([]);
   const [todoFilter, setTodoFilter] = useState([]);
-  // const [status, setStatus] = useState('');
 
   const fetchTasksData = async () => {
     await axios.get('http://localhost:5000/tasks').then((response) => {
@@ -20,24 +18,14 @@ const ToDoTab = () => {
     fetchTasksData();
   }, []);
 
-  // const filterTodoTasks = () => {
-  //   const todoFilteredTasks = tasksApi.filter(
-  //     (task) => task.status === 'To Do'
-  //   );
-  //   setTodoTasks(todoFilteredTasks);
-  // };
-
   useEffect(() => {
     const todos = todoTasks.filter(response => response.status === 'To Do');
     if (!todos) {
       return <EmptyState />
     } else
     setTodoFilter(todos)
+    console.log('Displaying to do tasks.')
   }, []);
-
-  // useEffect(() => {
-  //   filterTodoTasks();
-  // }, []);
 
   return (
     <div>
@@ -53,6 +41,7 @@ const ToDoTab = () => {
           createdAt={task.createdAt}
         ></TaskCard>
       ))}
+      todos
     </div>
   );
 };
