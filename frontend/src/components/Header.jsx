@@ -13,13 +13,13 @@ const Header = () => {
       <nav className='bg-white border-gray-200 px-8 sm:px-4 py-2.5 rounded '>
         <div className='container flex flex-row justify-between items-center mx-auto'>
           <div>
-            <p class='text-2xl font-semibold whitespace-nowrap text-black'>
+            <p className='text-2xl font-semibold whitespace-nowrap text-black'>
               Hi, firstName!
             </p>
             <p className='text-sm'>{now}</p>
           </div>
           <div className='flex flex-row items-center'>
-          <ul class='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-20'>
+          <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-20'>
             <li>
               <a
                 href='#'

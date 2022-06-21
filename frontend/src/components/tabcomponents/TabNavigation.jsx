@@ -8,77 +8,77 @@ import Tab from './Tab';
 const TabNavigation = () => {
   return (
     <div>
-      <div class='mb-4 border-b border-lightergray'>
+      <div className='mb-4 border-b border-grey w-2/3 mx-8'>
         <ul
-          class='flex flex-wrap -mb-px text-sm font-medium text-center'
+          className='flex flex-wrap -mb-px text-sm font-medium text-center'
           id='myTab'
           data-tabs-toggle='#myTabContent'
           role='tablist'
         >
-          <li class='mr-2' role='presentation'>
+          <li className='mr-2' role='presentation'>
             <button
-              className='inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-brightblue hover:border-lightergray'
+              className='inline-block p-4 rounded-t-lg border-b-2 hover:text-brightblue'
               id='todo-tab'
               data-tabs-target='#todo'
               type='button'
               role='tab'
               aria-controls='todo'
-              aria-selected='false'
+              aria-selected='true'
             >
               TO DO
             </button>
           </li>
-          <li class='mr-2' role='presentation'>
+          <li className='mr-2' role='presentation'>
             <button
-              className='inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-brightblue hover:border-lightergray'
-              id='inprogress-tab'
-              data-tabs-target='#inprogress'
+              className='inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-brightblue hover:border-gray-300'
+              id='dashboard-tab'
+              data-tabs-target='#dashboard'
               type='button'
               role='tab'
-              aria-controls='inprogress'
-              aria-selected='false'
+              aria-controls='dashboard'
+              aria-selected='true'
             >
-              IN PROGRESS
+              Dashboard
             </button>
           </li>
-          <li class='mr-2' role='presentation'>
+          <li className='mr-2' role='presentation'>
             <button
-              className='inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-brightblue hover:border-lightergray'
-              id='completed-tab'
-              data-tabs-target='#completed'
+              className='inline-block p-4 rounded-t-lg border-b-2 border-transparent v hover:border-gray-300 '
+              id='settings-tab'
+              data-tabs-target='#settings'
               type='button'
               role='tab'
-              aria-controls='completed'
-              aria-selected='false'
+              aria-controls='settings'
+              aria-selected='true'
             >
-             COMPLETED
+              Settings
             </button>
           </li>
           <li role='presentation'>
             <button
-             className='inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-brightblue hover:border-lightergray'
-              id='overdue-tab'
-              data-tabs-target='#overdue'
+              className='inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-brightblue hover:border-gray-300'
+              id='contacts-tab'
+              data-tabs-target='#contacts'
               type='button'
               role='tab'
-              aria-controls='overdue'
-              aria-selected='false'
+              aria-controls='contacts'
+              aria-selected='true'
             >
-              OVERDUE
+              Contacts
             </button>
           </li>
         </ul>
       </div>
       <div id='myTabContent'>
         <div
-          className='hidden p-4 bg-gray-50 rounded-lg'
-          id='todo'
+          className='hidden p-4 bg-gray-50 rounded-lg '
+          id='profile'
           role='tabpanel'
-          aria-labelledby='todo-tab'
+          aria-labelledby='profile-tab'
         >
-          <p class='text-sm text-gray-500 '>
+          <p className='text-sm text-gray-500 dark:text-gray-400'>
             This is some placeholder content the{' '}
-            <strong class='font-medium text-gray-800 '>
+            <strong className='font-medium text-gray-800 '>
               Profile tab's associated content
             </strong>
             . Clicking another tab will toggle the visibility of this one for
@@ -87,14 +87,14 @@ const TabNavigation = () => {
           </p>
         </div>
         <div
-          className='hidden p-4 bg-gray-50 rounded-lg'
-          id='inprogress'
+          className='hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800'
+          id='dashboard'
           role='tabpanel'
-          aria-labelledby='inprogress-tab'
+          aria-labelledby='dashboard-tab'
         >
-          <p class='text-sm text-gray-500 dark:text-gray-400'>
+          <p className='text-sm text-gray-500 dark:text-gray-400'>
             This is some placeholder content the{' '}
-            <strong class='font-medium text-gray-800 dark:text-white'>
+            <strong className='font-medium text-gray-800 dark:text-white'>
               Dashboard tab's associated content
             </strong>
             . Clicking another tab will toggle the visibility of this one for
@@ -103,14 +103,14 @@ const TabNavigation = () => {
           </p>
         </div>
         <div
-          class='hidden p-4 bg-gray-50 rounded-lg'
-          id='completed'
+          className='hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800'
+          id='settings'
           role='tabpanel'
-          aria-labelledby='completed-tab'
+          aria-labelledby='settings-tab'
         >
-          <p class='text-sm text-gray-500 dark:text-gray-400'>
+          <p className='text-sm text-gray-500 dark:text-gray-400'>
             This is some placeholder content the{' '}
-            <strong class='font-medium text-gray-800 dark:text-white'>
+            <strong className='font-medium text-gray-800 dark:text-white'>
               Settings tab's associated content
             </strong>
             . Clicking another tab will toggle the visibility of this one for
@@ -119,14 +119,14 @@ const TabNavigation = () => {
           </p>
         </div>
         <div
-          class='hidden p-4 bg-gray-50 rounded-lg'
-          id='overdue'
+          className='hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800'
+          id='contacts'
           role='tabpanel'
-          aria-labelledby='overdue-tab'
+          aria-labelledby='contacts-tab'
         >
-          <p class='text-sm text-gray-500 dark:text-gray-400'>
+          <p className='text-sm text-gray-500 dark:text-gray-400'>
             This is some placeholder content the{' '}
-            <strong class='font-medium text-gray-800 dark:text-white'>
+            <strong className='font-medium text-gray-800 dark:text-white'>
               Contacts tab's associated content
             </strong>
             . Clicking another tab will toggle the visibility of this one for
