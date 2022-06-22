@@ -2,10 +2,8 @@ import React from 'react';
 
 import TaskInput from '../components/TaskInput';
 import Header from '../components/Header';
-import TabNavigation from '../components/tabcomponents/TabNavigation';
+import TabNavigation from '../components/TabNavigation';
 import Sidebar from '../components/Sidebar';
-// import ToDoTab from '../components/tabcomponents/ToDoTab';
-// import InProgressTab from '../components/tabcomponents/InProgressTab';
 
 const Dashboard = () => {
 

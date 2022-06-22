@@ -77,6 +77,54 @@ const getAllTasks = async (req, res) => {
 
 }
 
+//GET Todo Tasks
+const getTodoTasks = async (req, res) => {
+  try {
+     const tasks = await Task.find({
+      status: "To Do"
+     });
+     res.json(tasks);
+  } catch (error) {
+      res.status(400).json({
+          error: 'No tasks found.',
+    message: error.message,
+      })
+  }
+
+}
+
+//GET In Progress Tasks
+const getInProgressTasks = async (req, res) => {
+  try {
+     const tasks = await Task.find({
+      status: "In Progress"
+     });
+     res.json(tasks);
+  } catch (error) {
+      res.status(400).json({
+          error: 'No tasks found.',
+    message: error.message,
+      })
+  }
+
+}
+
+//GET getCompleted Tasks
+const getCompletedTasks = async (req, res) => {
+  try {
+     const tasks = await Task.find({
+      status: "Completed"
+     });
+     res.json(tasks);
+  } catch (error) {
+      res.status(400).json({
+          error: 'No tasks found.',
+    message: error.message,
+      })
+  }
+
+}
+
 //Batch update task status
 const batchEditTasks = async ({ params, value }, res) => {
     const { status } = value.body;
@@ -122,6 +170,9 @@ const batchEditTasks = async ({ params, value }, res) => {
     editTask,
     deleteTask,
     getAllTasks,
+    getTodoTasks,
+    getInProgressTasks,
+    getCompletedTasks,
     batchEditTasks,
     batchDeleteTasks,
   };

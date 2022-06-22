@@ -6,7 +6,7 @@ import defaultDisplayphoto from '../assets/icons/default-displayphoto.svg';
 const Sidebar = () => {
   return (
     <aside className='w-80' aria-label='Sidebar'>
-      <div className='h-screen overflow-y-auto py-4 px-6 bg-brightblue'>
+      <div className='h-screen overflow-y-auto py-4 px-6 bg-darkblue'>
         <ul className='space-y-2'>
           <li id='logo'>
             <img src={doowitLogo} className='w-2/3 h-auto pt-14 pb-8' />
@@ -26,7 +26,7 @@ const Sidebar = () => {
           <li selected>
             <a
               href='#'
-              className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-navyblue hover:px-4'
+              className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
             >
               <svg
                 className='w-6 h-6 text-white transition duration-75'
@@ -43,7 +43,7 @@ const Sidebar = () => {
           <li>
             <button
               type='button'
-              className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-navyblue hover:px-4'
+              className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
               aria-controls='sort-dropdown'
               data-collapse-toggle='sort-dropdown'
             >
@@ -83,7 +83,7 @@ const Sidebar = () => {
               <li>
                 <a
                   href='#'
-                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-navyblue hover:px-4'
+                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
                 >
                   Low Priority to Urgent
                 </a>
@@ -91,7 +91,7 @@ const Sidebar = () => {
               <li>
                 <a
                   href='#'
-                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-navyblue hover:px-4'
+                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
                 >
                   Urgent to Low Priority
                 </a>
@@ -101,7 +101,7 @@ const Sidebar = () => {
           <li>
             <button
               type='button'
-              className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-navyblue hover:px-4'
+              className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
               aria-controls='sort-dropdown'
               data-collapse-toggle='sort-dropdown'
             >
@@ -141,7 +141,7 @@ const Sidebar = () => {
               <li>
                 <a
                   href='#'
-                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-navyblue hover:px-4'
+                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
                 >
                   Low Priority
                 </a>
@@ -149,7 +149,7 @@ const Sidebar = () => {
               <li>
                 <a
                   href='#'
-                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-navyblue hover:px-4e'
+                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4e'
                 >
                   Medium Priority
                 </a>
@@ -159,7 +159,7 @@ const Sidebar = () => {
           <li>
             <a
               href='#'
-              className='flex items-center self-end p-2 text-base font-normal text-white rounded-full hover:bg-navyblue hover:px-4'
+              className='flex items-center self-end p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
             >
               <svg
                 className='flex-shrink-0 w-6 h-6 text-white transition duration-75'

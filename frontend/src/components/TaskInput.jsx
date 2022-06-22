@@ -45,6 +45,7 @@ const TaskInput = () => {
 
   return (
     <div>
+      <div className='absolute right-0 top-24 pt-8 mr-12'>
       <button
         className='block text-white font-bold bg-brightblue hover:bg-brighterblue rounded-lg text-sm px-5 py-2.5 text-center'
         type='button'
@@ -52,6 +53,9 @@ const TaskInput = () => {
       >
         Add New Task
       </button>
+
+      </div>
+     
       {popup ? (
         <div
           id='task-input'
