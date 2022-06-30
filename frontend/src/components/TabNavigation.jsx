@@ -34,7 +34,7 @@ const TabNavigation = () => {
   ));
 
   const tabContents = tabdata.map((content) => (
-    <div className='grid grid-flow-col w-full' style={activeStatusTab === content.id ? {} : { display: 'none' }} >
+    <div className='w-full flex-row border-4 border-brightblue' style={activeStatusTab === content.id ? {} : { display: 'none' }} >
       {content.tabContent}
     </div>
   ));
@@ -42,10 +42,10 @@ const TabNavigation = () => {
   return (
     <div>
       <div className='text-normal font-medium text-center text-gray-500 border-b border-gray-300'>
-        <ul className='flex flex-wrap -mb-px px-8 mt-4'>{statusTabTitles}</ul>
+        <ul className='flex flex-row -mb-px px-8 mt-4'>{statusTabTitles}</ul>
       </div>
       <div className='px-8'>
-        <div id='tab-contents '>{tabContents}</div>
+        <div id='tab-contents ' className='flex flex-row border-4 border-darkerblue'>{tabContents}</div>
       </div>
     </div>
   );

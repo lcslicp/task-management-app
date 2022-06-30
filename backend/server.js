@@ -5,6 +5,7 @@ import logger from 'morgan';
 import mongoose from 'mongoose';
 
 import taskRoutes from './routes/taskRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ mongoose.connect(process.env.DB_HOST, {
 }).then(() => console.log('Established connection with MongoDB.')).catch(console.error);
 
 app.use('/', taskRoutes);
+app.use('/', userRoutes);
 
 
 

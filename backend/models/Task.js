@@ -1,18 +1,18 @@
 import mongoose from 'mongoose';
 
 const { model, Schema } = mongoose;
-const option = {
+const optionRequired = {
     type: String,
     required: true,
 };
 
 const TaskSchema = new Schema({
-    title: option,
+    title: optionRequired,
     description: {
         type: String,
     },
-    status: option,
-    priority: option,
+    status: optionRequired,
+    priority: optionRequired,
     dueDate:{
         type: String,
     },
