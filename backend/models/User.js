@@ -13,7 +13,10 @@ const UserSchema = new Schema({
         ...optionRequired,
         unique: true,
     },
-    password: optionRequired
+    password: optionRequired,
+    refreshToken: {
+        type: String
+    }
 });
 
 const User = mongoose.model('User', UserSchema);

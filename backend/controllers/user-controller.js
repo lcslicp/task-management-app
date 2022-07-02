@@ -1,5 +1,7 @@
-import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+
 import User from '../models/User.js';
 
 dotenv.config();
@@ -8,91 +10,67 @@ dotenv.config();
 const signup = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
+  if (!firstName || !lastName || !email || !password)
+    return res.status(400).json({ message: 'All fields are required.' });
+
+  const duplicate = await User.findOne({ email: email }).exec();
+  if (duplicate) return res.sendStatus(409);
+
   try {
-    const userExists = await User.findOne( { email: email });
+    const hashedPwd = await bcrypt.hash(password, 10);
 
-    if(userExists) {
-      throw 'User already exists.'
-    }
-
-    const user = new User({
-      firstName,
-      lastName,
-      email,
-      password,
+    await User.create({
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: hashedPwd,
     });
-  
-    await user.save();
 
-    res.status(201).json('Account created successfully.');
+    res.status(201).json({ Success: 'Successfully created Doowit account.' });
   } catch (error) {
-    res.status(400).json({
-      error: 'Something went wrong on sign up.',
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
 //User authentication
 const authenticateUser = async (req, res) => {
-  const {  email, password } = req.body;
+  const { email, password } = req.body;
+  if (!email || !password)
+    return res.sendStatus(400).json({ message: 'All fields are required.' });
+  const foundUser = await User.findOne({ email: email }).exec();
+  if (!foundUser) return res.sendStatus(401); //Unauthorized
 
-  
-  try {
-    const user = await User.findOne( { email: email });
+  const matchPwd = await bcrypt.compare(password, foundUser.password);
+  if (matchPwd) {
+    const accessToken = jwt.sign(
+      { 'email': foundUser.email },
+      '' + process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '15m' }
+    );
+    const refreshToken = jwt.sign(
+      { email: foundUser.email },
+      '' + process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: '7d' }
+    );
 
-    if (user === null) {
-      return res.status(400).json({
-        error: 'User does not exist.',
-      })
-    }
+    foundUser.refreshToken = refreshToken;
+    await foundUser.save();
 
-    if (password !== user.password) {
-      return res.status(400).json({
-        error: 'Invalid email/password.',
-      })
-    }
-
-    const accesstoken = generateAccessToken(user)
-    const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
-    res.json( { acessToken: accesstoken, refreshToken: refreshToken })
-
-    const generateAccessToken= (user) => {
-      return jwt.sign(user , process.env.ACESS_TOKEN_SECRET, { expiresIn: '2d'})
-    }
-
-    const authenticateToken = (req, res, next) => {
-      const authHeader = req.headers['authorization']
-      const token = authHeader && authHeader.split(' ')[1]
-      if (token == null) return res.sendStatus(401)
-
-      jwt.verify(token, process.env.ACESS_TOKEN_SECRET, (error, user) => {
-        if (error) return res.sendStatus(403)
-        req.user = user
-        next()
-      })
-    }
-
-
-    res.status(201).json({
-      message: 'You are now logged in.',
-    token,
-  });
-  } catch (error) {
-    res.status(400).json({
-      error: 'Something went wrong on login, please try again.',
-      message: error.message,
+    res.cookie('jwt', refreshToken, {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true,
+      maxAge: 168 * 60 * 60 * 1000,
     });
+    res.json({ accessToken });
+  } else {
+    res.sendStatus(401);
   }
 };
 
 const UserController = {
   signup,
   authenticateUser,
-
 };
 
 export default UserController;
-
-
-//continue: https://www.youtube.com/watch?v=mbsmsi7l3r4&t=879s , 10-min mark
