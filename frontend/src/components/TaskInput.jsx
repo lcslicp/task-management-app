@@ -47,7 +47,7 @@ const TaskInput = () => {
     <div>
       <div className='absolute right-0 top-24 pt-8 mr-12'>
       <button
-        className='block text-white font-bold bg-brightblue hover:bg-brighterblue rounded-lg text-sm px-5 py-2.5 text-center'
+        className='block text-white font-bold bg-brightblue hover:bg-brighterblue hover:scale-110 rounded-lg text-sm px-5 py-2.5 text-center'
         type='button'
         onClick={handleModalOpen}
       >
@@ -152,14 +152,14 @@ const TaskInput = () => {
                     <div className='flex flex-row w-2/3 space-x-4'>
                       <button
                         type='submit'
-                        className='w-full text-black bg-lightgray hover:opacity-25 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center'
+                        className='w-full text-black bg-lightgray hover:scale-110 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center'
                         onClick={handleModalClose}
                       >
                         Cancel
                       </button>
                       <button
                         type='submit'
-                        className='w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center'
+                        className='w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 hover:scale-110 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center'
                       >
                         Add Task
                       </button>

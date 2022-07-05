@@ -16,7 +16,8 @@ const UserSchema = new Schema({
     password: optionRequired,
     refreshToken: {
         type: String
-    }
+    },
+    tasks: [{ ObjectId: Number }]
 });
 
 const User = mongoose.model('User', UserSchema);

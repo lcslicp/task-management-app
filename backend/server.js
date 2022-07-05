@@ -34,9 +34,10 @@ mongoose.connect(process.env.DB_HOST, {
 
 app.use('/', userRoutes);
 app.use('/', refresh);
-app.use('/', logoutRoute);
+
 app.use(verifyJWT);
 app.use('/', taskRoutes);
+app.use('/', logoutRoute);
 
 
 
