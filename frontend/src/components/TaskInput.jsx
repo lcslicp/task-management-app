@@ -1,5 +1,5 @@
-import axios from 'axios';
 import React, { useState } from 'react';
+import axios from '../api/axios';
 
 const TaskInput = () => {
   const [taskTitle, setTaskTitle] = useState('');
@@ -10,6 +10,8 @@ const TaskInput = () => {
 
   const [popup, setPopup] = useState(false);
   //   const [taskResult, setTaskResult] = useState('');
+
+  const CREATE_TASK_URL = '/compose/newtask';
 
   const handleFormReset = () => {
         setTaskTitle('');
@@ -22,7 +24,7 @@ const TaskInput = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios
-      .post('http://localhost:5000/compose/newtask', {
+      .post(CREATE_TASK_URL, {
         title: taskTitle,
         description: taskDescription,
         status: taskStatus,

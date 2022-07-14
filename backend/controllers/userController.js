@@ -6,6 +6,8 @@ import User from '../models/User.js';
 
 dotenv.config();
 
+const maxAge = 168 * 60 * 60;
+
 // CREATE user for registration
 const signup = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -13,56 +15,66 @@ const signup = async (req, res) => {
   if (!firstName || !lastName || !email || !password)
     return res.status(400).json({ message: 'All fields are required.' });
 
-  const duplicate = await User.findOne({ email: email }).exec();
+  const duplicate = await User.findOne({ email: email });
   if (duplicate) return res.sendStatus(409);
 
   try {
     const hashedPwd = await bcrypt.hash(password, 10);
 
-    await User.create({
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
       password: hashedPwd,
     });
 
-    res.status(201).json({ Success: 'Successfully created Doowit account.' });
+    const accessToken = jwt.sign(
+      { 'user': user._id },
+      '' + process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.cookie('jwt', accessToken, {
+      maxAge:  maxAge * 1000,
+    });
+
+    res.status(201).json({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    });
+
+    
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-//User authentication
+//User authentication or LOGIN
 const authenticateUser = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
     return res.sendStatus(400).json({ message: 'All fields are required.' });
-  const foundUser = await User.findOne({ email: email }).exec();
+
+  const foundUser = await User.findOne({ email: email });
   if (!foundUser) return res.sendStatus(401); //Unauthorized
 
   const matchPwd = await bcrypt.compare(password, foundUser.password);
   if (matchPwd) {
+
     const accessToken = jwt.sign(
-      { 'email': foundUser.email },
+      { 'user': foundUser._id },
       '' + process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '15m' }
-    );
-    const refreshToken = jwt.sign(
-      { email: foundUser.email },
-      '' + process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '7d' }
     );
 
-    foundUser.refreshToken = refreshToken;
-    await foundUser.save();
-
-    res.cookie('jwt', refreshToken, {
-      httpOnly: true,
-      sameSite: 'None',
-      secure: true,
-      maxAge: 168 * 60 * 60 * 1000,
+    res.cookie('jwt', accessToken, {
+      maxAge:  maxAge * 1000,
     });
-    res.json({ accessToken });
+
+    res.status(200).json({user: foundUser._id});
   } else {
     res.sendStatus(401);
   }

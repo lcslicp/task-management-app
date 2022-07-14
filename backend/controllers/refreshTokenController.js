@@ -1,12 +1,13 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-const RefreshTokenController = async (req, res) => {
+const RefreshTokenController = (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(401); //Unauthorized
+  console.log(cookies.jwt);
   const refreshToken = cookies.jwt;
 
-  const foundUser = await User.findOne({ refreshToken }).exec();
+  const foundUser = User.findOne({ refreshToken: refreshToken }).exec();
   if (!foundUser) return res.sendStatus(403); //Forbidden
 
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {

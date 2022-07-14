@@ -28,24 +28,22 @@ const LoginPage = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+       const response = await axios.post(
         LOGIN_URL,
         JSON.stringify({ email: userEmail, password: pwd }),
         {
           headers: { 'Content-Type': 'application/json' },
-          // withCredentials: true
+          // withCredentials: true,
         }
-      );
-      const accessToken = response?.data?.accessToken;
-      console.log(accessToken);
+        );
       setUserEmail('');
       setPwd('');
-      navigate('/dashboard');
+      // navigate('/dashboard');
     } catch (error) {
       if (!error?.response) {
         setErrMsg('No Server Response');
       } else if (error.response?.status === 400) {
-        setErrMsg('All fields are required.');
+        setErrMsg('Invalid credentials, please try again.');
       } else if (error.response?.status === 401) {
         setErrMsg('Unauthorized.');
       } else {

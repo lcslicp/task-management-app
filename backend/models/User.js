@@ -5,7 +5,6 @@ const optionRequired = {
     type: String,
     required: true,
 }
-
 const UserSchema = new Schema({
     firstName: optionRequired,
     lastName: optionRequired,
@@ -14,10 +13,9 @@ const UserSchema = new Schema({
         unique: true,
     },
     password: optionRequired,
-    refreshToken: {
+    accessToken: {
         type: String
     },
-    tasks: [{ ObjectId: Number }]
 });
 
 const User = mongoose.model('User', UserSchema);

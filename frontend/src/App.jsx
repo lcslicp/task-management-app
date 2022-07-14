@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import LandingPage from './pages/LandingPage';
 import TaskPage from './pages/TaskPage';
 import NotFoundPage from './components/NotFoundPage';
+import LoginNewAccount from './pages/LoginNewAccount';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
          <Route path='/' element={<LandingPage />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/login' element={<LoginPage />} />
+        <Route path='/welcome/login' element={<LoginNewAccount />} />
 
         {/* protected routes  */}
           <Route path='/dashboard' element={<Dashboard />} />

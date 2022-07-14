@@ -1,9 +1,20 @@
 import React from 'react';
+import axios from '../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 import doowitLogo from '../assets/icons/doowit-logo.svg';
 import defaultDisplayphoto from '../assets/icons/default-displayphoto.svg';
 
 const Sidebar = () => {
+  const LOGOUT_URL = '/logout';
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    axios
+    .get(LOGOUT_URL);
+    navigate('/login');
+
+  }
   return (
     <aside className='w-80' aria-label='Sidebar'>
       <div className='h-screen overflow-y-auto py-4 px-6 bg-darkblue'>
@@ -173,7 +184,7 @@ const Sidebar = () => {
                   clipRule='evenodd'
                 ></path>
               </svg>
-              <span className='flex-1 ml-3 whitespace-nowrap'>Log Out</span>
+              <span className='flex-1 ml-3 whitespace-nowrap' onClick={handleLogout}>Log Out</span>
             </a>
           </li>
         </ul>

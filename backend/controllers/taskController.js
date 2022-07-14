@@ -1,10 +1,19 @@
-import Task from '../models/Task.js';
+import Task from "../models/Task.js";
 
 //Create New Task
 const addTask = async (req, res) =>{
-    const { title, description, status, priority, dueDate, createdAt } = req.body;
+    const { title,
+    description,
+    status,
+    priority,
+    dueDate, 
+    createdAt
+ } = req.body;
+ 
+
     try {
         const task = new Task({
+            user: req.user,
             title,
             description,
             status,
@@ -12,9 +21,9 @@ const addTask = async (req, res) =>{
             dueDate,
             createdAt
         });
-        await task.save();
+        const userTask = await task.save();
 
-        res.status(201).json(task);
+        res.status(201).json(userTask);
     } catch(error) {
         res.status(400).json({
             error: 'Something went wrong, please create task again.',
@@ -66,7 +75,7 @@ const deleteTask = async (req, res) => {
 //GET all tasks
 const getAllTasks = async (req, res) => {
     try {
-       const tasks = await Task.find();
+       const tasks = await Task.find({userId: id}).sort({createdAt: 1});
        res.json(tasks);
     } catch (error) {
         res.status(400).json({

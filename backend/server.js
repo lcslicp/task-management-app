@@ -4,10 +4,9 @@ import cors from 'cors';
 import logger from 'morgan';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
-import path from 'path';
+// import path from 'path';
+import errorHandler from './middleware/errorHandler.js';
 
-import credentials from './middleware/credentials.js';
-import verifyJWT from './middleware/veriryJWT.js';
 import refresh from './routes/refresh.js';
 import logoutRoute from './routes/logoutRoute.js';
 import taskRoutes from './routes/taskRoutes.js';
@@ -19,25 +18,24 @@ dotenv.config();
 const app = express();
 
 app.use(logger('dev'));
-app.use(credentials);
-app.use(cors(''));
+app.use(cors());
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cookieParser());
 
+
+app.use('/', userRoutes);
+app.use('/', refresh);
+app.use('/', logoutRoute);
+app.use('/', taskRoutes);
+
+app.use(errorHandler);
 
 mongoose.connect(process.env.DB_HOST, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => console.log('Established connection with MongoDB.')).catch(console.error);
 
-
-app.use('/', userRoutes);
-app.use('/', refresh);
-
-app.use(verifyJWT);
-app.use('/', taskRoutes);
-app.use('/', logoutRoute);
 
 
 

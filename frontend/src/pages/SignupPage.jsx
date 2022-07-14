@@ -53,7 +53,6 @@ const SignupPage = () => {
     setUserEmail('');
     setPwd('');
     setMatchPwd('');
-    navigate(from, {replace: true });
   };
 
   const handleSignupSubmit = async (e) => {
@@ -64,7 +63,7 @@ const SignupPage = () => {
       return;
     }
     try {
-      const response = await axios.post(
+      const { data } = await axios.post(
         SIGNUP_URL, JSON.stringify(
           {
             firstName: userFirstName,
@@ -72,12 +71,15 @@ const SignupPage = () => {
             email: userEmail,
             password: pwd,
           }),
+
           {
             headers: { 'Content-Type': 'application/json' },
             // withCredentials: true,
-          }
+          },
       );
       handleFormReset();
+      // navigate('/welcome/login');
+      console.log(data);
     } catch (error) {
       if (!error?.response) {
         setErrMsg('No Server Response');
