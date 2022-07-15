@@ -38,7 +38,7 @@ const LoginPage = () => {
         );
       setUserEmail('');
       setPwd('');
-      // navigate('/dashboard');
+      navigate('/dashboard');
     } catch (error) {
       if (!error?.response) {
         setErrMsg('No Server Response');

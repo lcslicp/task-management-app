@@ -6,7 +6,7 @@ import User from '../models/User.js';
 
 dotenv.config();
 
-const maxAge = 168 * 60 * 60;
+// const maxAge = 168 * 60 * 60;
 
 // CREATE user for registration
 const signup = async (req, res) => {
@@ -18,7 +18,6 @@ const signup = async (req, res) => {
   const duplicate = await User.findOne({ email: email });
   if (duplicate) return res.sendStatus(409);
 
-  try {
     const hashedPwd = await bcrypt.hash(password, 10);
 
     const user = await User.create({
@@ -28,28 +27,29 @@ const signup = async (req, res) => {
       password: hashedPwd,
     });
 
-    const accessToken = jwt.sign(
-      { 'user': user._id },
-      '' + process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '7d' }
-    );
+    // const accessToken = jwt.sign(
+    //   { 'user': user._id },
+    //   '' + process.env.ACCESS_TOKEN_SECRET,
+    //   { expiresIn: '7d' }
+    // );
 
-    res.cookie('jwt', accessToken, {
-      maxAge:  maxAge * 1000,
-    });
+    // res.cookie('jwt', accessToken, {
+    //   maxAge:  maxAge * 1000,
+    // });
 
-    res.status(201).json({
-      _id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-    });
+    if (user) {
+      res.status(201).json({
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        token: generateToken(user._id),
+      })
+    } else {
+      res.sendStatus(400);
+    }
 
-    
-
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+   
 };
 
 //User authentication or LOGIN
@@ -63,21 +63,31 @@ const authenticateUser = async (req, res) => {
 
   const matchPwd = await bcrypt.compare(password, foundUser.password);
   if (matchPwd) {
+    // const accessToken = jwt.sign(
+    //   { 'user': foundUser._id },
+    //   '' + process.env.ACCESS_TOKEN_SECRET,
+    //   { expiresIn: '7d' }
+    // );
 
-    const accessToken = jwt.sign(
-      { 'user': foundUser._id },
-      '' + process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '7d' }
-    );
+    // res.cookie('jwt', accessToken, {
+    //   maxAge:  maxAge * 1000,
+    //   sameSite: 'none',
+    // });
 
-    res.cookie('jwt', accessToken, {
-      maxAge:  maxAge * 1000,
-    });
-
-    res.status(200).json({user: foundUser._id});
+    res
+      .status(200)
+      .json({
+        _id: foundUser._id,
+        email: foundUser.email,
+        token: generateToken(foundUser._id),
+      });
   } else {
     res.sendStatus(401);
   }
+};
+
+const generateToken = (id) => {
+  return jwt.sign({ id }, '' + process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
 };
 
 const UserController = {

@@ -75,7 +75,7 @@ const deleteTask = async (req, res) => {
 //GET all tasks
 const getAllTasks = async (req, res) => {
     try {
-       const tasks = await Task.find({userId: id}).sort({createdAt: 1});
+       const tasks = await Task.find({ user: req.user.id }).sort({createdAt: 1});
        res.json(tasks);
     } catch (error) {
         res.status(400).json({
@@ -90,7 +90,7 @@ const getAllTasks = async (req, res) => {
 const getTodoTasks = async (req, res) => {
   try {
      const tasks = await Task.find({
-      status: "To Do"
+        user: req.user.id, status: "To Do", 
      });
      res.json(tasks);
   } catch (error) {
@@ -106,7 +106,7 @@ const getTodoTasks = async (req, res) => {
 const getInProgressTasks = async (req, res) => {
   try {
      const tasks = await Task.find({
-      status: "In Progress"
+        user: req.user.id, status: "In Progress"
      });
      res.json(tasks);
   } catch (error) {
@@ -122,7 +122,7 @@ const getInProgressTasks = async (req, res) => {
 const getCompletedTasks = async (req, res) => {
   try {
      const tasks = await Task.find({
-      status: "Completed"
+        user: req.user.id, status: "Completed"
      });
      res.json(tasks);
   } catch (error) {
