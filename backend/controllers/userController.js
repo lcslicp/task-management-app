@@ -6,7 +6,7 @@ import User from '../models/User.js';
 
 dotenv.config();
 
-// const maxAge = 168 * 60 * 60;
+const maxAge = 168 * 60 * 60;
 
 // CREATE user for registration
 const signup = async (req, res) => {
@@ -27,15 +27,15 @@ const signup = async (req, res) => {
       password: hashedPwd,
     });
 
-    // const accessToken = jwt.sign(
-    //   { 'user': user._id },
-    //   '' + process.env.ACCESS_TOKEN_SECRET,
-    //   { expiresIn: '7d' }
-    // );
+    const accessToken = jwt.sign(
+      { 'user': user._id },
+      '' + process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '7d' }
+    );
 
-    // res.cookie('jwt', accessToken, {
-    //   maxAge:  maxAge * 1000,
-    // });
+    res.cookie('jwt', accessToken, {
+      maxAge:  maxAge * 1000,
+    });
 
     if (user) {
       res.status(201).json({
@@ -43,7 +43,7 @@ const signup = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        token: generateToken(user._id),
+        token: accessToken,
       })
     } else {
       res.sendStatus(400);
@@ -63,32 +63,32 @@ const authenticateUser = async (req, res) => {
 
   const matchPwd = await bcrypt.compare(password, foundUser.password);
   if (matchPwd) {
-    // const accessToken = jwt.sign(
-    //   { 'user': foundUser._id },
-    //   '' + process.env.ACCESS_TOKEN_SECRET,
-    //   { expiresIn: '7d' }
-    // );
+    const accessToken = jwt.sign(
+      { 'user': foundUser._id },
+      '' + process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '7d' }
+    );
 
-    // res.cookie('jwt', accessToken, {
-    //   maxAge:  maxAge * 1000,
-    //   sameSite: 'none',
-    // });
+    res.cookie('jwt', accessToken, {
+      maxAge:  maxAge * 1000,
+      sameSite: 'none',
+    });
 
     res
       .status(200)
       .json({
         _id: foundUser._id,
         email: foundUser.email,
-        token: generateToken(foundUser._id),
+        token: accessToken,
       });
   } else {
     res.sendStatus(401);
   }
 };
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, '' + process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
-};
+// const generateToken = (id) => {
+//   return jwt.sign({ id }, '' + process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
+// };
 
 const UserController = {
   signup,

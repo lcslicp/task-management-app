@@ -7,10 +7,9 @@ import cookieParser from 'cookie-parser';
 // import path from 'path';
 import errorHandler from './middleware/errorHandler.js';
 
-import logoutRoute from './routes/logoutRoute.js';
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import verifyJWT from './middleware/veriryJWT.js';
+// import verifyJWT from './middleware/veriryJWT.js';
 
 
 dotenv.config();
@@ -25,8 +24,7 @@ app.use(cookieParser());
 
 
 app.use('/', userRoutes);
-app.use('/', logoutRoute);
-app.use('/', verifyJWT);
+// app.use('/', verifyJWT);
 app.use('/', taskRoutes);
 
 app.use(errorHandler);

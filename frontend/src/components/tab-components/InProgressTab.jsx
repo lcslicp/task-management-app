@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../../api/axios';
 
 import TaskCard from '../task-cards/defaultTaskCard';
-// import EmptyState from '../EmptyState';
+import EmptyState from '../EmptyState';
 
 const InProgressTab = () => {
   const [inProgressTasks, setInProgressTasks] = useState([]);
 
+  const INPROGRESS_TASK_URL = '/compose/newtask';
+
   const fetchTasksData = async () => {
-    await axios.get('http://localhost:5000/tasks/inprogress').then((response) => {
+    await axios.get(INPROGRESS_TASK_URL).then((response) => {
       setInProgressTasks(response.data);
     });
   };
@@ -19,18 +21,21 @@ const InProgressTab = () => {
 
   return (
     <div>
-      {inProgressTasks.map((task) => (
-        <TaskCard
-          id={task._id}
-          key={task._id}
-          title={task.title}
-          description={task.description}
-          priority={task.priority}
-          dueDate={task.dueDate}
-          createdAt={task.createdAt}
-        ></TaskCard>
-      ))}
-    </div>
+    {(inProgressTasks.length === 0)  ? < EmptyState /> :
+    <div>
+    {inProgressTasks.map((task, id) => (
+      <TaskCard
+        id={task._id}
+        key={id}
+        title={task.title}
+        description={task.description} 
+        priority={task.priority}
+        dueDate={task.dueDate}
+        createdAt={task.createdAt}
+      ></TaskCard>
+    ))} </div>
+    }
+  </div>
   );
 };
 

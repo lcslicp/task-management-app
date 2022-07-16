@@ -13,9 +13,6 @@ const UserSchema = new Schema({
         unique: true,
     },
     password: optionRequired,
-    accessToken: {
-        type: String
-    },
 });
 
 const User = mongoose.model('User', UserSchema);

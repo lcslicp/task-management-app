@@ -77,6 +77,7 @@ const SignupPage = () => {
             // withCredentials: true,
           },
       );
+      localStorage.setItem('token', response?.data?.token)
       handleFormReset();
       // navigate('/welcome/login');
       console.log(data);

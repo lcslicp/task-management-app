@@ -25,10 +25,10 @@ const ToDoTab = () => {
     <div>
       {(todoTasks.length === 0)  ? < EmptyState /> :
       <div>
-      {todoTasks.map((task) => (
+      {todoTasks.map((task, id) => (
         <TaskCard
           id={task._id}
-          key={task._id}
+          key={id}
           title={task.title}
           description={task.description} 
           priority={task.priority}

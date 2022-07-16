@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import axios from '../api/axios.js';
-
 import doowitLogo from '../assets/icons/doowit-logo-colored.svg';
 
 const LOGIN_URL = '/login';
@@ -25,6 +24,10 @@ const LoginPage = () => {
     setErrMsg('');
   }, [userEmail, pwd]);
 
+  const storeToken = () => {
+    
+  }
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -32,13 +35,16 @@ const LoginPage = () => {
         LOGIN_URL,
         JSON.stringify({ email: userEmail, password: pwd }),
         {
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json' },
           // withCredentials: true,
         }
         );
+        console.log(response);
+      localStorage.setItem('token', response?.data?.token)
       setUserEmail('');
       setPwd('');
-      navigate('/dashboard');
+      // navigate('/dashboard');
     } catch (error) {
       if (!error?.response) {
         setErrMsg('No Server Response');
