@@ -1,4 +1,6 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import jwt_decode from 'jwt-decode';
+import axios from '../api/axios';
 
 const Header = () => {
   const options = {
@@ -7,6 +9,27 @@ const Header = () => {
     month: 'long',
     day: 'numeric',
   };
+
+  const token = localStorage.getItem('token');
+  const decoded = jwt_decode(token);
+  const id = decoded.user;
+  const USER_URL = `/user/${id}`;
+
+  const [firstName, setFirstName] = useState('Luv');
+
+  const getUser = async () => {
+    await axios.get(USER_URL).then((response) => {
+      setFirstName(response?.data?.firstName);
+      // console.log(response);
+    })
+  
+  }
+
+  useEffect(() => {
+    getUser()
+  }, [])
+  
+
   const now = new Date().toLocaleTimeString('en-us', options);
   return (
     <header className='flex flex-col pt-8 pl-80 pr-8 bg-white fixed w-full border-4 border-white z-20'>
@@ -14,7 +37,7 @@ const Header = () => {
         <div className='container flex flex-row justify-between items-center mx-auto'>
           <div>
             <p className='text-2xl font-semibold whitespace-nowrap text-black'>
-              Hi, firstName!
+              Hi, {firstName}!
             </p>
             <p className='text-sm'>{now}</p>
           </div>

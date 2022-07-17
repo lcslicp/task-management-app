@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { UserContext } from './context/userContext';
 import ProtectedRoutes from './components/ProtectedRoutes';
+import PublicRoutes from './components/PublicRoutes';
 import Dashboard from './pages/Dashboard';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
@@ -18,11 +19,12 @@ function App() {
     <UserContext.Provider value={ [loggedUser, setLoggedUser] }>
       <Routes>
         {/* public routes */}
+        <Route element={<PublicRoutes />} >
         <Route path='/' element={<LandingPage />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/*' element={<NotFoundPage />} />
-
+        </Route>
         {/* protected routes  */}
         <Route path='/' element={<ProtectedRoutes />}>
         <Route path='/dashboard'  element={<Dashboard />} />

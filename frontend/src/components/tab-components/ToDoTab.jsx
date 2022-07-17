@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from '../../api/axios';
+import { UserContext } from '../../context/userContext';
 
 import TaskCard from '../task-cards/defaultTaskCard';
 import EmptyState from '../EmptyState';
@@ -7,11 +8,18 @@ import EmptyState from '../EmptyState';
 
 const ToDoTab = () => {
   const [todoTasks, setTodoTasks] = useState([]);
+  const [loggedUser] = useContext(UserContext);
 
   const TODO_TASK_URL = '/tasks/todo';
 
   const fetchTasksData = async () => {
-    await axios.get(TODO_TASK_URL).then((response) => {
+    await axios.get(TODO_TASK_URL,
+      {
+        headers: {
+          'Content-Type': 'application/json' },
+          withCredentials: true,
+          'x-auth-token': loggedUser,
+      }).then((response) => {
       setTodoTasks(response.data);
     });
   };

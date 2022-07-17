@@ -18,39 +18,37 @@ const signup = async (req, res) => {
   const duplicate = await User.findOne({ email: email });
   if (duplicate) return res.sendStatus(409);
 
-    const hashedPwd = await bcrypt.hash(password, 10);
+  const hashedPwd = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-      firstName,
-      lastName,
-      email,
-      password: hashedPwd,
+  const user = await User.create({
+    firstName,
+    lastName,
+    email,
+    password: hashedPwd,
+  });
+
+  const accessToken = jwt.sign(
+    { user: user._id },
+    '' + process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: '7d' }
+  );
+
+  res.cookie('jwt', accessToken, {
+    maxAge: maxAge * 1000,
+    httpOnly: true,
+  });
+
+  if (user) {
+    res.status(201).json({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      token: accessToken,
     });
-
-    const accessToken = jwt.sign(
-      { 'user': user._id },
-      '' + process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    res.cookie('jwt', accessToken, {
-      maxAge:  maxAge * 1000,
-      httpOnly: true,
-    });
-
-    if (user) {
-      res.status(201).json({
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        token: accessToken,
-      })
-    } else {
-      res.sendStatus(400);
-    }
-
-   
+  } else {
+    res.sendStatus(400);
+  }
 };
 
 //User authentication or LOGIN
@@ -65,31 +63,44 @@ const authenticateUser = async (req, res) => {
   const matchPwd = await bcrypt.compare(password, foundUser.password);
   if (matchPwd) {
     const accessToken = jwt.sign(
-      { 'user': foundUser._id },
+      { user: foundUser._id },
       '' + process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: '7d' }
     );
 
     res.cookie('jwt', accessToken, {
-      maxAge:  maxAge * 1000,
+      maxAge: maxAge * 1000,
       httpOnly: true,
     });
 
-    res
-      .status(200)
-      .json({
-        _id: foundUser._id,
-        email: foundUser.email,
-        token: accessToken,
-      });
+    res.status(200).json({
+      _id: foundUser._id,
+      email: foundUser.email,
+      token: accessToken,
+    });
   } else {
     res.sendStatus(401);
   }
 };
 
+//GET User
+const reqUser = async (req, res) => {
+  const { _id, firstName, lastName, email } = req.body;
+
+  const foundUser = await User.findOne({ id: _id });
+  if (!foundUser) return res.sendStatus(404); 
+
+  res.status(200).json({
+    firstName: foundUser.firstName,
+    lastName: foundUser.lastName,
+    email: foundUser.email,
+  });
+};
+
 const UserController = {
   signup,
   authenticateUser,
+  reqUser,
 };
 
 export default UserController;

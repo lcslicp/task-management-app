@@ -1,17 +1,36 @@
-import React from 'react';
-import axios from '../api/axios';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
+import axios from '../api/axios';
 
 import doowitLogo from '../assets/icons/doowit-logo.svg';
 import defaultDisplayphoto from '../assets/icons/default-displayphoto.svg';
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  const decoded = jwt_decode(token);
+  const id = decoded.user;
+  const USER_URL = `/user/${id}`;
+  const [firstName, setFirstName] = useState('Luv');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const getUser = async () => {
+    await axios.get(USER_URL).then((response) => {
+      setFirstName(response?.data?.firstName);
+      setLastName(response?.data?.lastName);
+      setEmail(response?.data?.email);
+    })}
+
+    useEffect(() => {
+      getUser()
+    }, [])
+    
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
-
   }
   return (
     <aside className='w-72 fixed z-30' aria-label='Sidebar'>
@@ -27,9 +46,9 @@ const Sidebar = () => {
             />
             <div className='space-y-1'>
               <div className='font-bold text-white text-base'>
-                Hardcoded Name
+                {firstName} {lastName}
               </div>
-              <div className='text-xs text-white'>hardcoded@email.com</div>
+              <div className='text-xs text-white'>{email}</div>
             </div>
           </li>
           <li selected>

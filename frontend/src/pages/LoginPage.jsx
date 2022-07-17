@@ -41,7 +41,7 @@ const LoginPage = () => {
         }
         );
       localStorage.setItem('token', JSON.stringify(response?.data?.token))
-      // setLoggedUser(response?.data?.token);
+      setLoggedUser(response?.data?.token);
       // setHeader('x-auth-token', response?.data?.token)
       
       navigate('/dashboard');
