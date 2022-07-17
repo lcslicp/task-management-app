@@ -16,8 +16,8 @@ const Sidebar = () => {
 
   }
   return (
-    <aside className='w-80' aria-label='Sidebar'>
-      <div className='h-screen overflow-y-auto py-4 px-6 bg-darkblue'>
+    <aside className='w-72 fixed z-30' aria-label='Sidebar'>
+      <div className='h-screen overflow-y-auto py-4 px-8 bg-darkblue'>
         <ul className='space-y-2'>
           <li id='logo'>
             <img src={doowitLogo} className='w-2/3 h-auto pt-14 pb-8' />

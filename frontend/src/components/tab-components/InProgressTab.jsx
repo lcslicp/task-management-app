@@ -7,7 +7,7 @@ import EmptyState from '../EmptyState';
 const InProgressTab = () => {
   const [inProgressTasks, setInProgressTasks] = useState([]);
 
-  const INPROGRESS_TASK_URL = '/compose/newtask';
+  const INPROGRESS_TASK_URL = '/tasks/inprogress';
 
   const fetchTasksData = async () => {
     await axios.get(INPROGRESS_TASK_URL).then((response) => {

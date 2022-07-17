@@ -8,7 +8,7 @@ import EmptyState from '../EmptyState';
 const ToDoTab = () => {
   const [todoTasks, setTodoTasks] = useState([]);
 
-  const TODO_TASK_URL = '/compose/newtask';
+  const TODO_TASK_URL = '/tasks/todo';
 
   const fetchTasksData = async () => {
     await axios.get(TODO_TASK_URL).then((response) => {
@@ -24,7 +24,7 @@ const ToDoTab = () => {
     
     <div>
       {(todoTasks.length === 0)  ? < EmptyState /> :
-      <div>
+      <div className=''>
       {todoTasks.map((task, id) => (
         <TaskCard
           id={task._id}

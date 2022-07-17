@@ -7,7 +7,7 @@ import EmptyState from '../EmptyState';
 const CompletedTab = () => {
   const [completedTasks, setCompletedTasks] = useState([]);
 
-  const COMPLETED_TASK_URL = '/compose/newtask';
+  const COMPLETED_TASK_URL = '/tasks/completed';
 
   const fetchTasksData = async () => {
     await axios.get(COMPLETED_TASK_URL).then((response) => {

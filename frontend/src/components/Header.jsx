@@ -9,8 +9,8 @@ const Header = () => {
   };
   const now = new Date().toLocaleTimeString('en-us', options);
   return (
-    <header className='flex flex-col pt-8 px-8 border-2 bg-white '>
-      <nav className='bg-white border-lightgray px-8 sm:px-4 py-2.5 rounded '>
+    <header className='flex flex-col pt-8 pl-80 pr-8 bg-white fixed w-full border-4 border-white z-20'>
+      <nav className='bg-white border-lightgray px-8 sm:px-4 py-2.5 rounded'>
         <div className='container flex flex-row justify-between items-center mx-auto'>
           <div>
             <p className='text-2xl font-semibold whitespace-nowrap text-black'>
@@ -18,7 +18,7 @@ const Header = () => {
             </p>
             <p className='text-sm'>{now}</p>
           </div>
-          <div className='flex flex-row items-center'>
+          <div className='flex flex-row items-center justify-end'>
           <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-20'>
             <li>
               <a

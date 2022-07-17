@@ -24,4 +24,11 @@
       .floating {
         animation: float 6s ease-in-out infinite;
       }
+
+      .lineclamp {
+          text-overflow: ellipsis;
+          /* white-space: wrap; */
+          overflow: hidden;
+          line-clamp: 4; 
+      }
 }

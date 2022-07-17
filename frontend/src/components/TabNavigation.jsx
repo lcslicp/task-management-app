@@ -20,9 +20,9 @@ const TabNavigation = () => {
 
   const [activeStatusTab, setActiveStatusTab] = useState(tabdata[0].id);
 
-  const statusTabTitles = tabdata.map((tab) => (
+  const statusTabTitles = tabdata.map((tab, id) => (
     <li
-    key={tab.id}
+    key={id}
       onClick={() => setActiveStatusTab(tab.id)}
       className={
         
@@ -35,20 +35,21 @@ const TabNavigation = () => {
     </li>
   ));
 
-  const tabContents = tabdata.map((content) => (
-    <div className='w-full flex-row border-4 border-brightblue' style={activeStatusTab === content.id ? {} : { display: 'none' }} >
+  const tabContents = tabdata.map((content, id) => (
+    <div className='w-full' key={id} style={activeStatusTab === content.id ? {} : { display: 'none' }} >
       {content.tabContent}
     </div>
   ));
 
   return (
-    <div>
-      <div className='text-normal font-medium text-center text-gray-500 border-b border-gray-300'>
+    <div className='pl-72 pt-28'>
+      <div className='text-normal font-medium text-center text-gray-500 border-b fixed bg-white z-20  w-full'>
         <ul className='flex flex-row -mb-px px-8 mt-4'>{statusTabTitles}</ul>
       </div>
-      <div className='px-8'>
-        <div id='tab-contents ' className='flex flex-row border-4 border-darkerblue'>{tabContents}</div>
+      <div className='px-8 pt-28 pb-8 '>
+        <div id='tab-contents' className='w-full columns-3 gap-8 break-inside-avoid'>{tabContents}</div>
       </div>
+      <div className='fixed bg-lightergray w-full h-full -z-10 inset-0'></div>
     </div>
   );
 };
