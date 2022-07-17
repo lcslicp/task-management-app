@@ -6,12 +6,10 @@ import doowitLogo from '../assets/icons/doowit-logo.svg';
 import defaultDisplayphoto from '../assets/icons/default-displayphoto.svg';
 
 const Sidebar = () => {
-  const LOGOUT_URL = '/logout';
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    axios
-    .get(LOGOUT_URL);
+    localStorage.removeItem('token');
     navigate('/login');
 
   }
@@ -184,7 +182,7 @@ const Sidebar = () => {
                   clipRule='evenodd'
                 ></path>
               </svg>
-              <span className='flex-1 ml-3 whitespace-nowrap' onClick={handleLogout}>Log Out</span>
+              <span className='flex-1 ml-3 whitespace-nowrap' type='button' onClick={handleLogout}>Log Out</span>
             </a>
           </li>
         </ul>

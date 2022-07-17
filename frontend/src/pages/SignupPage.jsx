@@ -74,10 +74,11 @@ const SignupPage = () => {
 
           {
             headers: { 'Content-Type': 'application/json' },
-            // withCredentials: true,
+            withCredentials: true,
           },
       );
       localStorage.setItem('token', response?.data?.token)
+      localStorage.setItem('token', JSON.stringify(response?.data?.token))
       handleFormReset();
       // navigate('/welcome/login');
       console.log(data);

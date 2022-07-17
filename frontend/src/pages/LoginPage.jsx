@@ -1,8 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext  } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import axios from '../api/axios.js';
+import { UserContext } from '../context/userContext';
 import doowitLogo from '../assets/icons/doowit-logo-colored.svg';
+
 
 const LOGIN_URL = '/login';
 
@@ -14,6 +16,7 @@ const LoginPage = () => {
 
   const [userEmail, setUserEmail] = useState('');
   const [pwd, setPwd] = useState('');
+  const [setLoggedUser] = useContext(UserContext);
   const [errMsg, setErrMsg] = useState('');
 
   useEffect(() => {
@@ -24,9 +27,6 @@ const LoginPage = () => {
     setErrMsg('');
   }, [userEmail, pwd]);
 
-  const storeToken = () => {
-    
-  }
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -37,21 +37,23 @@ const LoginPage = () => {
         {
           headers: {
             'Content-Type': 'application/json' },
-          // withCredentials: true,
+            withCredentials: true,
         }
         );
-        console.log(response);
-      localStorage.setItem('token', response?.data?.token)
+      localStorage.setItem('token', JSON.stringify(response?.data?.token))
+      // setLoggedUser(response?.data?.token);
+      // setHeader('x-auth-token', response?.data?.token)
+      
+      navigate('/dashboard');
       setUserEmail('');
       setPwd('');
-      // navigate('/dashboard');
     } catch (error) {
       if (!error?.response) {
         setErrMsg('No Server Response');
       } else if (error.response?.status === 400) {
         setErrMsg('Invalid credentials, please try again.');
       } else if (error.response?.status === 401) {
-        setErrMsg('Unauthorized.');
+        setErrMsg('Invalid credentials, please try again.');
       } else {
         setErrMsg('Login Failed');
       }

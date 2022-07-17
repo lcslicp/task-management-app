@@ -14,7 +14,7 @@ const LandingPage = () => {
             <li>
               <a
                 href='#'
-                className='block py-2 pr-4 pl-3 ml-12 text-black font-semibold hover:text-brightblue md:p-0'
+                className='block py-2 pr-4 pl-3 ml-12 text-black font-semibold hover:text-brightblue hover:scale-110 md:p-0'
               >
                 How It Works
               </a>
@@ -22,7 +22,7 @@ const LandingPage = () => {
             <li>
               <a
                 href='#'
-                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue md:p-0'
+                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue hover:scale-110 md:p-0'
               >
                 Support
               </a>
@@ -30,7 +30,7 @@ const LandingPage = () => {
             <li>
               <a
                 href='#'
-                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue md:p-0'
+                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue hover:scale-110 md:p-0'
               >
                 Help
               </a>
@@ -42,8 +42,8 @@ const LandingPage = () => {
           <h1 className='text-6xl text-darkblue pt-40'>
             A step ahead in managing tasks.
           </h1>
-          <p className='text-base w-2/3 pt-5 pb-20'>
-            Streamline tasks, track productivity, build projects like no other.
+          <p className='text-base w-2/3 pt-8 pb-14'>
+            Streamline tasks, track productivity, <br /> build projects like no other.
             Do it with{' '}
             <em>
               <strong>Doowit</strong>

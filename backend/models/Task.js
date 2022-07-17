@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-// import User from './User.js';
+import User from './User.js';
 
 const { model, Schema } = mongoose;
 const optionRequired = {
@@ -8,11 +8,11 @@ const optionRequired = {
 };
 
 const TaskSchema = new Schema({
-    // user: {
-    //     type: Schema.Types.ObjectId,
-    //     required: true,
-    //     ref: User,
-    // },
+    user: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: User,
+    },
     title: optionRequired,
     description: {
         type: String,

@@ -35,6 +35,7 @@ const signup = async (req, res) => {
 
     res.cookie('jwt', accessToken, {
       maxAge:  maxAge * 1000,
+      httpOnly: true,
     });
 
     if (user) {
@@ -71,7 +72,7 @@ const authenticateUser = async (req, res) => {
 
     res.cookie('jwt', accessToken, {
       maxAge:  maxAge * 1000,
-      sameSite: 'none',
+      httpOnly: true,
     });
 
     res
@@ -85,10 +86,6 @@ const authenticateUser = async (req, res) => {
     res.sendStatus(401);
   }
 };
-
-// const generateToken = (id) => {
-//   return jwt.sign({ id }, '' + process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
-// };
 
 const UserController = {
   signup,

@@ -9,7 +9,7 @@ import errorHandler from './middleware/errorHandler.js';
 
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-// import verifyJWT from './middleware/veriryJWT.js';
+import verifyJWT from './middleware/veriryJWT.js';
 
 
 dotenv.config();
@@ -17,14 +17,17 @@ dotenv.config();
 const app = express();
 
 app.use(logger('dev'));
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: ['http://localhost:3000']
+}));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cookieParser());
 
 
 app.use('/', userRoutes);
-// app.use('/', verifyJWT);
+app.use('/', verifyJWT);
 app.use('/', taskRoutes);
 
 app.use(errorHandler);
