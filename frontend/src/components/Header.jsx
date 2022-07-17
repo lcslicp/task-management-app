@@ -9,7 +9,6 @@ const Header = () => {
     month: 'long',
     day: 'numeric',
   };
-
   const token = localStorage.getItem('token');
   const decoded = jwt_decode(token);
   const id = decoded.user;
@@ -18,9 +17,9 @@ const Header = () => {
   const [firstName, setFirstName] = useState('Luv');
 
   const getUser = async () => {
+    
     await axios.get(USER_URL).then((response) => {
       setFirstName(response?.data?.firstName);
-      // console.log(response);
     })
   
   }

@@ -63,24 +63,23 @@ const SignupPage = () => {
       return;
     }
     try {
-      const { data } = await axios.post(
-        SIGNUP_URL, JSON.stringify(
-          {
-            firstName: userFirstName,
-            lastName: userLastName,
-            email: userEmail,
-            password: pwd,
-          }),
+      const response = await axios.post(
+        SIGNUP_URL,
+        JSON.stringify({
+          firstName: userFirstName,
+          lastName: userLastName,
+          email: userEmail,
+          password: pwd,
+        }),
 
-          {
-            headers: { 'Content-Type': 'application/json' },
-            withCredentials: true,
-          },
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
       );
-      localStorage.setItem('token', response?.data?.token)
-      localStorage.setItem('token', JSON.stringify(response?.data?.token))
+      localStorage.setItem('token', JSON.stringify(response?.data?.token));
+      navigate('/dashboard');
       handleFormReset();
-      // navigate('/welcome/login');
       console.log(data);
     } catch (error) {
       if (!error?.response) {
@@ -98,11 +97,11 @@ const SignupPage = () => {
   return (
     <section className='w-screen h-screen flex flex-row'>
       <div className='flex flex-col w-2/5 pl-32 pt-32'>
-      <img src={doowitLogo} className='w-1/4 h-auto pr-8' />
+        <img src={doowitLogo} className='w-1/4 h-auto pr-8' />
         <h2 className='text-5xl font-bold text-darkblue pt-4'>Sign up</h2>
         <p className='text-sm w-2/3 pt-5 pb-4'>Create your account.</p>
         <div>
-          <div className={errMsg ? 'block' : 'hidden'} >
+          <div className={errMsg ? 'block' : 'hidden'}>
             <p
               ref={errRef}
               className='text-xs bg-grey text-white w-2/3 p-4 rounded-lg'
@@ -205,15 +204,20 @@ const SignupPage = () => {
                 Sign Up
               </button>
               <p className='text-xs pt-4'>
-                Already have an account? <strong><Link to='/login' className='hover:underline hover:italic'>Log in.</Link></strong>
+                Already have an account?{' '}
+                <strong>
+                  <Link to='/login' className='hover:underline hover:italic'>
+                    Log in.
+                  </Link>
+                </strong>
               </p>
             </div>
           </form>
         </div>
       </div>
       <div className='bg-brightblue w-2/3 flex flex-col'>
-        <div  className='flex flex-row items-center justify-end gap-10 pt-12'>
-        <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-24 gap-5 z-10'>
+        <div className='flex flex-row items-center justify-end gap-10 pt-12'>
+          <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-24 gap-5 z-10'>
             <li>
               <a
                 href='#'
@@ -242,9 +246,10 @@ const SignupPage = () => {
         </div>
 
         <div>
-          <h2 className='text-5xl text-white pt-24 pl-16 w-2/3'>Join the Doowit community today!</h2>
+          <h2 className='text-5xl text-white pt-24 pl-16 w-2/3'>
+            Join the Doowit community today!
+          </h2>
         </div>
-      
       </div>
     </section>
   );

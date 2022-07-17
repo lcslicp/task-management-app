@@ -85,16 +85,19 @@ const authenticateUser = async (req, res) => {
 
 //GET User
 const reqUser = async (req, res) => {
-  const { _id, firstName, lastName, email } = req.body;
+  const id = req.params['id'];
+  if (!id) return res.sendStatus(404);
 
-  const foundUser = await User.findOne({ id: _id });
-  if (!foundUser) return res.sendStatus(404); 
-
-  res.status(200).json({
-    firstName: foundUser.firstName,
-    lastName: foundUser.lastName,
-    email: foundUser.email,
-  });
+  try {
+    const user = await User.findOne({ _id: id });
+    res.json({
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+  } catch (error) {
+    console.error;
+  }
 };
 
 const UserController = {

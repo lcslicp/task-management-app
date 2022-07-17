@@ -1,10 +1,9 @@
-import React, { useRef, useState, useEffect, useContext  } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import axios from '../api/axios.js';
 import { UserContext } from '../context/userContext';
 import doowitLogo from '../assets/icons/doowit-logo-colored.svg';
-
 
 const LOGIN_URL = '/login';
 
@@ -27,23 +26,22 @@ const LoginPage = () => {
     setErrMsg('');
   }, [userEmail, pwd]);
 
-
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-       const response = await axios.post(
+      const response = await axios.post(
         LOGIN_URL,
         JSON.stringify({ email: userEmail, password: pwd }),
         {
           headers: {
-            'Content-Type': 'application/json' },
-            withCredentials: true,
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
         }
-        );
-      localStorage.setItem('token', JSON.stringify(response?.data?.token))
-      setLoggedUser(response?.data?.token);
+      );
+      localStorage.setItem('token', JSON.stringify(response?.data?.token));
+      // setLoggedUser(response?.data?.token);
       // setHeader('x-auth-token', response?.data?.token)
-      
       navigate('/dashboard');
       setUserEmail('');
       setPwd('');
@@ -64,9 +62,11 @@ const LoginPage = () => {
   return (
     <section className='w-screen h-screen flex flex-row'>
       <div className='flex flex-col w-2/5 pl-32 pt-48'>
-      <img src={doowitLogo} className='w-1/4 h-auto pr-8' />
-        <h2  className='text-5xl font-bold text-darkblue pt-4'>Log in</h2>
-        <p className='text-sm w-2/3 pt-5 pb-8'>Please enter your login details.</p>
+        <img src={doowitLogo} className='w-1/4 h-auto pr-8' />
+        <h2 className='text-5xl font-bold text-darkblue pt-4'>Log in</h2>
+        <p className='text-sm w-2/3 pt-5 pb-8'>
+          Please enter your login details.
+        </p>
         <div>
           <div className={errMsg ? 'block' : 'hidden'}>
             <p
@@ -119,8 +119,8 @@ const LoginPage = () => {
         </div>
       </div>
       <div className='bg-brightblue w-2/3 flex flex-col'>
-        <div  className='flex flex-row items-center justify-end gap-10 pt-12'>
-        <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-24 gap-5 z-10'>
+        <div className='flex flex-row items-center justify-end gap-10 pt-12'>
+          <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-24 gap-5 z-10'>
             <li>
               <a
                 href='#'
@@ -149,10 +149,13 @@ const LoginPage = () => {
         </div>
 
         <div>
-          <h2 className='text-5xl text-white pt-24 pl-16 w-full'>Welcome back to Doowit!</h2>
-          <p className='text-2xl text-white pt-1 pl-16 w-2/3'>Your tasks are waiting.</p>
+          <h2 className='text-5xl text-white pt-24 pl-16 w-full'>
+            Welcome back to Doowit!
+          </h2>
+          <p className='text-2xl text-white pt-1 pl-16 w-2/3'>
+            Your tasks are waiting.
+          </p>
         </div>
-      
       </div>
     </section>
   );
