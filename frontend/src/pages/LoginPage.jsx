@@ -15,7 +15,7 @@ const LoginPage = () => {
 
   const [userEmail, setUserEmail] = useState('');
   const [pwd, setPwd] = useState('');
-  const [setLoggedUser] = useContext(UserContext);
+  const [loggedUser, setLoggedUser] = useContext(UserContext);
   const [errMsg, setErrMsg] = useState('');
 
   useEffect(() => {
@@ -40,7 +40,6 @@ const LoginPage = () => {
         }
       );
       localStorage.setItem('token', JSON.stringify(response?.data?.token));
-      // setLoggedUser(response?.data?.token);
       // setHeader('x-auth-token', response?.data?.token)
       navigate('/dashboard');
       setUserEmail('');

@@ -45,7 +45,7 @@ const Header = () => {
             <li>
               <a
                 href='#'
-                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue md:p-0'
+                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue hover:scale-110 md:p-0'
               >
                 How It Works
               </a>
@@ -53,7 +53,7 @@ const Header = () => {
             <li>
               <a
                 href='#'
-                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue md:p-0'
+                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue hover:scale-110 md:p-0'
               >
                 Support
               </a>
@@ -61,7 +61,7 @@ const Header = () => {
             <li>
               <a
                 href='#'
-                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue md:p-0'
+                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue hover:scale-110 md:p-0'
               >
                 Help
               </a>

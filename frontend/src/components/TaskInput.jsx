@@ -9,8 +9,11 @@ const TaskInput = () => {
   const [taskDue, setTaskDue] = useState('');
 
   const [popup, setPopup] = useState(false);
-
+  const token = JSON.parse(localStorage.getItem('token'));
   const CREATE_TASK_URL = '/compose/newtask';
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+};
 
   const handleFormReset = () => {
     setTaskTitle('');
@@ -29,7 +32,8 @@ const TaskInput = () => {
         status: taskStatus,
         priority: taskPriority,
         dueDate: taskDue,
-      })
+      }, config
+      )
       .then((res) => console.log(res))
       .then(() => handleFormReset())
       .then(() => handleModalClose())

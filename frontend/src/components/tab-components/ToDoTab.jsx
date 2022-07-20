@@ -8,19 +8,18 @@ import EmptyState from '../EmptyState';
 
 const ToDoTab = () => {
   const [todoTasks, setTodoTasks] = useState([]);
-  const [loggedUser] = useContext(UserContext);
-
+  const token = JSON.parse(localStorage.getItem('token'));
   const TODO_TASK_URL = '/tasks/todo';
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+};
 
   const fetchTasksData = async () => {
     await axios.get(TODO_TASK_URL,
-      {
-        headers: {
-          'Content-Type': 'application/json' },
-          withCredentials: true,
-          'x-auth-token': loggedUser,
-      }).then((response) => {
+      config
+      ).then((response) => {
       setTodoTasks(response.data);
+      
     });
   };
 

@@ -31,7 +31,9 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
+    window.location.reload();
   }
+  
   return (
     <aside className='w-72 fixed z-30' aria-label='Sidebar'>
       <div className='h-screen overflow-y-auto py-4 px-8 bg-darkblue'>
@@ -73,7 +75,6 @@ const Sidebar = () => {
               type='button'
               className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
               aria-controls='sort-dropdown'
-              data-collapse-toggle='sort-dropdown'
             >
               <svg
                 className='flex-shrink-0 w-6 h-6 text-white transition duration-75'
@@ -89,12 +90,10 @@ const Sidebar = () => {
               </svg>
               <span
                 className='flex-1 ml-3 text-left whitespace-nowrap'
-                sidebar-toggle-item
               >
                 Sort
               </span>
               <svg
-                sidebar-toggle-item
                 className='w-6 h-6'
                 fill='currentColor'
                 viewBox='0 0 20 20'
@@ -131,7 +130,6 @@ const Sidebar = () => {
               type='button'
               className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
               aria-controls='sort-dropdown'
-              data-collapse-toggle='sort-dropdown'
             >
               <svg
                 className='flex-shrink-0 w-6 h-6 text-white transition duration-75'
@@ -147,12 +145,10 @@ const Sidebar = () => {
               </svg>
               <span
                 className='flex-1 ml-3 text-left whitespace-nowrap'
-                sidebar-toggle-item
               >
                 Filter
               </span>
               <svg
-                sidebar-toggle-item
                 className='w-6 h-6'
                 fill='currentColor'
                 viewBox='0 0 20 20'
