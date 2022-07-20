@@ -4,6 +4,10 @@ import { useState } from 'react';
 
 const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
   const [dropdown, setDropdown] = useState('hidden');
+  const token = JSON.parse(localStorage.getItem('token'));
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+};
   
   const toggleTask = () => {
     dropdown === 'hidden' ? setDropdown('visible') : setDropdown('hidden');
@@ -14,7 +18,11 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
   };
 
   const handleDelete = async () => {
-    await axios.delete(`/${id}`).catch((error) => console.error(error));
+    await axios.delete(`/${id}`,
+    config
+    ).then((response) => {
+    console.log(response.data)}).then(toggleTask()).then(window.location.reload())
+    .catch((error) => console.error(error));
   };
 
   return (

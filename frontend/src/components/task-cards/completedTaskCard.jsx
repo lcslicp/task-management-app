@@ -4,6 +4,10 @@ import axios from '../../api/axios';
 
 const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
     const [dropdown, setDropdown] = useState('hidden');
+    const token = JSON.parse(localStorage.getItem('token'));
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+};
     
     const toggleTask = () => {
       dropdown === 'hidden' ? setDropdown('visible') : setDropdown('hidden');
@@ -14,9 +18,12 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
     };
   
     const handleDelete = async () => {
-      await axios.delete(`/${id}`).catch((error) => console.error(error));
+      await axios.delete(`/${id}`,
+      config
+      ).then((response) => {
+      console.log(response.data)}).then(toggleTask()).then(window.location.reload())
+      .catch((error) => console.error(error));
     };
-
   return (
     <div
       className='p-6 max-w-sm pl-8 bg-grey bg-opacity-10 rounded-lg border hover:grey max-h-96 mb-8 break-inside-avoid'
@@ -43,7 +50,7 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
           style={{ visibility: `${dropdown}` }}
           className='relative -left-5 z-10 w-24 text-base list-none bg-lightergray rounded divide-y divide-gray-100 shadow'
         >
-          <ul class='py-1' aria-labelledby='dropdownButton'>
+          <ul className='py-1' aria-labelledby='dropdownButton'>
             <li>
               <button
                 onClick={handleEdit}

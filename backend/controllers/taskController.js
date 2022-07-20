@@ -60,7 +60,9 @@ const editTask = async (req, res) => {
 //Delete existing task
 const deleteTask = async (req, res) => {
     try {
-        await Task.findOneAndDelete(req.params.id);
+        await Task.findOneAndDelete({
+            _id: req.params.id,
+        });
 
         res.status(200).json('Task successfully deleted.');
     } catch(error) {
@@ -137,7 +139,7 @@ const getCompletedTasks = async (req, res) => {
   }
 
 }
-
+//GET specific task
 const getSingleTask = async (req, res) => {
     try {
        const task = await Task.findOne({

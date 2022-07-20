@@ -55,7 +55,7 @@ const Sidebar = () => {
           </li>
           <li selected>
             <a
-              href='#'
+              href='/dashboard'
               className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
             >
               <svg
@@ -67,7 +67,7 @@ const Sidebar = () => {
                 <path d='M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z'></path>
                 <path d='M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z'></path>
               </svg>
-              <a href='/dashboard' className='ml-3'>Dashboard</a>
+              <span className='ml-3'>Dashboard</span>
             </a>
           </li>
           <li>
