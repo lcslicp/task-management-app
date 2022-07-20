@@ -89,7 +89,7 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
         <p className='text-sm font-bold text-black  pt-4'>
           Due Date: {dueDate}
         </p>
-        <p className='text-sm font-normal text-grey pr-2'>{description}</p>
+        <p className='text-sm font-normal text-grey pr-2'>{!description ? '' : description.substring(0,250)}...</p>
         <p className='pt-5 pb-1 text-xs font text-grey opacity-40'>
           Date Added: {createdAt}
         </p>

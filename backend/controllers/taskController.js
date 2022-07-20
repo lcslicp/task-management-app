@@ -9,7 +9,6 @@ const addTask = async (req, res) =>{
     dueDate, 
     createdAt
  } = req.body;
- 
 
     try {
         const task = new Task({
@@ -139,6 +138,21 @@ const getCompletedTasks = async (req, res) => {
 
 }
 
+const getSingleTask = async (req, res) => {
+    try {
+       const task = await Task.findOne({
+          _id: req.params.id,
+       });
+       res.json(task);
+    } catch (error) {
+        res.status(400).json({
+            error: 'Task not found.',
+      message: error.message,
+        })
+    }
+  
+  }
+
 //Batch update task status
 // const batchEditTasks = async ({ params, value }, res) => {
 //     const { status } = value.body;
@@ -187,6 +201,7 @@ const getCompletedTasks = async (req, res) => {
     getTodoTasks,
     getInProgressTasks,
     getCompletedTasks,
+    getSingleTask,
     // batchEditTasks,
     // batchDeleteTasks,
   };

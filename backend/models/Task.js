@@ -7,6 +7,11 @@ const optionRequired = {
     required: true,
 };
 
+const today = new Date();
+let dd = today.getDate();
+let mm = today.getMonth(); 
+let yyyy = today.getFullYear();
+
 const TaskSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
@@ -24,7 +29,7 @@ const TaskSchema = new Schema({
     },
     createdAt: {
         type: String,
-        default: Date.now()
+        default: new Date().toLocaleDateString("en-US"),
     }
 });
 

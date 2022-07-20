@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from '../../api/axios';
-import { UserContext } from '../../context/userContext';
 
 import TaskCard from '../task-cards/defaultTaskCard';
 import EmptyState from '../EmptyState';
-
 
 const ToDoTab = () => {
   const [todoTasks, setTodoTasks] = useState([]);
@@ -19,7 +17,6 @@ const ToDoTab = () => {
       config
       ).then((response) => {
       setTodoTasks(response.data);
-      
     });
   };
 
@@ -28,10 +25,9 @@ const ToDoTab = () => {
   }, []);
 
   return (
-    
     <div>
       {(todoTasks.length === 0)  ? < EmptyState /> :
-      <div className=''>
+      <div>
       {todoTasks.map((task, id) => (
         <TaskCard
           id={task._id}

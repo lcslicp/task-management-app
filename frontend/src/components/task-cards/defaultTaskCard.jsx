@@ -18,7 +18,7 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
   };
 
   return (
-    <div className='p-6 max-w-sm pl-8 bg-white rounded-lg border border-lightergray shadow-md hover:grey max-h-96 mb-8 break-inside-avoid'>
+    <div className='p-6 max-w-sm pl-8 bg-white rounded-lg border border-lightergray shadow-md hover:grey max-h-96 mb-8 break-inside-avoid '>
       <div className='flex justify-end '>
         <button
           id='dropdownButton'
@@ -87,7 +87,7 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
         <p className='text-sm font-bold text-black  pt-4'>
           Due Date: {dueDate}
         </p>
-        <p className='text-sm font-normal text-grey pr-2 max-h-32 lineclamp'>{description}</p>
+        <p className='text-sm font-normal text-grey pr-2'>{!description ? '' : description.substring(0,250)}...</p>
         <p className='pt-5 pb-1 text-xs font text-grey opacity-40'>
           Date Added: {createdAt}
         </p>
