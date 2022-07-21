@@ -80,7 +80,7 @@ const SignupPage = () => {
 
         {
           headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
+          withCredentials: false,
         }
       );
       localStorage.setItem('token', JSON.stringify(response?.data?.token));
