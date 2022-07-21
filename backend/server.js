@@ -17,7 +17,7 @@ import errorHandler from './middleware/errorHandler.js';
 dotenv.config();
 
 const app = express();
-
+const PORT = process.env.PORT || 5000;
 app.use(logger('dev'));
 app.use(cors({
     credentials: true,
@@ -27,14 +27,6 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-if(process.env.NODE_ENV === 'production') {
-    app.use(express.static('frontend/dist'));
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
-    });
-}
-
 
 
 app.get('/', (req, res) => { res.send('Hello from Express!')});
@@ -49,10 +41,16 @@ mongoose.connect(process.env.DB_HOST, {
     useUnifiedTopology: true
 }).then(() => console.log('Established connection with MongoDB.')).catch(console.error);
 
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('frontend/dist' ));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
+    })
+}
 
 
 
 
-const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, console.log(`Server running in Port ${PORT}`));
