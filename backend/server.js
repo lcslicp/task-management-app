@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 // import path from 'path';
 import errorHandler from './middleware/errorHandler.js';
+import handleCORS from './middleware/handleCORS.js';
 
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -25,8 +26,10 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cookieParser());
 
+
 app.get('/', (req, res) => { res.send('Hello from Express!')});
 app.use('/', userRoutes);
+app.use('/', handleCORS);
 app.use('/', verifyJWT);
 app.use('/', taskRoutes);
 
