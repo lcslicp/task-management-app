@@ -7,11 +7,11 @@ export default defineConfig({
   esbuild: {
     logOverride: { 'this-is-undefined-in-esm': 'silent' }
 },
-// build: {
-//   rollupOptions: {
-//     external: [
-//       /^node:.*/,
-//     ]
-//   }
-// }
+build: {
+  rollupOptions: {
+    external: [
+      /^node:.*/,
+    ]
+  }
+}
 })
