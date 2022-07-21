@@ -4,12 +4,14 @@ import cors from 'cors';
 import logger from 'morgan';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
-// import path from 'path';
-import errorHandler from './middleware/errorHandler.js';
+import path from 'path';
+import __dirname from './dirname.js';
 
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import verifyJWT from './middleware/veriryJWT.js';
+import errorHandler from './middleware/errorHandler.js';
+
 
 
 dotenv.config();
@@ -24,6 +26,12 @@ app.use(cors({
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(express.static(path.join(__dirname, 'frontend/dist')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/dist', 'assets'))
+});
 
 
 app.get('/', (req, res) => { res.send('Hello from Express!')});
