@@ -6,5 +6,12 @@ export default defineConfig({
   plugins: [react()],
   esbuild: {
     logOverride: { 'this-is-undefined-in-esm': 'silent' }
+},
+build: {
+  rollupOptions: {
+    external: [
+      /^node:.*/,
+    ]
+  }
 }
 })
