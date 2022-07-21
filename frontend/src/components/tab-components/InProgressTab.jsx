@@ -22,7 +22,7 @@ const InProgressTab = () => {
 
   useEffect(() => {
     fetchTasksData();
-  }, []);
+  }, [inProgressTasks]);
 
   return (
     <div>

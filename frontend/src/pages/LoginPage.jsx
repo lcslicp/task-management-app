@@ -2,8 +2,8 @@ import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import axios from '../api/axios.js';
-import { UserContext } from '../context/userContext';
 import doowitLogo from '../assets/icons/doowit-logo-colored.svg';
+import loginImage from '../assets/images/loginpage-img.png';
 
 const LOGIN_URL = '/login';
 
@@ -15,8 +15,8 @@ const LoginPage = () => {
 
   const [userEmail, setUserEmail] = useState('');
   const [pwd, setPwd] = useState('');
-  const [loggedUser, setLoggedUser] = useContext(UserContext);
   const [errMsg, setErrMsg] = useState('');
+  const [passwordVisibility, setPasswordVisibility] = useState('password');
 
   useEffect(() => {
     emailRef.current.focus();
@@ -25,6 +25,10 @@ const LoginPage = () => {
   useEffect(() => {
     setErrMsg('');
   }, [userEmail, pwd]);
+
+  const togglePassword = () => {
+    passwordVisibility === 'password' ? setPasswordVisibility('text') : setPasswordVisibility('password');
+  }
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -92,7 +96,7 @@ const LoginPage = () => {
             />
             <label htmlFor='password'></label>
             <input
-              type='password'
+              type={passwordVisibility}
               id='password'
               placeholder='Password'
               value={pwd}
@@ -100,6 +104,9 @@ const LoginPage = () => {
               required
               className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-2/3 p-2.5 mt-6'
             />
+            <div className='pt-4'>
+              <input type='checkbox' onClick={togglePassword} className='rounded-md' /><span className='text-sm pl-2'> Show Password</span></div>
+            
             <div>
               <button className='w-1/4 text-white bg-brightblue hover:bg-brighterblue hover:scale-110 focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center disabled:bg-grey disabled:opacity-30 disabled:cursor-not-allowed mt-8'>
                 Log in
@@ -148,12 +155,14 @@ const LoginPage = () => {
         </div>
 
         <div>
-          <h2 className='text-5xl text-white pt-24 pl-16 w-full'>
+          
+          <h2 className='text-5xl text-white pt-24 pl-24 w-full'>
             Welcome back to Doowit!
           </h2>
-          <p className='text-2xl text-white pt-1 pl-16 w-2/3'>
+          <p className='text-2xl text-white pt-1 pl-24 w-2/3'>
             Your tasks are waiting.
           </p>
+          <img src={loginImage} alt='task cards' className='pl-32 pr-8 pt-1 w-3/4  h-auto' />
         </div>
       </div>
     </section>

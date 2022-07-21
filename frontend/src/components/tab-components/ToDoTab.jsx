@@ -22,7 +22,7 @@ const ToDoTab = () => {
 
   useEffect(() => {
     fetchTasksData();
-  }, []);
+  }, [todoTasks]);
 
   return (
     <div>

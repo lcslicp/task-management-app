@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from '../api/axios.js';
 
 import doowitLogo from '../assets/icons/doowit-logo-colored.svg';
+import signUpImage from '../assets/images/signuppage-img.png';
 
 const SIGNUP_URL = '/signup';
 
@@ -25,6 +26,7 @@ const SignupPage = () => {
   const [pwd, setPwd] = useState('');
   const [validPwd, setValidPwd] = useState(false);
   const [pwdFocus, setPwdFocus] = useState(false);
+  const [passwordVisibility, setPasswordVisibility] = useState('password');
 
   const [matchPwd, setMatchPwd] = useState('');
   const [validMatch, setValidMatch] = useState(false);
@@ -54,6 +56,10 @@ const SignupPage = () => {
     setPwd('');
     setMatchPwd('');
   };
+
+  const togglePassword = () => {
+    passwordVisibility === 'password' ? setPasswordVisibility('text') : setPasswordVisibility('password');
+  }
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
@@ -147,7 +153,7 @@ const SignupPage = () => {
             />
             <label htmlFor='pwd'></label>
             <input
-              type='password'
+              type={passwordVisibility}
               id='pwd'
               placeholder='Set Password'
               value={pwd}
@@ -176,7 +182,7 @@ const SignupPage = () => {
             </div>
             <label htmlFor='confirmpwd'></label>
             <input
-              type='password'
+              type={passwordVisibility}
               id='confirmpwd'
               placeholder='Confirm Password'
               value={matchPwd}
@@ -196,6 +202,8 @@ const SignupPage = () => {
                 Password does not match.
               </p>
             </div>
+            <div className='pt-4'>
+              <input type='checkbox' onClick={togglePassword} className='rounded-md' /><span className='text-sm pl-2'> Show Password</span></div>
             <div>
               <button
                 disabled={!validPwd || !validMatch ? true : false}
@@ -215,7 +223,7 @@ const SignupPage = () => {
           </form>
         </div>
       </div>
-      <div className='bg-brightblue w-2/3 flex flex-col'>
+      <div className='bg-brightblue w-2/3 flex flex-col overflow-x-hidden'>
         <div className='flex flex-row items-center justify-end gap-10 pt-12'>
           <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-24 gap-5 z-10'>
             <li>
@@ -246,9 +254,10 @@ const SignupPage = () => {
         </div>
 
         <div>
-          <h2 className='text-5xl text-white pt-24 pl-16 w-2/3'>
+          <h2 className='text-5xl text-white pt-12 pl-24 w-2/3'>
             Join the Doowit community today!
           </h2>
+          <img src={signUpImage} alt='task cards' className='ml-5 pl-12 pr-24 pt-1 w-full  h-auto' />
         </div>
       </div>
     </section>
