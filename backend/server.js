@@ -19,7 +19,7 @@ const app = express();
 app.use(logger('dev'));
 app.use(cors({
     credentials: true,
-    origin: ['http://localhost:3000']
+    origin: ['https://doowit.netlify.app/']
 }));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
