@@ -19,8 +19,15 @@ const app = express();
 app.use(logger('dev'));
 app.use(cors({
     credentials: true,
-    origin: ['https://doowit.netlify.app/']
+    origin: ['https://doowit.netlify.app/'],
 }));
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://doowit.netlify.app/");
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+  });
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cookieParser());
