@@ -13,10 +13,6 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
       dropdown === 'hidden' ? setDropdown('visible') : setDropdown('hidden');
     };
   
-    const handleEdit = async () => {
-      await axios.put(`/edit/${id}`).catch((error) => console.error(error));
-    };
-  
     const handleDelete = async () => {
       await axios.delete(`/${id}`,
       config
@@ -36,7 +32,7 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
            onClick={toggleTask}
         >
           <svg
-            className='w-4 h-4 relative left-24 -top-8 hover:bg-gray-100 focus:outline-none border-1 rounded-full'
+            className='w-4 h-4 relative left-24 hover:bg-gray-100 focus:outline-none border-1 rounded-full'
             fill='currentColor'
             viewBox='0 0 20 20'
             xmlns='http://www.w3.org/2000/svg'
@@ -52,14 +48,6 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
         >
           <ul className='py-1' aria-labelledby='dropdownButton'>
             <li>
-              <button
-                onClick={handleEdit}
-                className='block py-2 px-4 w-full text-sm text-gray-700 hover:bg-gray-100'
-              >
-                Edit
-              </button>
-            </li>
-            <li>
             <button
                 onClick={handleDelete}
                 className='block py-2 px-4 w-full text-sm text-gray-700 hover:bg-gray-100'
@@ -71,7 +59,7 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
         </div>
       </div>
       <Link to={`/${id}`} className='flex flex-col -mt-14'>
-        <h1 className='text-2xl font-bold tracking-tight text-black pb-2'>
+        <h1 className='text-2xl font-bold tracking-tight text-black pb-2 pt-8'>
           {title}
         </h1>
         <p

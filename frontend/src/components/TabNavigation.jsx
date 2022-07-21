@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 import ToDoTab from './tab-components/ToDoTab';
 import InProgressTab from './tab-components/InProgressTab';
 import CompletedTab from './tab-components/CompletedTab';
-import OverdueTab from './tab-components/Overdue';
 
 const TabNavigation = () => {
   const tabdata = [
@@ -15,7 +14,6 @@ const TabNavigation = () => {
 
     { id: '3', key: '3', tabTitle: 'COMPLETED', tabContent: <CompletedTab /> },
 
-    { id: '4', key: '4', tabTitle: 'OVERDUE', tabContent: <OverdueTab /> },
   ];
 
   const [activeStatusTab, setActiveStatusTab] = useState(tabdata[0].id);
