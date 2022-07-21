@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "task management app",
   "main": "server.js",
+  "engines": {
+    "node": "17.x",
+    "npm": "8.5.2"
+},
   "type": "module",
   "scripts": {
     "start": "node backend/server.js",
