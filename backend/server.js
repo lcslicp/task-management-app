@@ -26,7 +26,7 @@ app.use(function (req, res, next) {
 
 app.use(logger('dev'));
 app.use(cors({
-    origin: 'https://doowit.netlify.app/',
+    origin: '*',
     credentials: true,
 }));
 
