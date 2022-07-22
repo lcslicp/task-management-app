@@ -74,7 +74,7 @@ const LandingPage = () => {
           </Link>
         </div>
       </div>
-      <div className='absolute right-8 w-1/2 pt-24 floating'>
+      <div className='absolute right-8 w-1/2 pt-48 floating'>
       <img src={landingImage} alt='doowit' className='h-auto' />
         </div>
     </section>
