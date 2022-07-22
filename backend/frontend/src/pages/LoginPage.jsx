@@ -67,7 +67,7 @@ const LoginPage = () => {
       <div className='flex flex-col w-2/5 pl-32 pt-48'>
         <img src={doowitLogo} className='w-1/4 h-auto pr-8' />
         <h2 className='text-5xl font-bold text-darkblue pt-4'>Log in</h2>
-        <p className='text-sm w-2/3 pt-5 pb-8'>
+        <p className='text-sm w-2/3 pt-5 pb-8 '>
           Please enter your login details.
         </p>
         <div>
