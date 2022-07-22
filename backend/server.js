@@ -5,7 +5,8 @@ import logger from 'morgan';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import path from 'path';
-import __dirname from './dirname.js';
+import { fileURLToPath } from 'url';
+const __dirname = fileURLToPath(import.meta.url);
 
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
