@@ -15,6 +15,14 @@ import verifyJWT from './middleware/veriryJWT.js';
 dotenv.config();
 
 const app = express();
+app.use(function (req, res, next) {
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
 
 app.use(logger('dev'));
 app.use(cors({
@@ -22,20 +30,13 @@ app.use(cors({
     credentials: true,
 }));
 
-app.use(function (req, res, next) {
 
-    res.setHeader('Access-Control-Allow-Origin', 'https://doowit.netlify.app/');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    next();
-});
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cookieParser());
 
 
-app.get('/', (req, res) => { res.send('Hellow from Express!')});
+app.get('/', (req, res) => { res.send('jjjjj from Express!')});
 app.use('/', userRoutes);
 app.use('/', verifyJWT);
 app.use('/', taskRoutes);
