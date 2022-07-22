@@ -20,7 +20,6 @@ app.use(logger('dev'));
 app.use(cors({
     origin: 'https://doowit.netlify.app/',
     credentials: true,
-    
 }));
 
 app.use(function (req, res, next) {
@@ -36,7 +35,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-app.get('/', (req, res) => { res.send('Helloooo from Express!')});
+app.get('/', (req, res) => { res.send('Hellow from Express!')});
 app.use('/', userRoutes);
 app.use('/', verifyJWT);
 app.use('/', taskRoutes);
