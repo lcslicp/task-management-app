@@ -19,7 +19,7 @@ const app = express();
 app.use(logger('dev'));
 app.use(cors({
     credentials: false,
-    origin: ['https://doowit.netlify.app/'],
+    origin: 'https://doowit.netlify.app/',
 }));
 
 app.use(function (req, res, next) {
