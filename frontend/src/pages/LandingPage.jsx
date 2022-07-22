@@ -74,8 +74,8 @@ const LandingPage = () => {
           </Link>
         </div>
       </div>
-      <div id='animation' className='absolute right-12 w-2/3 pt-24 floating'>
-        {landingImage}
+      <div className='absolute right-12 w-2/3 pt-24 floating'>
+      <img src={landingImage} alt='doowit' className='h-auto' />
         </div>
     </section>
   );
