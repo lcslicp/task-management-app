@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-app.get('/', (req, res) => { res.send('Hello from Express!')});
+app.get('/', (req, res) => { res.send('Hello, world from Express!')});
 app.use('/', userRoutes);
 app.use('/', verifyJWT);
 app.use('/', taskRoutes);
