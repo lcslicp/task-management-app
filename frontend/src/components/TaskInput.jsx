@@ -34,7 +34,6 @@ const TaskInput = () => {
         dueDate: taskDue,
       }, config
       )
-      .then((res) => console.log(res))
       .then(() => handleFormReset())
       .then(() => handleModalClose())
       .catch((error) => console.error(error));

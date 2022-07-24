@@ -10,7 +10,7 @@
   "type": "module",
   "scripts": {
     "start": "node backend/server.js",
-    "server": "node backend/server.js"
+    "server": "node server.js"
   },
   "repository": {
     "type": "git",

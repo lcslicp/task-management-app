@@ -14,10 +14,9 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
     };
   
     const handleDelete = async () => {
-      await axios.delete(`/${id}`,
+      await axios.delete(`${id}`,
       config
-      ).then((response) => {
-      console.log(response.data)}).then(toggleTask()).then(window.location.reload())
+      ).then(toggleTask())
       .catch((error) => console.error(error));
     };
   return (
