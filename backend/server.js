@@ -4,13 +4,11 @@ import cors from 'cors';
 import logger from 'morgan';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
-// import path from 'path';
 import errorHandler from './middleware/errorHandler.js';
 
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import verifyJWT from './middleware/veriryJWT.js';
-
 
 dotenv.config();
 
@@ -36,10 +34,6 @@ mongoose.connect(process.env.DB_HOST, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => console.log('Established connection with MongoDB.')).catch(console.error);
-
-
-
-
 
 const PORT = process.env.PORT || 5000;
 
