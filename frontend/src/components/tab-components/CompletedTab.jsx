@@ -22,7 +22,7 @@ const CompletedTab = () => {
 
   useEffect(() => {
     fetchTasksData();
-  }, [completedTasks]);
+  }, []);
 
   return (
     <div>

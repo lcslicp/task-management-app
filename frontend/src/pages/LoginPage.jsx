@@ -17,6 +17,7 @@ const LoginPage = () => {
   const [pwd, setPwd] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const [passwordVisibility, setPasswordVisibility] = useState('password');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     emailRef.current.focus();
@@ -32,6 +33,7 @@ const LoginPage = () => {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post(
         LOGIN_URL,
@@ -44,10 +46,10 @@ const LoginPage = () => {
         }
       );
       localStorage.setItem('token', JSON.stringify(response?.data?.token));
-      // setHeader('x-auth-token', response?.data?.token)
       navigate('/dashboard');
       setUserEmail('');
       setPwd('');
+      setLoading(false);
     } catch (error) {
       if (!error?.response) {
         setErrMsg('No Server Response');
@@ -109,7 +111,7 @@ const LoginPage = () => {
             
             <div>
               <button className='w-1/4 text-white bg-brightblue hover:bg-brighterblue hover:scale-110 focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center disabled:bg-grey disabled:opacity-30 disabled:cursor-not-allowed mt-8'>
-                Log in
+               {loading ? 'loading' : 'Log in'}
               </button>
               <p className='text-xs pt-4'>
                 Don't have an account?{' '}

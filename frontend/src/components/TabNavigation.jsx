@@ -27,8 +27,8 @@ const TabNavigation = () => {
       className={
         
         activeStatusTab === tab.id
-          ? 'px-8 inline-block p-4 rounded-t-lg border-b-2 text-brightblue font-bold border-brightblue hover:text-brightblue hover:border-brighterblue  '
-          : 'px-8 inline-block p-4 text-grey rounded-t-lg border-b border-gray-300'
+          ? 'px-8 inline-block p-4 rounded-t-lg border-b-2 text-brightblue font-bold border-brightblue hover:text-brightblue hover:border-brighterblue cursor-pointer '
+          : 'px-8 inline-block p-4 text-grey rounded-t-lg border-b border-gray-300 cursor-pointer'
       }
     >
       {tab.tabTitle}
