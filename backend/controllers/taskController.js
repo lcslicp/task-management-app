@@ -154,46 +154,6 @@ const getSingleTask = async (req, res) => {
     }
   
   }
-
-//Batch update task status
-// const batchEditTasks = async ({ params, value }, res) => {
-//     const { status } = value.body;
-  
-//     try {
-//       const tasks = await Task.updateMany(
-//         {
-//           status: '',
-//         },
-//         {
-//           $set: {
-//             status: status,
-//           },
-//         }
-//       );
-//       const updatedTasks = await tasks.save();
-  
-//       res.json(updatedTasks);
-//     } catch (e) {
-//       res.status(400).json({
-//         error: 'Something went wrong, please try again.',
-//         message: error.message,
-//       });
-//     }
-//   };
-  
-//   //Delete tasks in bulk
-//   const batchDeleteTasks = async ({ params }, res) => {
-//     try {
-//       await Task.deleteMany({ _id: params.id });
-  
-//       res.redirect('/dashboard/:status');
-//     } catch (e) {
-//       res.status(400).json({
-//         error: 'Something went wrong, please try again.',
-//         message: error.message,
-//       });
-//     }
-//   };
   
   const TaskController = {
     addTask,
@@ -204,8 +164,6 @@ const getSingleTask = async (req, res) => {
     getInProgressTasks,
     getCompletedTasks,
     getSingleTask,
-    // batchEditTasks,
-    // batchDeleteTasks,
   };
   
   export default TaskController;  
