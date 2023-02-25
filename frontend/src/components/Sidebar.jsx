@@ -6,12 +6,12 @@ import axios from '../api/axios';
 import doowitLogo from '../assets/icons/doowit-logo.svg';
 import defaultDisplayphoto from '../assets/icons/default-displayphoto.svg';
 import LoadingSpinner from './loadingSpinner';
-import dashIcon from '../assets/icons/dashboard-icon.svg'
-import sortIcon from '../assets/icons/sort-icon.svg'
-import filterIcon from '../assets/icons/filter-icon.svg'
-import logoutIcon from '../assets/icons/logout-icon.svg'
+import dashIcon from '../assets/icons/dashboard-icon.svg';
+import sortIcon from '../assets/icons/sort-icon.svg';
+import filterIcon from '../assets/icons/filter-icon.svg';
+import logoutIcon from '../assets/icons/logout-icon.svg';
 
-const Sidebar = () => {
+const Sidebar = ({ priorityFilter, setPriorityFilter }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
   const decoded = jwt_decode(token);
@@ -29,45 +29,54 @@ const Sidebar = () => {
       setFirstName(response?.data?.firstName);
       setLastName(response?.data?.lastName);
       setEmail(response?.data?.email);
-    })}
+    });
+  };
 
-    useEffect(() => {
-      getUser()
-    }, [])
-    
+  useEffect(() => {
+    getUser();
+  }, []);
 
   const handleLogout = () => {
-    setLoading(true)
+    setLoading(true);
     try {
       localStorage.removeItem('token');
       navigate('/login');
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
-      console.log(error)
+      setLoading(false);
+      console.log(error);
     }
-  }
+  };
 
   const toggleSortDropdown = () => {
     setToggleSort(!toggleSort);
-  }
+  };
 
   const toggleFilterDropdown = () => {
     setToggleFilter(!toggleFilter);
-  }
+  };
 
   const sortItems = [
-    {id: 1, label: 'Low Priority to Urgent', function: ''},
-    {id: 2, label: 'Urgent to Low Priority', function: ''}
-  ]
+    { id: 1, label: 'Low Priority to Urgent' },
+    { id: 2, label: 'Urgent to Low Priority' },
+  ];
 
   const filterItems = [
-    {id: 1, label: 'Low Priority', function: ''},
-    {id: 2, label: 'Medium Priority', function: ''},
-    {id: 3, label: 'High Priority', function: ''},
-    {id: 4, label: 'Urgent', function: ''},
-  ]
-  
+    {
+      id: 1,
+      label: 'Low Priority',
+    },
+    {
+      id: 2,
+      label: 'Medium Priority',
+    },
+    {
+      id: 3,
+      label: 'High Priority',
+    },
+    { id: 4, label: 'Urgent', },
+  ];
+
   return (
     <aside className='w-72 fixed z-30' aria-label='Sidebar'>
       <div className='h-screen overflow-y-auto py-4 px-8 bg-darkblue'>
@@ -92,7 +101,10 @@ const Sidebar = () => {
               href='/dashboard'
               className='flex items-center text-base font-normal text-white rounded-full hover:bg-darkerblue px-7 py-2 active:bg-darkerblue w-full'
             >
-              <img src={dashIcon} className='w-4 h-4 text-white transition duration-75' />
+              <img
+                src={dashIcon}
+                className='w-4 h-4 text-white transition duration-75'
+              />
               <span className='ml-3'>Dashboard</span>
             </a>
           </li>
@@ -102,10 +114,11 @@ const Sidebar = () => {
               className='flex items-center text-base font-normal text-white rounded-full hover:bg-darkerblue px-7 py-2 w-full'
               onClick={toggleSortDropdown}
             >
-              <img src={sortIcon} className='w-4 h-4 text-white transition duration-75' />
-              <span
-                className='flex-1 ml-3 text-left whitespace-nowrap'
-              >
+              <img
+                src={sortIcon}
+                className='w-4 h-4 text-white transition duration-75'
+              />
+              <span className='flex-1 ml-3 text-left whitespace-nowrap'>
                 Sort
               </span>
               <svg
@@ -123,13 +136,15 @@ const Sidebar = () => {
             </button>
             {toggleSort && (
               <ul className='py-2 space-y-2'>
-                {sortItems.map((item)=> (
-                  <li className='flex items-center pl-9 pt-2 pb-2 text-sm font-normal text-white rounded-full hover:bg-darkerblue opacity-70' key={item.id}>{item.label}
-                </li>
+                {sortItems.map((item) => (
+                  <li
+                    className='flex items-center pl-9 pt-2 pb-2 text-sm font-normal text-white rounded-full hover:bg-darkerblue opacity-70'
+                    key={item.id} 
+                  >{item.label}
+                  </li>
                 ))}
-            </ul>
+              </ul>
             )}
-            
           </li>
           <li>
             <button
@@ -137,10 +152,11 @@ const Sidebar = () => {
               className='flex items-center text-base font-normal text-white rounded-full hover:bg-darkerblue px-7 py-2 w-full'
               onClick={toggleFilterDropdown}
             >
-              <img src={filterIcon} className='w-4 h-4 text-white transition duration-75' />
-              <span
-                className='flex-1 ml-3 text-left whitespace-nowrap'
-              >
+              <img
+                src={filterIcon}
+                className='w-4 h-4 text-white transition duration-75'
+              />
+              <span className='flex-1 ml-3 text-left whitespace-nowrap'>
                 Filter
               </span>
               <svg
@@ -158,11 +174,16 @@ const Sidebar = () => {
             </button>
             {toggleFilter && (
               <ul className='py-2 space-y-2'>
-                {filterItems.map((item)=> (
-                  <li className='flex items-center pl-9 pt-2 pb-2 text-sm font-normal text-white rounded-full hover:bg-darkerblue opacity-70' key={item.id}>{item.label}
-                </li>
+                {filterItems.map((item) => (
+                  <li
+                    className={`first-line:flex items-center pl-9 pt-2 pb-2 text-sm font-normal text-white rounded-full hover:bg-darkerblue opacity-70 cursor-pointer ${priorityFilter === item.label ? 'bg-darkerblue' : 'bg-transparent' }`}
+                    key={item.id}
+                    onClick={() => setPriorityFilter(item.label)}
+                  >
+                    {item.label}
+                  </li>
                 ))}
-            </ul>
+              </ul>
             )}
           </li>
           <li>
@@ -170,8 +191,17 @@ const Sidebar = () => {
               href='#'
               className='flex items-center self-end text-base font-normal text-white rounded-full hover:bg-darkerblue px-7 py-2'
             >
-              <img src={logoutIcon} className='w-4 h-4 text-white transition duration-75' />
-              <span className='flex-1 ml-3 whitespace-nowrap' type='button' onClick={handleLogout}>{loading ? <LoadingSpinner /> : 'Log Out'}</span>
+              <img
+                src={logoutIcon}
+                className='w-4 h-4 text-white transition duration-75'
+              />
+              <span
+                className='flex-1 ml-3 whitespace-nowrap'
+                type='button'
+                onClick={handleLogout}
+              >
+                {loading ? <LoadingSpinner /> : 'Log Out'}
+              </span>
             </a>
           </li>
         </ul>

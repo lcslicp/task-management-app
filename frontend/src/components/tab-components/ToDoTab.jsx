@@ -1,33 +1,34 @@
-import React, { useEffect, useState, useContext } from 'react';
-import axios from '../../api/axios';
+import React from 'react';
 
 import TaskCard from '../task-cards/defaultTaskCard';
 import EmptyState from '../EmptyState';
 
-const ToDoTab = () => {
-  const [todoTasks, setTodoTasks] = useState([]);
-  const token = JSON.parse(localStorage.getItem('token'));
-  const TODO_TASK_URL = '/tasks/todo';
-  const config = {
-    headers: { Authorization: `Bearer ${token}` }
-};
-
-  const fetchTasksData = async () => {
-    await axios.get(TODO_TASK_URL,
-      config
-      ).then((response) => {
-      setTodoTasks(response.data);
-    });
-  };
-
-  useEffect(() => {
-    fetchTasksData();
-  }, []);
-
+const ToDoTab = ({ todoTasks, priorityFilter }) => {
   return (
     <div>
       {(todoTasks.length === 0)  ? < EmptyState /> :
+       priorityFilter.length !== 0 ? 
+       todoTasks.filter((task)=> task.priority === priorityFilter).map((task, id) => 
+        {
+          let dueDate = new Date(task.dueDate);
+          let date = dueDate.toLocaleDateString('default', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })
+          return (
+          <TaskCard
+            id={task._id}
+            key={id}
+            title={task.title}
+            description={task.description} 
+            priority={task.priority}
+            dueDate={date}
+            createdAt={task.createdAt}
+          ></TaskCard>
+        )}) :
       <div>
+       
       {todoTasks.map((task, id) => {
         let dueDate = new Date(task.dueDate);
         let date = dueDate.toLocaleDateString('default', {
