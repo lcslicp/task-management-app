@@ -29,7 +29,7 @@ const TaskSchema = new Schema({
     },
     createdAt: {
         type: String,
-        default: new Date().toLocaleDateString("en-US"),
+        default: new Date().toLocaleDateString('default'),
     }
 });
 

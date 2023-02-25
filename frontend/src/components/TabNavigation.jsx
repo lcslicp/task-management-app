@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
+import React, { useState } from 'react';
 
-// import EmptyState from '../EmptyState';
 import ToDoTab from './tab-components/ToDoTab';
 import InProgressTab from './tab-components/InProgressTab';
 import CompletedTab from './tab-components/CompletedTab';

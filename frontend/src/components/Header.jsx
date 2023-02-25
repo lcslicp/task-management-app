@@ -4,9 +4,8 @@ import axios from '../api/axios';
 
 const Header = () => {
   const options = {
-    weekday: 'long',
-    year: 'numeric',
     month: 'long',
+    year: 'numeric',
     day: 'numeric',
   };
   const token = localStorage.getItem('token');
@@ -17,19 +16,16 @@ const Header = () => {
   const [firstName, setFirstName] = useState('Luv');
 
   const getUser = async () => {
-    
     await axios.get(USER_URL).then((response) => {
       setFirstName(response?.data?.firstName);
-    })
-  
-  }
+    });
+  };
 
   useEffect(() => {
-    getUser()
-  }, [])
-  
+    getUser();
+  }, []);
 
-  const now = new Date().toLocaleTimeString('en-us', options);
+  const now = new Date().toLocaleDateString('default', options);
 
   const links = [
     { id: 1, href: '/', label: 'About' },
@@ -45,24 +41,28 @@ const Header = () => {
             <p className='text-2xl font-semibold whitespace-nowrap text-black'>
               Hi, {firstName}!
             </p>
-            <p className='text-sm'>{now}</p>
+            <p className='text-xs opacity-50 pt-2'>Today is {now}.</p>
           </div>
-          <div className='flex flex-row items-center justify-end'>
-          <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-20'>
-            {links.map((link)=> (
-              <li key={link.id}>
-                <a href={link.href} className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue md:p-0'>{link.label}</a>
-              </li>
-            ))}
-          </ul>
-          <input
-            type='text'
-            id='search-navbar'
-            className='block p-2 pl-10 w-60 h-1/3 text-gray-900 bg-lightgray rounded-lg border border-gray-300 sm:text-sm focus:ring-lightgray focus:border-grey  '
-            placeholder='Search...'
-          />
-        </div>
-         
+          <div className='flex flex-row items-center justify-end w-3/4'>
+            <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-20'>
+              {links.map((link) => (
+                <li key={link.id}>
+                  <a
+                    href={link.href}
+                    className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue md:p-0'
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <input
+              type='text'
+              id='search-navbar'
+              className='block p-2 pl-4 w-full h-1/3 text-gray-900 bg-lightgray rounded-lg border border-gray-300 sm:text-sm focus:ring-lightgray focus:border-grey  '
+              placeholder='Search...'
+            />
+          </div>
         </div>
       </nav>
     </header>
