@@ -4,6 +4,7 @@ import axios from '../api/axios.js';
 
 import doowitLogo from '../assets/icons/doowit-logo-colored.svg';
 import signUpImage from '../assets/images/signuppage-img.png';
+import LoadingSpinner from '../components/loadingSpinner.jsx';
 
 const SIGNUP_URL = '/signup';
 
@@ -33,6 +34,7 @@ const SignupPage = () => {
   const [matchFocus, setMatchFocus] = useState(false);
 
   const [errMsg, setErrMsg] = useState('hidden');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     userRef.current.focus();
@@ -58,11 +60,14 @@ const SignupPage = () => {
   };
 
   const togglePassword = () => {
-    passwordVisibility === 'password' ? setPasswordVisibility('text') : setPasswordVisibility('password');
-  }
+    passwordVisibility === 'password'
+      ? setPasswordVisibility('text')
+      : setPasswordVisibility('password');
+  };
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const valid = PWD_REGEX.test(pwd);
     if (!valid) {
       setErrMsg('Invalid entry, please try again.');
@@ -86,8 +91,9 @@ const SignupPage = () => {
       localStorage.setItem('token', JSON.stringify(response?.data?.token));
       navigate('/dashboard');
       handleFormReset();
-      console.log(data);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       if (!error?.response) {
         setErrMsg('No Server Response');
         console.log(error);
@@ -100,10 +106,18 @@ const SignupPage = () => {
     }
   };
 
+  const links = [
+    { id: 1, href: '/', label: 'About' },
+    { id: 2, href: '/', label: 'Github' },
+    { id: 3, href: '/', label: 'Help' },
+  ];
+
   return (
     <section className='w-screen h-screen flex flex-row'>
       <div className='flex flex-col w-2/5 pl-32 pt-32'>
-        <img src={doowitLogo} className='w-1/4 h-auto pr-8' />
+        <a href='/home'>
+          <img src={doowitLogo} className='w-1/4 h-auto pr-8' />
+        </a>
         <h2 className='text-5xl font-bold text-darkblue pt-4'>Sign up</h2>
         <p className='text-sm w-2/3 pt-5 pb-4'>Create your account.</p>
         <div>
@@ -203,13 +217,19 @@ const SignupPage = () => {
               </p>
             </div>
             <div className='pt-4'>
-              <input type='checkbox' onClick={togglePassword} className='rounded-md' /><span className='text-sm pl-2'> Show Password</span></div>
+              <input
+                type='checkbox'
+                onClick={togglePassword}
+                className='rounded-md'
+              />
+              <span className='text-sm pl-2'> Show Password</span>
+            </div>
             <div>
               <button
                 disabled={!validPwd || !validMatch ? true : false}
-                className='w-1/4 text-white bg-brightblue hover:bg-brighterblue hover:scale-110 focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center disabled:bg-grey disabled:opacity-30 disabled:cursor-not-allowed mt-8'
+                className='w-1/4 text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center disabled:bg-grey disabled:opacity-30 disabled:cursor-not-allowed mt-8 flex justify-center'
               >
-                Sign Up
+                {loading ? <LoadingSpinner /> : 'Sign Up'}
               </button>
               <p className='text-xs pt-4'>
                 Already have an account?{' '}
@@ -226,30 +246,16 @@ const SignupPage = () => {
       <div className='bg-brightblue w-2/3 flex flex-col overflow-x-hidden'>
         <div className='flex flex-row items-center justify-end gap-10 pt-12'>
           <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-24 gap-5 z-10'>
-            <li>
-              <a
-                href='#'
-                className='block py-2 pl-3 ml-12 text-white font-semibold hover:scale-110 md:p-0'
-              >
-                How It Works
-              </a>
-            </li>
-            <li>
-              <a
-                href='#'
-                className='block py-2 pl-3 text-white font-semibold hover:scale-110 md:p-0'
-              >
-                Support
-              </a>
-            </li>
-            <li>
-              <a
-                href='#'
-                className='block py-2 pl-3 text-white font-semibold hover:scale-110 md:p-0'
-              >
-                Help
-              </a>
-            </li>
+            {links.map((link) => (
+              <li key={link.id}>
+                <a
+                  href={link.href}
+                  className='block py-2 pl-3 ml-12 text-white font-semibold md:p-0 hover:brightness-90'
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -257,7 +263,11 @@ const SignupPage = () => {
           <h2 className='text-5xl text-white pt-12 pl-24 w-2/3'>
             Join the Doowit community today!
           </h2>
-          <img src={signUpImage} alt='task cards' className='ml-5 pl-12 pr-24 pt-1 w-full  h-auto' />
+          <img
+            src={signUpImage}
+            alt='task cards'
+            className='ml-5 pl-12 pr-24 pt-1 w-full  h-auto'
+          />
         </div>
       </div>
     </section>

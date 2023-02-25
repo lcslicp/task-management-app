@@ -1,5 +1,6 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../components/loadingSpinner.jsx';
 
 import axios from '../api/axios.js';
 import doowitLogo from '../assets/icons/doowit-logo-colored.svg';
@@ -51,6 +52,7 @@ const LoginPage = () => {
       setPwd('');
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       if (!error?.response) {
         setErrMsg('No Server Response');
       } else if (error.response?.status === 400) {
@@ -64,10 +66,16 @@ const LoginPage = () => {
     }
   };
 
+  const links = [
+    { id: 1, href: '/', label: 'About' },
+    { id: 2, href: '/', label: 'Github' },
+    { id: 3, href: '/', label: 'Help' },
+  ];
+
   return (
     <section className='w-screen h-screen flex flex-row'>
       <div className='flex flex-col w-2/5 pl-32 pt-48'>
-        <img src={doowitLogo} className='w-1/4 h-auto pr-8' />
+        <a href='/'><img src={doowitLogo} className='w-1/4 h-auto pr-8' /></a>
         <h2 className='text-5xl font-bold text-darkblue pt-4'>Log in</h2>
         <p className='text-sm w-2/3 pt-5 pb-8'>
           Please enter your login details.
@@ -110,8 +118,9 @@ const LoginPage = () => {
               <input type='checkbox' onClick={togglePassword} className='rounded-md' /><span className='text-sm pl-2'> Show Password</span></div>
             
             <div>
-              <button className='w-1/4 text-white bg-brightblue hover:bg-brighterblue hover:scale-110 focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center disabled:bg-grey disabled:opacity-30 disabled:cursor-not-allowed mt-8'>
-               {loading ? 'loading' : 'Log in'}
+              <button className='w-1/4 text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center disabled:bg-grey disabled:opacity-30 disabled:cursor-not-allowed mt-8 flex justify-center'>
+                {loading ? <LoadingSpinner /> : 'Log in'}
+               
               </button>
               <p className='text-xs pt-4'>
                 Don't have an account?{' '}
@@ -129,30 +138,11 @@ const LoginPage = () => {
       <div className='bg-brightblue w-2/3 flex flex-col'>
         <div className='flex flex-row items-center justify-end gap-10 pt-12'>
           <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-24 gap-5 z-10'>
-            <li>
-              <a
-                href='#'
-                className='block py-2 pl-3 ml-12 text-white font-semibold hover:scale-110 md:p-0'
-              >
-                How It Works
-              </a>
-            </li>
-            <li>
-              <a
-                href='#'
-                className='block py-2 pl-3 text-white font-semibold hover:scale-110 md:p-0'
-              >
-                Support
-              </a>
-            </li>
-            <li>
-              <a
-                href='#'
-                className='block py-2 pl-3 text-white font-semibold hover:scale-110 md:p-0'
-              >
-                Help
-              </a>
-            </li>
+            {links.map((link) => (
+              <li key={link.id}>
+                <a href={link.href} className='block py-2 pl-3 ml-12 text-white font-semibold  md:p-0 hover:brightness-90'>{link.label}</a>
+              </li>
+            ))}
           </ul>
         </div>
 

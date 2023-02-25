@@ -5,6 +5,11 @@ import axios from '../api/axios';
 
 import doowitLogo from '../assets/icons/doowit-logo.svg';
 import defaultDisplayphoto from '../assets/icons/default-displayphoto.svg';
+import LoadingSpinner from './loadingSpinner';
+import dashIcon from '../assets/icons/dashboard-icon.svg'
+import sortIcon from '../assets/icons/sort-icon.svg'
+import filterIcon from '../assets/icons/filter-icon.svg'
+import logoutIcon from '../assets/icons/logout-icon.svg'
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -15,6 +20,9 @@ const Sidebar = () => {
   const [firstName, setFirstName] = useState('Luv');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [toggleSort, setToggleSort] = useState(false);
+  const [toggleFilter, setToggleFilter] = useState(false);
 
   const getUser = async () => {
     await axios.get(USER_URL).then((response) => {
@@ -29,10 +37,36 @@ const Sidebar = () => {
     
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-    window.location.reload();
+    setLoading(true)
+    try {
+      localStorage.removeItem('token');
+      navigate('/login');
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      console.log(error)
+    }
   }
+
+  const toggleSortDropdown = () => {
+    setToggleSort(!toggleSort);
+  }
+
+  const toggleFilterDropdown = () => {
+    setToggleFilter(!toggleFilter);
+  }
+
+  const sortItems = [
+    {id: 1, label: 'Low Priority to Urgent', function: ''},
+    {id: 2, label: 'Urgent to Low Priority', function: ''}
+  ]
+
+  const filterItems = [
+    {id: 1, label: 'Low Priority', function: ''},
+    {id: 2, label: 'Medium Priority', function: ''},
+    {id: 3, label: 'High Priority', function: ''},
+    {id: 4, label: 'Urgent', function: ''},
+  ]
   
   return (
     <aside className='w-72 fixed z-30' aria-label='Sidebar'>
@@ -56,45 +90,26 @@ const Sidebar = () => {
           <li selected>
             <a
               href='/dashboard'
-              className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
+              className='flex items-center text-base font-normal text-white rounded-full hover:bg-darkerblue px-7 py-2 active:bg-darkerblue w-full'
             >
-              <svg
-                className='w-6 h-6 text-white transition duration-75'
-                fill='currentColor'
-                viewBox='0 0 20 20'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <path d='M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z'></path>
-                <path d='M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z'></path>
-              </svg>
+              <img src={dashIcon} className='w-4 h-4 text-white transition duration-75' />
               <span className='ml-3'>Dashboard</span>
             </a>
           </li>
           <li>
             <button
               type='button'
-              className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
-              aria-controls='sort-dropdown'
+              className='flex items-center text-base font-normal text-white rounded-full hover:bg-darkerblue px-7 py-2 w-full'
+              onClick={toggleSortDropdown}
             >
-              <svg
-                className='flex-shrink-0 w-6 h-6 text-white transition duration-75'
-                fill='currentColor'
-                viewBox='0 0 20 20'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <path
-                  fillRule='evenodd'
-                  d='M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z'
-                  clipRule='evenodd'
-                ></path>
-              </svg>
+              <img src={sortIcon} className='w-4 h-4 text-white transition duration-75' />
               <span
                 className='flex-1 ml-3 text-left whitespace-nowrap'
               >
                 Sort
               </span>
               <svg
-                className='w-6 h-6'
+                className='w-7 h-7 pl-2 pt-1'
                 fill='currentColor'
                 viewBox='0 0 20 20'
                 xmlns='http://www.w3.org/2000/svg'
@@ -106,50 +121,30 @@ const Sidebar = () => {
                 ></path>
               </svg>
             </button>
-            <ul id='sort-dropdown' className='hidden py-2 space-y-2'>
-              <li>
-                <a
-                  href='#'
-                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
-                >
-                  Low Priority to Urgent
-                </a>
-              </li>
-              <li>
-                <a
-                  href='#'
-                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
-                >
-                  Urgent to Low Priority
-                </a>
-              </li>
+            {toggleSort && (
+              <ul className='py-2 space-y-2'>
+                {sortItems.map((item)=> (
+                  <li className='flex items-center pl-9 pt-2 pb-2 text-sm font-normal text-white rounded-full hover:bg-darkerblue opacity-70' key={item.id}>{item.label}
+                </li>
+                ))}
             </ul>
+            )}
+            
           </li>
           <li>
             <button
               type='button'
-              className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
-              aria-controls='sort-dropdown'
+              className='flex items-center text-base font-normal text-white rounded-full hover:bg-darkerblue px-7 py-2 w-full'
+              onClick={toggleFilterDropdown}
             >
-              <svg
-                className='flex-shrink-0 w-6 h-6 text-white transition duration-75'
-                fill='currentColor'
-                viewBox='0 0 20 20'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <path
-                  fillRule='evenodd'
-                  d='M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z'
-                  clipRule='evenodd'
-                ></path>
-              </svg>
+              <img src={filterIcon} className='w-4 h-4 text-white transition duration-75' />
               <span
                 className='flex-1 ml-3 text-left whitespace-nowrap'
               >
                 Filter
               </span>
               <svg
-                className='w-6 h-6'
+                className='w-7 h-7 pl-2 pt-1'
                 fill='currentColor'
                 viewBox='0 0 20 20'
                 xmlns='http://www.w3.org/2000/svg'
@@ -161,43 +156,22 @@ const Sidebar = () => {
                 ></path>
               </svg>
             </button>
-            <ul id='sort-dropdown' className='hidden py-2 space-y-2'>
-              <li>
-                <a
-                  href='#'
-                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
-                >
-                  Low Priority
-                </a>
-              </li>
-              <li>
-                <a
-                  href='#'
-                  className='flex items-center p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4e'
-                >
-                  Medium Priority
-                </a>
-              </li>
+            {toggleFilter && (
+              <ul className='py-2 space-y-2'>
+                {filterItems.map((item)=> (
+                  <li className='flex items-center pl-9 pt-2 pb-2 text-sm font-normal text-white rounded-full hover:bg-darkerblue opacity-70' key={item.id}>{item.label}
+                </li>
+                ))}
             </ul>
+            )}
           </li>
           <li>
             <a
               href='#'
-              className='flex items-center self-end p-2 text-base font-normal text-white rounded-full hover:bg-darkerblue hover:px-4'
+              className='flex items-center self-end text-base font-normal text-white rounded-full hover:bg-darkerblue px-7 py-2'
             >
-              <svg
-                className='flex-shrink-0 w-6 h-6 text-white transition duration-75'
-                fill='currentColor'
-                viewBox='0 0 20 20'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <path
-                  fillRule='evenodd'
-                  d='M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z'
-                  clipRule='evenodd'
-                ></path>
-              </svg>
-              <span className='flex-1 ml-3 whitespace-nowrap' type='button' onClick={handleLogout}>Log Out</span>
+              <img src={logoutIcon} className='w-4 h-4 text-white transition duration-75' />
+              <span className='flex-1 ml-3 whitespace-nowrap' type='button' onClick={handleLogout}>{loading ? <LoadingSpinner /> : 'Log Out'}</span>
             </a>
           </li>
         </ul>

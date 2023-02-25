@@ -30,6 +30,13 @@ const Header = () => {
   
 
   const now = new Date().toLocaleTimeString('en-us', options);
+
+  const links = [
+    { id: 1, href: '/', label: 'About' },
+    { id: 2, href: '/', label: 'Github' },
+    { id: 3, href: '/', label: 'Help' },
+  ];
+
   return (
     <header className='flex flex-col pt-8 pl-80 pr-8 bg-white fixed w-full border-4 border-white z-20 drop-shadow-md'>
       <nav className='bg-white border-lightgray px-8 sm:px-4 py-2.5 rounded'>
@@ -42,30 +49,11 @@ const Header = () => {
           </div>
           <div className='flex flex-row items-center justify-end'>
           <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-20'>
-            <li>
-              <a
-                href='#'
-                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue hover:scale-110 md:p-0'
-              >
-                How It Works
-              </a>
-            </li>
-            <li>
-              <a
-                href='#'
-                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue hover:scale-110 md:p-0'
-              >
-                Support
-              </a>
-            </li>
-            <li>
-              <a
-                href='#'
-                className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue hover:scale-110 md:p-0'
-              >
-                Help
-              </a>
-            </li>
+            {links.map((link)=> (
+              <li key={link.id}>
+                <a href={link.href} className='block py-2 pr-4 pl-3 text-black font-semibold hover:text-brightblue md:p-0'>{link.label}</a>
+              </li>
+            ))}
           </ul>
           <input
             type='text'
