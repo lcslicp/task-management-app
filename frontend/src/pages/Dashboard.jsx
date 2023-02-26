@@ -15,7 +15,7 @@ const Dashboard = () => {
   const [todoTasks, setTodoTasks] = useState([]);
   const [inProgressTasks, setInProgressTasks] = useState([]);
   const [completedTasks, setCompletedTasks] = useState([]);
-  const [priorityFilter, setPriorityFilter] = useState('');
+  const [priorityFilter, setPriorityFilter] = useState([]);
 
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
@@ -88,6 +88,8 @@ const Dashboard = () => {
   ];
 
   const [activeStatusTab, setActiveStatusTab] = useState(tabdata[0].id);
+
+  console.log(priorityFilter);
 
   return (
     <div className='flex flex-row'>

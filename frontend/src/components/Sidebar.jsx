@@ -56,6 +56,15 @@ const Sidebar = ({ priorityFilter, setPriorityFilter }) => {
     setToggleFilter(!toggleFilter);
   };
 
+  const handleFiltersSelected = (label) => {
+    const isSelected = priorityFilter.includes(label);
+    setPriorityFilter(
+      isSelected
+        ? priorityFilter.filter((item) => item !== label)
+        : [...priorityFilter, label]
+    );
+  };
+
   const sortItems = [
     { id: 1, label: 'Low Priority to Urgent' },
     { id: 2, label: 'Urgent to Low Priority' },
@@ -74,7 +83,7 @@ const Sidebar = ({ priorityFilter, setPriorityFilter }) => {
       id: 3,
       label: 'High Priority',
     },
-    { id: 4, label: 'Urgent', },
+    { id: 4, label: 'Urgent' },
   ];
 
   return (
@@ -139,8 +148,9 @@ const Sidebar = ({ priorityFilter, setPriorityFilter }) => {
                 {sortItems.map((item) => (
                   <li
                     className='flex items-center pl-9 pt-2 pb-2 text-sm font-normal text-white rounded-full hover:bg-darkerblue opacity-70'
-                    key={item.id} 
-                  >{item.label}
+                    key={item.id}
+                  >
+                    {item.label}
                   </li>
                 ))}
               </ul>
@@ -175,12 +185,22 @@ const Sidebar = ({ priorityFilter, setPriorityFilter }) => {
             {toggleFilter && (
               <ul className='py-2 space-y-2'>
                 {filterItems.map((item) => (
-                  <li
-                    className={`first-line:flex items-center pl-9 pt-2 pb-2 text-sm font-normal text-white rounded-full hover:bg-darkerblue opacity-70 cursor-pointer ${priorityFilter === item.label ? 'bg-darkerblue' : 'bg-transparent' }`}
-                    key={item.id}
-                    onClick={() => setPriorityFilter(item.label)}
-                  >
-                    {item.label}
+                  <li key={item.id} className={`flex justify-between w-full hover:bg-darkerblue rounded-full pt-2  pr-7 pb-2 opacity-70 ${priorityFilter.includes(item.label) ? 'bg-darkerblue' : 'bg-transparent'}`} onClick={() => setPriorityFilter([...priorityFilter, item.label])}>
+                    <label
+                      htmlFor={item.id}
+                      className='text-xs font-normal text-white cursor-pointer pl-9'
+                    >
+                      {item.label}
+                    </label>
+                    <input
+                      type='checkbox'
+                      name={item.label}
+                      value={item.label}
+                      checked={priorityFilter.includes(item.label)}
+                      className='checkbox focus:ring-0'
+                      key={item.id}
+                      onChange={() => handleFiltersSelected(item.label)}
+                    />
                   </li>
                 ))}
               </ul>

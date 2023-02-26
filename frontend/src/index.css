@@ -60,4 +60,25 @@
           75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
           100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
       }
+
+      .checkbox {
+        width: 16px;
+        height: 16px;
+        border: none;
+        outline: none; /* Remove the focus ring */
+        cursor: pointer;
+        background-color: transparent;
+        filter: opacity(0.9);
+      }
+      
+      .checkbox:checked:before {
+        content: "x";
+        display: block;
+        text-align: center;
+        line-height: 16px;
+        font-size: 12px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #090A0E;
+      }
 }
