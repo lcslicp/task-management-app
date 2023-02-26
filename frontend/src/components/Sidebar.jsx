@@ -11,7 +11,7 @@ import sortIcon from '../assets/icons/sort-icon.svg';
 import filterIcon from '../assets/icons/filter-icon.svg';
 import logoutIcon from '../assets/icons/logout-icon.svg';
 
-const Sidebar = ({ priorityFilter, setPriorityFilter }) => {
+const Sidebar = ({ priorityFilter, setPriorityFilter, sort, setSort, sortOldest, sortDueDate }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
   const decoded = jwt_decode(token);
@@ -65,9 +65,19 @@ const Sidebar = ({ priorityFilter, setPriorityFilter }) => {
     );
   };
 
+  const handleSortSelected = (label) => {
+    const isSelected = sort.includes(label);
+    setSort(
+      isSelected
+        ? 'newest'
+        
+        : label
+    );
+  };
+
   const sortItems = [
-    { id: 1, label: 'Low Priority to Urgent' },
-    { id: 2, label: 'Urgent to Low Priority' },
+    { id: 1, label: 'Oldest Added', function: sortOldest, sortLabel: 'oldest' },
+    { id: 2, label: 'Sort by Due Date', function: sortDueDate, sortLabel: 'duedate' },
   ];
 
   const filterItems = [
@@ -147,10 +157,25 @@ const Sidebar = ({ priorityFilter, setPriorityFilter }) => {
               <ul className='py-2 space-y-2'>
                 {sortItems.map((item) => (
                   <li
-                    className='flex items-center pl-9 pt-2 pb-2 text-sm font-normal text-white rounded-full hover:bg-darkerblue opacity-70'
+                  className={`flex justify-between w-full hover:bg-darkerblue rounded-full pt-2  pr-7 pb-2 opacity-70 ${sort === item.sortLabel ? 'bg-darkerblue' : 'bg-transparent'}`}
                     key={item.id}
+                    onClick={(() => item.function())}
                   >
-                    {item.label}
+                    <label
+                      htmlFor={item.id}
+                      className='text-xs font-normal text-white cursor-pointer pl-9'
+                    >
+                      {item.label}
+                    </label>
+                    <input
+                      type='checkbox'
+                      name={item.label}
+                      value={item.label}
+                      className='checkbox focus:ring-0'
+                      checked={sort.includes(item.sortLabel)}
+                      key={item.id}
+                      onChange={() => handleSortSelected(item.sortLabel)}
+                    />
                   </li>
                 ))}
               </ul>

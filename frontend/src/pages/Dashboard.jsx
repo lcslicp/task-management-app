@@ -16,6 +16,7 @@ const Dashboard = () => {
   const [inProgressTasks, setInProgressTasks] = useState([]);
   const [completedTasks, setCompletedTasks] = useState([]);
   const [priorityFilter, setPriorityFilter] = useState([]);
+  const [sort, setSort] = useState('newest');
 
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
@@ -43,11 +44,21 @@ const Dashboard = () => {
     });
   };
 
+  const sortOldest = () => {
+    setSort('oldest');
+  }
+
+  const sortDueDate = () => {
+    setSort('duedate');
+  }
+
   useEffect(() => {
     fetchTodoData();
     fetchInProgresssData();
     fetchCompletedData();
   }, []);
+
+  console.log(sort);
 
   const tabdata = [
     {
@@ -56,7 +67,8 @@ const Dashboard = () => {
       tabTitle: 'TO DO',
       tabContent: (
         <ToDoTab todoTasks={todoTasks}
-        priorityFilter={priorityFilter} />
+        priorityFilter={priorityFilter}
+        sort={sort} />
       ),
     },
 
@@ -68,6 +80,7 @@ const Dashboard = () => {
         <InProgressTab
           inProgressTasks={inProgressTasks}
           priorityFilter={priorityFilter}
+          sort={sort}
         />
       ),
     },
@@ -80,6 +93,7 @@ const Dashboard = () => {
         <CompletedTab
           completedTasks={completedTasks}
           priorityFilter={priorityFilter}
+          sort={sort}
         />
       ),
     },
@@ -88,8 +102,6 @@ const Dashboard = () => {
   ];
 
   const [activeStatusTab, setActiveStatusTab] = useState(tabdata[0].id);
-
-  console.log(priorityFilter);
 
   return (
     <div className='flex flex-row'>
@@ -100,6 +112,10 @@ const Dashboard = () => {
         completedTasks={completedTasks}
         priorityFilter={priorityFilter}
         setPriorityFilter={setPriorityFilter}
+        sort={sort}
+        setSort={setSort}
+        sortOldest={sortOldest}
+        sortDueDate={sortDueDate}
       />
       <div className='flex flex-col w-full'>
         <Header />

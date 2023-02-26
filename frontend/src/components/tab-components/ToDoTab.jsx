@@ -3,19 +3,32 @@ import React from 'react';
 import TaskCard from '../task-cards/defaultTaskCard';
 import EmptyState from '../EmptyState';
 
-const ToDoTab = ({ todoTasks, priorityFilter }) => {
+const ToDoTab = ({ todoTasks, sort, priorityFilter }) => {
+
+  let sortedTasks = [...todoTasks];
+
+  if (sort === 'newest') {
+    sortedTasks = [...todoTasks].sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  } else if (sort === 'oldest') {
+    sortedTasks = [...todoTasks].sort((a, b) => {
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    });
+  }
+
   return (
     <div>
-      {todoTasks.length === 0 ||
+      {sortedTasks.length === 0 ||
       (priorityFilter.length === 0
         ? false
-        : todoTasks.filter((task) => priorityFilter.includes(task.priority))
+        : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
             .length === 0) ? (
         <EmptyState />
       ) : (
         (priorityFilter.length === 0
-          ? todoTasks
-          : todoTasks.filter((task) => priorityFilter.includes(task.priority))
+          ? sortedTasks
+          : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
         ).map((task, id) => {
           let dueDate = new Date(task.dueDate);
           let date = dueDate.toLocaleDateString('default', {
