@@ -4,7 +4,6 @@ import TaskCard from '../task-cards/defaultTaskCard';
 import EmptyState from '../EmptyState';
 
 const ToDoTab = ({ todoTasks, sort, priorityFilter }) => {
-
   let sortedTasks = [...todoTasks];
 
   if (sort === 'newest') {
@@ -15,6 +14,21 @@ const ToDoTab = ({ todoTasks, sort, priorityFilter }) => {
     sortedTasks = [...todoTasks].sort((a, b) => {
       return new Date(a.createdAt) - new Date(b.createdAt);
     });
+  } else if (sort === 'duedate') {
+    sortedTasks = [...todoTasks].sort((a, b) => {
+      if (a.dueDate === '' && b.dueDate === '') {
+        return 0;
+      } else if (a.dueDate === '') {
+        return 1;
+      } else if (b.dueDate === '') {
+        return -1;
+      } else {
+        return new Date(a.dueDate) - new Date(b.dueDate);
+      }
+    });
+    sortedTasks = sortedTasks
+      .filter((task) => task.dueDate !== 'Invalid Date')
+      .concat(sortedTasks.filter((task) => task.dueDate === 'Invalid Date'));
   }
 
   return (

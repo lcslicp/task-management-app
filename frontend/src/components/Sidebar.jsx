@@ -11,7 +11,14 @@ import sortIcon from '../assets/icons/sort-icon.svg';
 import filterIcon from '../assets/icons/filter-icon.svg';
 import logoutIcon from '../assets/icons/logout-icon.svg';
 
-const Sidebar = ({ priorityFilter, setPriorityFilter, sort, setSort, sortOldest, sortDueDate }) => {
+const Sidebar = ({
+  priorityFilter,
+  setPriorityFilter,
+  sort,
+  setSort,
+  sortOldest,
+  sortDueDate,
+}) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
   const decoded = jwt_decode(token);
@@ -67,17 +74,17 @@ const Sidebar = ({ priorityFilter, setPriorityFilter, sort, setSort, sortOldest,
 
   const handleSortSelected = (label) => {
     const isSelected = sort.includes(label);
-    setSort(
-      isSelected
-        ? 'newest'
-        
-        : label
-    );
+    setSort(isSelected ? 'newest' : label);
   };
 
   const sortItems = [
     { id: 1, label: 'Oldest Added', function: sortOldest, sortLabel: 'oldest' },
-    { id: 2, label: 'Sort by Due Date', function: sortDueDate, sortLabel: 'duedate' },
+    {
+      id: 2,
+      label: 'Sort by Due Date',
+      function: sortDueDate,
+      sortLabel: 'duedate',
+    },
   ];
 
   const filterItems = [
@@ -115,7 +122,7 @@ const Sidebar = ({ priorityFilter, setPriorityFilter, sort, setSort, sortOldest,
               <div className='text-xs text-white'>{email}</div>
             </div>
           </li>
-          <li selected>
+          <li>
             <a
               href='/dashboard'
               className='flex items-center text-base font-normal text-white rounded-full hover:bg-darkerblue px-7 py-2 active:bg-darkerblue w-full'
@@ -157,9 +164,13 @@ const Sidebar = ({ priorityFilter, setPriorityFilter, sort, setSort, sortOldest,
               <ul className='py-2 space-y-2'>
                 {sortItems.map((item) => (
                   <li
-                  className={`flex justify-between w-full hover:bg-darkerblue rounded-full pt-2  pr-7 pb-2 opacity-70 ${sort === item.sortLabel ? 'bg-darkerblue' : 'bg-transparent'}`}
+                    className={`flex justify-between w-full hover:bg-darkerblue rounded-full pt-2  pr-7 pb-2 opacity-70 ${
+                      sort === item.sortLabel
+                        ? 'bg-darkerblue'
+                        : 'bg-transparent'
+                    }`}
                     key={item.id}
-                    onClick={(() => item.function())}
+                    onClick={() => item.function()}
                   >
                     <label
                       htmlFor={item.id}
@@ -210,7 +221,17 @@ const Sidebar = ({ priorityFilter, setPriorityFilter, sort, setSort, sortOldest,
             {toggleFilter && (
               <ul className='py-2 space-y-2'>
                 {filterItems.map((item) => (
-                  <li key={item.id} className={`flex justify-between w-full hover:bg-darkerblue rounded-full pt-2  pr-7 pb-2 opacity-70 ${priorityFilter.includes(item.label) ? 'bg-darkerblue' : 'bg-transparent'}`} onClick={() => setPriorityFilter([...priorityFilter, item.label])}>
+                  <li
+                    key={item.id}
+                    className={`flex justify-between w-full hover:bg-darkerblue rounded-full pt-2  pr-7 pb-2 opacity-70 ${
+                      priorityFilter.includes(item.label)
+                        ? 'bg-darkerblue'
+                        : 'bg-transparent'
+                    }`}
+                    onClick={() =>
+                      setPriorityFilter([...priorityFilter, item.label])
+                    }
+                  >
                     <label
                       htmlFor={item.id}
                       className='text-xs font-normal text-white cursor-pointer pl-9'

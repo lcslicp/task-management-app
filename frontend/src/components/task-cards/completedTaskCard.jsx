@@ -3,37 +3,38 @@ import { Link } from 'react-router-dom';
 import axios from '../../api/axios';
 
 const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
-    const [dropdown, setDropdown] = useState('hidden');
-    const token = JSON.parse(localStorage.getItem('token'));
+  const [dropdown, setDropdown] = useState('hidden');
+  const token = JSON.parse(localStorage.getItem('token'));
   const config = {
-    headers: { Authorization: `Bearer ${token}` }
-};
-    
-    const toggleTask = () => {
-      dropdown === 'hidden' ? setDropdown('visible') : setDropdown('hidden');
-    };
-  
-    const handleEdit = async () => {
-      await axios.put(`/edit/${id}`).catch((error) => console.error(error));
-    };
-  
-    const handleDelete = async () => {
-      await axios.delete(`/${id}`,
-      config
-      ).then((response) => {
-      console.log(response.data)}).then(toggleTask()).then(window.location.reload())
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  const toggleTask = () => {
+    dropdown === 'hidden' ? setDropdown('visible') : setDropdown('hidden');
+  };
+
+  const handleEdit = async () => {
+    await axios.put(`/edit/${id}`).catch((error) => console.error(error));
+  };
+
+  const handleDelete = async () => {
+    await axios
+      .delete(`/${id}`, config)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .then(toggleTask())
+      .then(window.location.reload())
       .catch((error) => console.error(error));
-    };
+  };
   return (
-    <div
-      className='p-6 max-w-sm pl-8 bg-grey bg-opacity-10 rounded-lg border hover:grey max-h-96 mb-8 break-inside-avoid'
-    >
+    <div className='p-6 max-w-sm pl-8 bg-grey bg-opacity-10 rounded-lg border hover:grey max-h-96 mb-8 break-inside-avoid'>
       <div className='flex justify-end '>
         <button
-           id='dropdownButton'
-           className='sm:inline-block text-gray-500 rounded-lg text-sm'
-           type='button'
-           onClick={toggleTask}
+          id='dropdownButton'
+          className='sm:inline-block text-gray-500 rounded-lg text-sm'
+          type='button'
+          onClick={toggleTask}
         >
           <svg
             className='w-4 h-4 relative left-24 -top-8 hover:bg-gray-100 focus:outline-none border-1 rounded-full'
@@ -60,7 +61,7 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
               </button>
             </li>
             <li>
-            <button
+              <button
                 onClick={handleDelete}
                 className='block py-2 px-4 w-full text-sm text-gray-700 hover:bg-gray-100'
               >
@@ -94,9 +95,11 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
           {priority}
         </p>
         <p className='text-xs font-bold text-black  pt-4'>
-          Due Date: {dueDate == 'Invalid Date' ? '': dueDate}
+          Due Date: {dueDate == 'Invalid Date' ? 'Unknown' : dueDate}
         </p>
-        <p className='text-xs font-normal text-grey pr-2 pt-3'>{!description ? '' : description.substring(0,250)}...</p>
+        <p className='text-xs font-normal text-grey pr-2 pt-3'>
+          {!description ? '' : description.substring(0, 250)}...
+        </p>
         <p className='pt-5 pb-1 text-xs font text-grey opacity-40'>
           Date Added: {createdAt}
         </p>

@@ -70,7 +70,7 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
         </div>
       </div>
       <Link to={`/${id}`} className='flex flex-col -mt-14'>
-        <h1 className='text-2xl font-bold tracking-tight text-black pb-4'>
+        <h1 className='text-2xl font-bold tracking-tight text-darkblue pb-4'>
           {title}
         </h1>
         <p
@@ -92,8 +92,8 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
           {' '}
           {priority}
         </p>
-        <p className='text-xs font-bold text-black  pt-4'>
-          Due Date: {dueDate == 'Invalid Date' ? '': dueDate}
+        <p className='text-xs text-darkblue font-semibold pt-4'>
+          Due Date: {dueDate == 'Invalid Date' ? 'Unknown': dueDate}
         </p>
         <p className='text-xs font-normal text-grey pr-2 pt-3'>{!description ? '' : description.substring(0,250)}...</p>
         <p className='pt-5 pb-1 text-xs font text-grey opacity-40'>

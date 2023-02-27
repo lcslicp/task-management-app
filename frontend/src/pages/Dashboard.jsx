@@ -58,8 +58,6 @@ const Dashboard = () => {
     fetchCompletedData();
   }, []);
 
-  console.log(sort);
-
   const tabdata = [
     {
       id: '1',
