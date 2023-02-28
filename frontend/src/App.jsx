@@ -7,7 +7,7 @@ import Dashboard from './pages/Dashboard';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import LandingPage from './pages/LandingPage';
-import TaskPage from './pages/TaskPage';
+import Task from './components/Task';
 
 function App() {
 
@@ -23,7 +23,7 @@ function App() {
         {/* protected routes  */}
         <Route path='/' element={<ProtectedRoutes />}>
         <Route path='/dashboard'  element={<Dashboard />} />
-        <Route path='/:id' element={<TaskPage />} />
+        <Route path='/:id' element={<Task />} />
         {/* catch all  */}
         </Route>
       </Routes>

@@ -10,6 +10,7 @@ import ToDoTab from '../components/tab-components/ToDoTab';
 import InProgressTab from '../components/tab-components/InProgressTab';
 import CompletedTab from '../components/tab-components/CompletedTab';
 import OverdueTab from '../components/tab-components/Overdue';
+import Task from '../components/Task';
 
 const Dashboard = () => {
   const [todoTasks, setTodoTasks] = useState([]);
@@ -17,6 +18,20 @@ const Dashboard = () => {
   const [completedTasks, setCompletedTasks] = useState([]);
   const [priorityFilter, setPriorityFilter] = useState([]);
   const [sort, setSort] = useState('newest');
+
+  const [taskId, setTaskId] = useState();
+  const [taskTitle, setTaskTitle] = useState('');
+  const [taskDescription, setTaskDescription] = useState('');
+  const [taskStatus, setTaskStatus] = useState('');
+  const [taskPriority, setTaskPriority] = useState('');
+  const [taskDue, setTaskDue] = useState('');
+  const [taskOpen, setTaskOpen] = useState(false);
+
+  const [cardTitle, setCardTitle] = useState('');
+  const [cardDescription, setCardDescription] = useState('');
+  const [cardStatus, setCardStatus] = useState('');
+  const [cardPriority, setCardPriority] = useState('');
+  const [cardDue, setCardDue] = useState('');
 
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
@@ -44,13 +59,24 @@ const Dashboard = () => {
     });
   };
 
+  const fetchTasksData = async (id) => {
+    const { data } = await axios.get(`/task/${id}`, config);
+    const { title, description, priority, status, dueDate } = data;
+    setCardTitle(title);
+    setCardDescription(description);
+    setCardPriority(priority);
+    setCardStatus(status);
+    setCardDue(dueDate);
+    console.log('fetchTasksData called');
+  };
+
   const sortOldest = () => {
     setSort('oldest');
-  }
+  };
 
   const sortDueDate = () => {
     setSort('duedate');
-  }
+  };
 
   useEffect(() => {
     fetchTodoData();
@@ -64,9 +90,14 @@ const Dashboard = () => {
       key: '1',
       tabTitle: 'TO DO',
       tabContent: (
-        <ToDoTab todoTasks={todoTasks}
-        priorityFilter={priorityFilter}
-        sort={sort} />
+        <ToDoTab
+          todoTasks={todoTasks}
+          priorityFilter={priorityFilter}
+          sort={sort}
+          taskOpen={taskOpen}
+          setTaskOpen={setTaskOpen}
+          fetchTasksData={fetchTasksData}
+        />
       ),
     },
 
@@ -79,6 +110,9 @@ const Dashboard = () => {
           inProgressTasks={inProgressTasks}
           priorityFilter={priorityFilter}
           sort={sort}
+          taskOpen={taskOpen}
+          setTaskOpen={setTaskOpen}
+          fetchTasksData={fetchTasksData}
         />
       ),
     },
@@ -92,6 +126,9 @@ const Dashboard = () => {
           completedTasks={completedTasks}
           priorityFilter={priorityFilter}
           sort={sort}
+          taskOpen={taskOpen}
+          setTaskOpen={setTaskOpen}
+          fetchTasksData={fetchTasksData}
         />
       ),
     },
@@ -122,7 +159,29 @@ const Dashboard = () => {
           activeStatusTab={activeStatusTab}
           setActiveStatusTab={setActiveStatusTab}
         />
-        <TaskInput />
+        <TaskInput
+          taskTitle={taskTitle}
+          setTaskTitle={setTaskTitle}
+          taskDescription={taskDescription}
+          setTaskDescription={setTaskDescription}
+          taskStatus={taskStatus}
+          setTaskStatus={setTaskStatus}
+          taskPriority={taskPriority}
+          setTaskPriority={setTaskPriority}
+          taskDue={taskDue}
+          setTaskDue={setTaskDue}
+        />
+
+        <Task
+          taskId={taskId}
+          taskOpen={taskOpen}
+          setTaskOpen={setTaskOpen}
+          cardTitle={cardTitle}
+          cardDescription={cardDescription}
+          cardStatus={cardStatus}
+          cardPriority={cardPriority}
+          cardDue={cardDue}
+        />
       </div>
     </div>
   );

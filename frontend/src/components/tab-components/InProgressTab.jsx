@@ -3,7 +3,14 @@ import React from 'react';
 import TaskCard from '../task-cards/defaultTaskCard';
 import EmptyState from '../EmptyState';
 
-const InProgressTab = ({ inProgressTasks, sort, priorityFilter }) => {
+const InProgressTab = ({
+  inProgressTasks,
+  sort,
+  priorityFilter,
+  fetchTasksData,
+  taskOpen,
+  setTaskOpen,
+}) => {
   let sortedTasks = [...inProgressTasks];
 
   if (sort === 'newest') {
@@ -59,6 +66,9 @@ const InProgressTab = ({ inProgressTasks, sort, priorityFilter }) => {
               priority={task.priority}
               dueDate={date}
               createdAt={task.createdAt}
+              fetchTasksData={fetchTasksData}
+              taskOpen={taskOpen}
+              setTaskOpen={setTaskOpen}
             />
           );
         })

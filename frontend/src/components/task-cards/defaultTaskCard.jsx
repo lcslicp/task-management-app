@@ -1,14 +1,23 @@
 import axios from '../../api/axios';
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
-const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
+const TaskCard = ({
+  id,
+  title,
+  description,
+  priority,
+  dueDate,
+  createdAt,
+  fetchTasksData,
+  taskOpen,
+  setTaskOpen,
+}) => {
   const [dropdown, setDropdown] = useState('hidden');
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
-    headers: { Authorization: `Bearer ${token}` }
-};
-  
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
   const toggleTask = () => {
     dropdown === 'hidden' ? setDropdown('visible') : setDropdown('hidden');
   };
@@ -17,16 +26,32 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
     await axios.put(`/edit/${id}`).catch((error) => console.error(error));
   };
 
+  const openModal = () => {
+    setTaskOpen(true);
+    // window.location.href = `/${taskId}`;
+  };
+
+  const handleClick = (id) => {
+    fetchTasksData(id);
+    openModal();
+  };
+
   const handleDelete = async () => {
-    await axios.delete(`/${id}`,
-    config
-    ).then((response) => {
-    console.log(response.data)}).then(toggleTask()).then(window.location.reload())
-    .catch((error) => console.error(error));
+    await axios
+      .delete(`/${id}`, config)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .then(toggleTask())
+      .then(window.location.reload())
+      .catch((error) => console.error(error));
   };
 
   return (
-    <div className='p-6 max-w-sm pl-8 bg-white rounded-lg border border-lightergray shadow-md hover:grey max-h-96 mb-8 break-inside-avoid '>
+    <div
+      className='p-6 max-w-sm pl-8 bg-white rounded-lg border border-lightergray shadow-md hover:grey max-h-96 mb-8 break-inside-avoid cursor-pointer'
+      onClick={() => handleClick(id)}
+    >
       <div className='flex justify-end '>
         <button
           id='dropdownButton'
@@ -69,7 +94,7 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
           </ul>
         </div>
       </div>
-      <Link to={`/${id}`} className='flex flex-col -mt-14'>
+      <div className='flex flex-col -mt-14'>
         <h1 className='text-2xl font-bold tracking-tight text-darkblue pb-4'>
           {title}
         </h1>
@@ -93,13 +118,15 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
           {priority}
         </p>
         <p className='text-xs text-darkblue font-semibold pt-4'>
-          Due Date: {dueDate == 'Invalid Date' ? 'Unknown': dueDate}
+          Due Date: {dueDate == 'Invalid Date' ? 'Unknown' : dueDate}
         </p>
-        <p className='text-xs font-normal text-grey pr-2 pt-3'>{!description ? '' : description.substring(0,250)}...</p>
+        <p className='text-xs font-normal text-grey pr-2 pt-3 whitespace-pre-line'>
+          {!description ? '' : description.substring(0, 250)}...
+        </p>
         <p className='pt-5 pb-1 text-xs font text-grey opacity-40'>
           Date Added: {createdAt}
         </p>
-      </Link>
+      </div>
     </div>
   );
 };

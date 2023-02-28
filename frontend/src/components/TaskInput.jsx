@@ -1,19 +1,26 @@
 import React, { useState } from 'react';
 import axios from '../api/axios';
 
-const TaskInput = () => {
-  const [taskTitle, setTaskTitle] = useState('');
-  const [taskDescription, setTaskDescription] = useState('');
-  const [taskStatus, setTaskStatus] = useState('');
-  const [taskPriority, setTaskPriority] = useState('');
-  const [taskDue, setTaskDue] = useState('');
-
+const TaskInput = ({
+  taskTitle,
+  setTaskTitle,
+  taskDescription,
+  setTaskDescription,
+  taskStatus,
+  setTaskStatus,
+  taskPriority,
+  setTaskPriority,
+  taskDue,
+  setTaskDue,
+}) => {
   const [popup, setPopup] = useState(false);
+
   const token = JSON.parse(localStorage.getItem('token'));
   const CREATE_TASK_URL = '/compose/newtask';
+
   const config = {
-    headers: { Authorization: `Bearer ${token}` }
-};
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   const handleFormReset = () => {
     setTaskTitle('');
@@ -26,15 +33,17 @@ const TaskInput = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios
-      .post(CREATE_TASK_URL, {
-        title: taskTitle,
-        description: taskDescription,
-        status: taskStatus,
-        priority: taskPriority,
-        dueDate: taskDue,
-      }, config
+      .post(
+        CREATE_TASK_URL,
+        {
+          title: taskTitle,
+          description: taskDescription,
+          status: taskStatus,
+          priority: taskPriority,
+          dueDate: taskDue,
+        },
+        config
       )
-      .then((res) => console.log(res))
       .then(() => handleFormReset())
       .then(() => handleModalClose())
       .catch((error) => console.error(error));
