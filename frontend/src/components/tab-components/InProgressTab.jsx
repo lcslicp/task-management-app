@@ -8,7 +8,6 @@ const InProgressTab = ({
   sort,
   priorityFilter,
   fetchTasksData,
-  taskOpen,
   setTaskOpen,
 }) => {
   let sortedTasks = [...inProgressTasks];
@@ -67,7 +66,6 @@ const InProgressTab = ({
               dueDate={date}
               createdAt={task.createdAt}
               fetchTasksData={fetchTasksData}
-              taskOpen={taskOpen}
               setTaskOpen={setTaskOpen}
             />
           );

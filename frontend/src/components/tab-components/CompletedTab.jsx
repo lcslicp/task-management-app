@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import axios from '../../api/axios';
+import React from 'react';
 
 import TaskCard from '../task-cards/completedTaskCard';
 import EmptyState from '../EmptyState';
 
-const CompletedTab = ({ completedTasks, sort, priorityFilter }) => {
+const CompletedTab = ({
+  completedTasks,
+  sort,
+  priorityFilter,
+  fetchTasksData,
+  setTaskOpen,
+}) => {
   let sortedTasks = [...completedTasks];
 
   if (sort === 'newest') {
@@ -60,6 +65,8 @@ const CompletedTab = ({ completedTasks, sort, priorityFilter }) => {
               priority={task.priority}
               dueDate={date}
               createdAt={task.createdAt}
+              fetchTasksData={fetchTasksData}
+              setTaskOpen={setTaskOpen}
             />
           );
         })

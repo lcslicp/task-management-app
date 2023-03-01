@@ -32,6 +32,7 @@ const Dashboard = () => {
   const [cardStatus, setCardStatus] = useState('');
   const [cardPriority, setCardPriority] = useState('');
   const [cardDue, setCardDue] = useState('');
+  const [cardDate, setCardDate] = useState('');
 
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
@@ -61,13 +62,13 @@ const Dashboard = () => {
 
   const fetchTasksData = async (id) => {
     const { data } = await axios.get(`/task/${id}`, config);
-    const { title, description, priority, status, dueDate } = data;
+    const { title, description, priority, status, dueDate, createdAt } = data;
     setCardTitle(title);
     setCardDescription(description);
     setCardPriority(priority);
     setCardStatus(status);
     setCardDue(dueDate);
-    console.log('fetchTasksData called');
+    setCardDate(createdAt)
   };
 
   const sortOldest = () => {
@@ -181,6 +182,7 @@ const Dashboard = () => {
           cardStatus={cardStatus}
           cardPriority={cardPriority}
           cardDue={cardDue}
+          cardDate={cardDate}
         />
       </div>
     </div>

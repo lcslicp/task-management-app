@@ -3,7 +3,7 @@ import React from 'react';
 import TaskCard from '../task-cards/defaultTaskCard';
 import EmptyState from '../EmptyState';
 
-const ToDoTab = ({ todoTasks, sort, priorityFilter }) => {
+const ToDoTab = ({ todoTasks, sort, priorityFilter, fetchTasksData, taskOpen, setTaskOpen }) => {
   let sortedTasks = [...todoTasks];
 
   if (sort === 'newest') {
@@ -59,6 +59,8 @@ const ToDoTab = ({ todoTasks, sort, priorityFilter }) => {
               priority={task.priority}
               dueDate={date}
               createdAt={task.createdAt}
+              fetchTasksData={fetchTasksData}
+              setTaskOpen={setTaskOpen}
             />
           );
         })

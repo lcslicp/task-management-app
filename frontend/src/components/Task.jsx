@@ -6,6 +6,7 @@ const Task = ({
   cardStatus,
   cardPriority,
   cardDue,
+  cardDate,
   taskOpen,
   setTaskOpen,
 }) => {
@@ -13,8 +14,14 @@ const Task = ({
     setTaskOpen(false);
   };
 
-  let dueDate = new Date(cardDue);
-  let date = dueDate.toLocaleDateString('default', {
+  let due = new Date(cardDue);
+  let createdAt = new Date(cardDate);
+  let dueDate = due.toLocaleDateString('default', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  let createdDate = createdAt.toLocaleDateString('default', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -59,13 +66,13 @@ const Task = ({
                       className={(() => {
                         switch (cardPriority) {
                           case 'Low Priority':
-                            return 'border border-grey text-xs text-grey rounded-full px-2 py-2 w-36 text-center';
+                            return 'border border-grey text-xs text-grey rounded-full px-2 py-2 w-28 text-center';
                           case 'Medium Priority':
                             return 'bg-lightgray text-xs text-grey rounded-full px-2 py-2 w-36 text-center';
                           case 'High Priority':
-                            return 'bg-darkblue text-xs text-white rounded-full px-2 py-2 w-36 text-center';
+                            return 'bg-darkblue text-xs text-white rounded-full px-3 py-2 w-28 text-center';
                           case 'Urgent':
-                            return 'bg-brightblue text-xs text-white rounded-full px-2 py-2 w-36 text-center';
+                            return 'bg-brightblue text-xs text-white rounded-full px-2 py-2 w-24 text-center';
                           default:
                             return null;
                         }
@@ -78,11 +85,11 @@ const Task = ({
                       className={(() => {
                         switch (cardStatus) {
                           case 'To Do':
-                            return 'border border-grey text-sm text-grey rounded-full px-2 py-2 w-36 text-center';
+                            return 'border border-grey text-xs text-grey rounded-full px-1 py-2 w-24 text-center';
                           case 'In Progress':
                             return 'bg-lightgray text-xs text-grey rounded-full px-2 py-2 w-36 text-center';
                           case 'Completed':
-                            return 'bg-darkblue text-xs text-white rounded-full px-2 py-2 w-36 text-center';
+                            return 'bg-darkblue text-xs text-white rounded-full px-2 py-2 w-28 text-center';
                           case 'Overdue':
                             return 'bg-brightblue text-xs text-white rounded-full px-2 py-2 w-36 text-center';
                           default:
@@ -94,10 +101,14 @@ const Task = ({
                       {cardStatus}
                     </p>
                   </div>
-                  <p className='text-sm font-bold text-darkblue pt-4'>
-                    Due Date: {date == 'Invalid Date' ? 'Unknown' : date}{' '}
+                  <p className='text-grey text-xs pt-4 pb-1 font-normal '>
+                    Date Added: {createdDate}
                   </p>
-                  <p className='text-sm font-normal text-grey pr-2 py-10 whitespace-pre-line'>
+                  <p className='text-xs font-bold text-darkblue '>
+                    Due Date: {dueDate == 'Invalid Date' ? 'Unknown' : dueDate}{' '}
+                  </p>
+
+                  <p className='text-sm font-normal text-grey pr-2 py-10 whitespace-pre-line leading-6'>
                     {cardDescription}
                   </p>
                 </div>

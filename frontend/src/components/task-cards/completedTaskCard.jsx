@@ -2,7 +2,16 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from '../../api/axios';
 
-const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
+const TaskCard = ({
+  id,
+  title,
+  description,
+  priority,
+  dueDate,
+  createdAt,
+  fetchTasksData,
+  setTaskOpen,
+}) => {
   const [dropdown, setDropdown] = useState('hidden');
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
@@ -27,8 +36,22 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
       .then(window.location.reload())
       .catch((error) => console.error(error));
   };
+
+  const openModal = () => {
+    setTaskOpen(true);
+    // window.location.href = `/${taskId}`;
+  };
+
+  const handleClick = (id) => {
+    fetchTasksData(id);
+    openModal();
+  };
+
   return (
-    <div className='p-6 max-w-sm pl-8 bg-grey bg-opacity-10 rounded-lg border hover:grey max-h-96 mb-8 break-inside-avoid'>
+    <div
+      className='p-6 max-w-sm pl-8 bg-grey bg-opacity-10 rounded-lg border hover:grey max-h-96 mb-8 break-inside-avoid cursor-pointer'
+      onClick={() => handleClick(id)}
+    >
       <div className='flex justify-end '>
         <button
           id='dropdownButton'
@@ -71,7 +94,7 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
           </ul>
         </div>
       </div>
-      <Link to={`/${id}`} className='flex flex-col -mt-14'>
+      <div className='flex flex-col -mt-14'>
         <h1 className='text-2xl font-bold tracking-tight text-black pb-4'>
           {title}
         </h1>
@@ -103,7 +126,7 @@ const TaskCard = ({ id, title, description, priority, dueDate, createdAt }) => {
         <p className='pt-5 pb-1 text-xs font text-grey opacity-40'>
           Date Added: {createdAt}
         </p>
-      </Link>
+      </div>
     </div>
   );
 };

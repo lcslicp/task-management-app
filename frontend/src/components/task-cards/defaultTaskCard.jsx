@@ -9,7 +9,6 @@ const TaskCard = ({
   dueDate,
   createdAt,
   fetchTasksData,
-  taskOpen,
   setTaskOpen,
 }) => {
   const [dropdown, setDropdown] = useState('hidden');
@@ -49,7 +48,7 @@ const TaskCard = ({
 
   return (
     <div
-      className='p-6 max-w-sm pl-8 bg-white rounded-lg border border-lightergray shadow-md hover:grey max-h-96 mb-8 break-inside-avoid cursor-pointer'
+      className='p-6 max-w-sm pl-8 bg-white rounded-lg border border-lightergray shadow-md hover:grey h-fit mb-8 break-inside-avoid cursor-pointer'
       onClick={() => handleClick(id)}
     >
       <div className='flex justify-end '>
@@ -120,7 +119,7 @@ const TaskCard = ({
         <p className='text-xs text-darkblue font-semibold pt-4'>
           Due Date: {dueDate == 'Invalid Date' ? 'Unknown' : dueDate}
         </p>
-        <p className='text-xs font-normal text-grey pr-2 pt-3 whitespace-pre-line'>
+        <p className='text-xs font-normal text-grey pr-2 pt-3 whitespace-pre-line leading-5'>
           {!description ? '' : description.substring(0, 250)}...
         </p>
         <p className='pt-5 pb-1 text-xs font text-grey opacity-40'>
