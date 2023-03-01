@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Task = ({
   cardTitle,
@@ -10,8 +11,11 @@ const Task = ({
   taskOpen,
   setTaskOpen,
 }) => {
+  const navigate = useNavigate();
+
   const handleModalClose = () => {
     setTaskOpen(false);
+    navigate('/dashboard');
   };
 
   let due = new Date(cardDue);

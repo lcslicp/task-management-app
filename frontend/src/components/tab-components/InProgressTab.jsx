@@ -59,7 +59,7 @@ const InProgressTab = ({
           return (
             <TaskCard
               id={task._id}
-              key={id}
+              key={task._id}
               title={task.title}
               description={task.description}
               priority={task.priority}

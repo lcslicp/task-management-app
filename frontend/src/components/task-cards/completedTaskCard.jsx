@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
 
 const TaskCard = ({
@@ -13,6 +13,7 @@ const TaskCard = ({
   setTaskOpen,
 }) => {
   const [dropdown, setDropdown] = useState('hidden');
+  const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -45,6 +46,7 @@ const TaskCard = ({
   const handleClick = (id) => {
     fetchTasksData(id);
     openModal();
+    navigate(`/${id}`);
   };
 
   return (

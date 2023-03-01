@@ -3,7 +3,7 @@ import React from 'react';
 import TaskCard from '../task-cards/defaultTaskCard';
 import EmptyState from '../EmptyState';
 
-const ToDoTab = ({ todoTasks, sort, priorityFilter, fetchTasksData, taskOpen, setTaskOpen }) => {
+const ToDoTab = ({ todoTasks, sort, priorityFilter, fetchTasksData, setTaskOpen }) => {
   let sortedTasks = [...todoTasks];
 
   if (sort === 'newest') {
@@ -53,7 +53,7 @@ const ToDoTab = ({ todoTasks, sort, priorityFilter, fetchTasksData, taskOpen, se
           return (
             <TaskCard
               id={task._id}
-              key={id}
+              key={task._id}
               title={task.title}
               description={task.description}
               priority={task.priority}
