@@ -25,14 +25,8 @@ const Dashboard = () => {
   const [taskStatus, setTaskStatus] = useState('');
   const [taskPriority, setTaskPriority] = useState('');
   const [taskDue, setTaskDue] = useState('');
+  const [taskDate, setTaskDate] = useState('');
   const [taskOpen, setTaskOpen] = useState(false);
-
-  const [cardTitle, setCardTitle] = useState('');
-  const [cardDescription, setCardDescription] = useState('');
-  const [cardStatus, setCardStatus] = useState('');
-  const [cardPriority, setCardPriority] = useState('');
-  const [cardDue, setCardDue] = useState('');
-  const [cardDate, setCardDate] = useState('');
 
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
@@ -63,13 +57,21 @@ const Dashboard = () => {
   const fetchTasksData = async (id) => {
     const { data } = await axios.get(`/task/${id}`, config);
     const { title, description, priority, status, dueDate, createdAt } = data;
-    setCardTitle(title);
-    setCardDescription(description);
-    setCardPriority(priority);
-    setCardStatus(status);
-    setCardDue(dueDate);
-    setCardDate(createdAt)
+    setTaskTitle(title);
+    setTaskDescription(description);
+    setTaskPriority(priority);
+    setTaskStatus(status);
+    setTaskDue(dueDate);
+    setTaskDate(createdAt)
   };
+
+  const handleUpdate = (updatedTask) => {
+    setTaskTitle(updatedTask.taskTitle)
+    setTaskDescription(updatedTask.taskDescription)
+    setTaskPriority(updatedTask.taskPriority)
+    setTaskStatus(updatedTask.taskStatus)
+    setTaskDue(updatedTask.taskDue)
+  }
 
   const sortOldest = () => {
     setSort('oldest');
@@ -177,12 +179,13 @@ const Dashboard = () => {
           taskId={taskId}
           taskOpen={taskOpen}
           setTaskOpen={setTaskOpen}
-          cardTitle={cardTitle}
-          cardDescription={cardDescription}
-          cardStatus={cardStatus}
-          cardPriority={cardPriority}
-          cardDue={cardDue}
-          cardDate={cardDate}
+          taskTitle={taskTitle}
+          taskDescription={taskDescription}
+          taskStatus={taskStatus}
+          taskPriority={taskPriority}
+          taskDue={taskDue}
+          taskDate={taskDate}
+          onUpdate={handleUpdate}
         />
       </div>
     </div>

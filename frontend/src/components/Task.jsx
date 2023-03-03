@@ -1,25 +1,72 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from '../api/axios';
+import editIcon from '../assets/icons/edit-icon.svg';
+import deleteIcon from '../assets/icons/delete-icon.svg';
 
 const Task = ({
-  cardTitle,
-  cardDescription,
-  cardStatus,
-  cardPriority,
-  cardDue,
-  cardDate,
+  taskId,
+  taskTitle,
+  taskDescription,
+  taskStatus,
+  taskPriority,
+  taskDue,
+  taskDate,
   taskOpen,
   setTaskOpen,
+  onUpdate,
 }) => {
+
+  const currentTask = {
+    taskId,
+    taskTitle,
+    taskDescription,
+    taskStatus,
+    taskPriority,
+    taskDue,
+    taskDate,
+  }
+
+  const token = JSON.parse(localStorage.getItem('token'));
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTask, setEditedTask] = useState();
   const navigate = useNavigate();
 
   const handleModalClose = () => {
     setTaskOpen(false);
     navigate('/dashboard');
+    setIsEditing(false);
   };
 
-  let due = new Date(cardDue);
-  let createdAt = new Date(cardDate);
+  const handleEdit = () => {
+    setIsEditing(true);
+    setEditedTask(currentTask)
+  };
+
+  const handleInputChange = (name, value) => {
+    setEditedTask((oldTask) => ({ ...oldTask, [name]: value }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.put(`/edit/${editedTask.taskId}`, editedTask, config);
+      // onUpdate(response)
+      console.log(response.data);
+      setIsEditing(false);
+      console.log('handleSubmit triggered');
+    } catch (error) {
+      console.error(error);
+      console.log('handleSubmit triggered with error');
+    }
+  }
+
+  let due = new Date(taskDue);
+  let createdAt = new Date(taskDate);
   let dueDate = due.toLocaleDateString('default', {
     month: 'short',
     day: 'numeric',
@@ -61,76 +108,172 @@ const Task = ({
                     ></path>
                   </svg>
                 </button>
-                <div className='py-6 px-6 lg:px-8'>
-                  <h1 className='text-3xl font-bold tracking-tight text-darkblue pb-6 pt-6'>
-                    {cardTitle}
-                  </h1>
-                  <div className='flex flex-row gap-4 pb-2'>
-                    <p
-                      className={(() => {
-                        switch (cardPriority) {
-                          case 'Low Priority':
-                            return 'border border-grey text-xs text-grey rounded-full px-2 py-2 w-28 text-center';
-                          case 'Medium Priority':
-                            return 'bg-lightgray text-xs text-grey rounded-full px-2 py-2 w-36 text-center';
-                          case 'High Priority':
-                            return 'bg-darkblue text-xs text-white rounded-full px-3 py-2 w-28 text-center';
-                          case 'Urgent':
-                            return 'bg-brightblue text-xs text-white rounded-full px-2 py-2 w-24 text-center';
-                          default:
-                            return null;
-                        }
-                      })()}
-                    >
-                      {' '}
-                      {cardPriority}
-                    </p>
-                    <p
-                      className={(() => {
-                        switch (cardStatus) {
-                          case 'To Do':
-                            return 'border border-grey text-xs text-grey rounded-full px-1 py-2 w-24 text-center';
-                          case 'In Progress':
-                            return 'bg-lightgray text-xs text-grey rounded-full px-2 py-2 w-36 text-center';
-                          case 'Completed':
-                            return 'bg-darkblue text-xs text-white rounded-full px-2 py-2 w-28 text-center';
-                          case 'Overdue':
-                            return 'bg-brightblue text-xs text-white rounded-full px-2 py-2 w-36 text-center';
-                          default:
-                            return null;
-                        }
-                      })()}
-                    >
-                      {' '}
-                      {cardStatus}
-                    </p>
-                  </div>
-                  <p className='text-grey text-xs pt-4 pb-1 font-normal '>
-                    Date Added: {createdDate}
-                  </p>
-                  <p className='text-xs font-bold text-darkblue '>
-                    Due Date: {dueDate == 'Invalid Date' ? 'Unknown' : dueDate}{' '}
-                  </p>
+                {isEditing ? (
+                  <div className='py-6 px-6 lg:px-8'>
+                    <form onSubmit={handleSubmit} className='space-y-6 '>
+                      <input
+                        type='text'
+                        placeholder='Enter your task title...'
+                        className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-full p-2.5 mt-6'
+                        id='title'
+                        name='taskTitle'
+                        value={editedTask.taskTitle}
+                        onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                        required
+                      />
+                      <div
+                        id='selections'
+                        className='flex flex-row items-center'
+                      >
+                        <select
+                          name='taskStatus'
+                          className='w-32 h-8 border-none bg-darkblue text-white text-xs rounded-md mr-4 '
+                        value={editedTask.taskStatus}
+                        onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                          required
+                        >
+                          <option value='' disabled>
+                            Status
+                          </option>
+                          <option value='To Do'>To Do</option>
+                          <option value='In Progress'>In Progress</option>
+                          <option value='Completed'>Completed</option>
+                        </select>
+                        <select
+                          name='taskPriority'
+                          className='w-32 h-8 border-darkblue text-xs rounded-md'
+                        value={editedTask.taskPriority}
+                        onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                          required
+                        >
+                          <option value='' disabled>
+                            Priority
+                          </option>
+                          <option value='Low Priority'>Low Priority</option>
+                          <option value='Medium Priority'>
+                            Medium Priority
+                          </option>
+                          <option value='High Priority'>High Priority</option>
+                          <option value='Urgent'>Urgent</option>
+                        </select>
+                        <div
+                          id='due-date'
+                          className='flex-row items-center ml-auto inline-flex'
+                        >
+                          <p className='text-sm font-bold mr-4'>DUE DATE: </p>
+                          <input
+                            type='date'
+                            name='taskDue'
+                            className='bg-lightgray border-none text-xs rounded-md'
+                        value={editedTask.taskDue}
+                        onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                          />
+                        </div>
+                      </div>
 
-                  <p className='text-sm font-normal text-grey pr-2 py-10 whitespace-pre-line leading-6'>
-                    {cardDescription}
-                  </p>
-                </div>
-                {/* <div className='py-6 px-6 lg:px-8'>
-                  <button
-                    type='submit'
-                    className='w-full text-black bg-lightgray focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center hover:brightness-90'
-                    onClick={handleModalClose}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type='submit'
-                    className='w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center'
-                  >
-                    Add Task
-                  </button>
-                </div> */}
+                      <textarea
+                        placeholder='Write your task description...'
+                        cols='30'
+                        rows='10'
+                        className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-blue-500 focus:border-brightblue block w-full p-2.5'
+                        id='description'
+                        name='taskDescription'
+                        value={editedTask.taskDescription || ''}
+                        onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                      ></textarea>
+                      <div className='w-full flex justify-end'>
+                        <div className='flex flex-row w-2/3 space-x-4'>
+                          <button
+                            type='submit'
+                            className='w-full text-black bg-lightgray focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center hover:brightness-90'
+                            onClick={handleModalClose}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type='submit'
+                            className='w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center'
+                          >
+                            Add Task
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                ) : (
+                  <div className='py-6 px-6 lg:px-8'>
+                    <h1 className='text-3xl font-bold tracking-tight text-darkblue pb-6 pt-6'>
+                      {taskTitle}
+                    </h1>
+                    <div className='flex flex-row gap-4 pb-2'>
+                      <p
+                        className={(() => {
+                          switch (taskPriority) {
+                            case 'Low Priority':
+                              return 'border border-grey text-xs text-grey rounded-full px-2 py-2 w-28 text-center';
+                            case 'Medium Priority':
+                              return 'bg-lightgray text-xs text-grey rounded-full px-2 py-2 w-36 text-center';
+                            case 'High Priority':
+                              return 'bg-darkblue text-xs text-white rounded-full px-3 py-2 w-28 text-center';
+                            case 'Urgent':
+                              return 'bg-brightblue text-xs text-white rounded-full px-2 py-2 w-24 text-center';
+                            default:
+                              return null;
+                          }
+                        })()}
+                      >
+                        {' '}
+                        {taskPriority}
+                      </p>
+                      <p
+                        className={(() => {
+                          switch (taskStatus) {
+                            case 'To Do':
+                              return 'border border-grey text-xs text-grey rounded-full px-1 py-2 w-24 text-center';
+                            case 'In Progress':
+                              return 'bg-lightgray text-xs text-grey rounded-full px-2 py-2 w-36 text-center';
+                            case 'Completed':
+                              return 'bg-darkblue text-xs text-white rounded-full px-2 py-2 w-28 text-center';
+                            case 'Overdue':
+                              return 'bg-brightblue text-xs text-white rounded-full px-2 py-2 w-36 text-center';
+                            default:
+                              return null;
+                          }
+                        })()}
+                      >
+                        {' '}
+                        {taskStatus}
+                      </p>
+                      </div>
+                      <p className='text-grey text-xs pt-4 pb-1 font-normal '>
+                        Date Added: {createdDate}
+                      </p>
+                      <p className='text-xs font-bold text-darkblue '>
+                        Due Date:{' '}
+                        {dueDate == 'Invalid Date' ? 'Unknown' : dueDate}{' '}
+                      </p>
+
+                      <p className='text-sm font-normal text-grey pr-2 py-10 whitespace-pre-line leading-6'>
+                        {taskDescription}
+                      </p>
+                    
+                    <button
+                      type='button'
+                      className='absolute bottom-3 right-3.5 bg-transparent hover:bg-lightgray hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center mr-6'
+                      onClick={handleEdit}
+                    >
+                      {' '}
+                      <img src={editIcon} className='w-4 h-4' />
+                    </button>
+                    <button
+                      type='button'
+                      className='absolute bottom-3 right-2.5 bg-transparent hover:bg-lightgray hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center'
+                      onClick={handleModalClose}
+                    >
+                      <img src={deleteIcon} className='w-4 h-4' />{' '}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
