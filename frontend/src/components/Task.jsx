@@ -17,14 +17,15 @@ const Task = ({
   onUpdate,
 }) => {
 
+
   const currentTask = {
-    taskId,
-    taskTitle,
-    taskDescription,
-    taskStatus,
-    taskPriority,
-    taskDue,
-    taskDate,
+    _id: taskId,
+    title: taskTitle,
+    description: taskDescription,
+    status: taskStatus,
+    priority: taskPriority,
+    dueDate: taskDue,
+    createdAt: taskDate,
   }
 
   const token = JSON.parse(localStorage.getItem('token'));
@@ -53,16 +54,11 @@ const Task = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.put(`/edit/${editedTask.taskId}`, editedTask, config);
-      // onUpdate(response)
-      console.log(response.data);
+      await axios.put(`/edit/${editedTask._id}`, editedTask, config).then((response) => {
+        onUpdate(response)
+      })
+      
       setIsEditing(false);
-      console.log('handleSubmit triggered');
-    } catch (error) {
-      console.error(error);
-      console.log('handleSubmit triggered with error');
-    }
   }
 
   let due = new Date(taskDue);
@@ -116,8 +112,8 @@ const Task = ({
                         placeholder='Enter your task title...'
                         className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-full p-2.5 mt-6'
                         id='title'
-                        name='taskTitle'
-                        value={editedTask.taskTitle}
+                        name='title'
+                        value={editedTask.title}
                         onChange={(e) => handleInputChange(e.target.name, e.target.value)}
                         required
                       />
@@ -126,9 +122,9 @@ const Task = ({
                         className='flex flex-row items-center'
                       >
                         <select
-                          name='taskStatus'
+                          name='status'
                           className='w-32 h-8 border-none bg-darkblue text-white text-xs rounded-md mr-4 '
-                        value={editedTask.taskStatus}
+                        value={editedTask.status}
                         onChange={(e) => handleInputChange(e.target.name, e.target.value)}
                           required
                         >
@@ -140,9 +136,9 @@ const Task = ({
                           <option value='Completed'>Completed</option>
                         </select>
                         <select
-                          name='taskPriority'
+                          name='priority'
                           className='w-32 h-8 border-darkblue text-xs rounded-md'
-                        value={editedTask.taskPriority}
+                        value={editedTask.priority}
                         onChange={(e) => handleInputChange(e.target.name, e.target.value)}
                           required
                         >
@@ -163,9 +159,9 @@ const Task = ({
                           <p className='text-sm font-bold mr-4'>DUE DATE: </p>
                           <input
                             type='date'
-                            name='taskDue'
+                            name='dueDate'
                             className='bg-lightgray border-none text-xs rounded-md'
-                        value={editedTask.taskDue}
+                        value={editedTask.dueDate}
                         onChange={(e) => handleInputChange(e.target.name, e.target.value)}
                           />
                         </div>
@@ -177,8 +173,8 @@ const Task = ({
                         rows='10'
                         className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-blue-500 focus:border-brightblue block w-full p-2.5'
                         id='description'
-                        name='taskDescription'
-                        value={editedTask.taskDescription || ''}
+                        name='description'
+                        value={editedTask.description || ''}
                         onChange={(e) => handleInputChange(e.target.name, e.target.value)}
                       ></textarea>
                       <div className='w-full flex justify-end'>
@@ -194,7 +190,7 @@ const Task = ({
                             type='submit'
                             className='w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center'
                           >
-                            Add Task
+                            Save Task
                           </button>
                         </div>
                       </div>
@@ -243,6 +239,7 @@ const Task = ({
                       >
                         {' '}
                         {taskStatus}
+                        
                       </p>
                       </div>
                       <p className='text-grey text-xs pt-4 pb-1 font-normal '>

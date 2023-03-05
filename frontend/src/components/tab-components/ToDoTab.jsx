@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import TaskCard from '../task-cards/defaultTaskCard';
 import EmptyState from '../EmptyState';
 
 const ToDoTab = ({ todoTasks, sort, priorityFilter, fetchTasksData, setTaskOpen }) => {
+  
+
   let sortedTasks = [...todoTasks];
 
   if (sort === 'newest') {
@@ -43,7 +45,7 @@ const ToDoTab = ({ todoTasks, sort, priorityFilter, fetchTasksData, setTaskOpen 
         (priorityFilter.length === 0
           ? sortedTasks
           : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
-        ).map((task, id) => {
+        ).map((task) => {
           let dueDate = new Date(task.dueDate);
           let date = dueDate.toLocaleDateString('default', {
             month: 'short',

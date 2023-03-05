@@ -56,7 +56,8 @@ const Dashboard = () => {
 
   const fetchTasksData = async (id) => {
     const { data } = await axios.get(`/task/${id}`, config);
-    const { title, description, priority, status, dueDate, createdAt } = data;
+    const { _id, title, description, priority, status, dueDate, createdAt } = data;
+    setTaskId(_id);
     setTaskTitle(title);
     setTaskDescription(description);
     setTaskPriority(priority);
@@ -65,12 +66,13 @@ const Dashboard = () => {
     setTaskDate(createdAt)
   };
 
-  const handleUpdate = (updatedTask) => {
-    setTaskTitle(updatedTask.taskTitle)
-    setTaskDescription(updatedTask.taskDescription)
-    setTaskPriority(updatedTask.taskPriority)
-    setTaskStatus(updatedTask.taskStatus)
-    setTaskDue(updatedTask.taskDue)
+  const handleUpdate = (response) => {
+    const updatedTask = (response.data.task)
+    setTaskTitle(updatedTask.title)
+    setTaskDescription(updatedTask.description)
+    setTaskPriority(updatedTask.priority)
+    setTaskStatus(updatedTask.status)
+    setTaskDue(updatedTask.dueDate)
   }
 
   const sortOldest = () => {
@@ -83,9 +85,17 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchTodoData();
-    fetchInProgresssData();
     fetchCompletedData();
-  }, []);
+  }, [todoTasks]);
+
+  useEffect(() => {
+    fetchInProgresssData();
+  }, [inProgressTasks]);
+
+  useEffect(() => {
+    fetchInProgresssData();
+  }, [completedTasks]);
+
 
   const tabdata = [
     {
