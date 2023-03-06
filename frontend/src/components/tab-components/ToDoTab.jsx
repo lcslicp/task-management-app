@@ -1,11 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import TaskCard from '../task-cards/defaultTaskCard';
-import EmptyState from '../EmptyState';
+import EmptyState from '../ui-states/EmptyState';
+import LoadingSpinner from '../ui-states/loadingSpinnerBlue';
 
-const ToDoTab = ({ todoTasks, sort, priorityFilter, fetchTasksData, setTaskOpen }) => {
-  
-
+const ToDoTab = ({
+  todoTasks,
+  sort,
+  priorityFilter,
+  fetchTasksData,
+  setTaskOpen,
+  setIsEditing,
+  loading,
+}) => {
   let sortedTasks = [...todoTasks];
 
   if (sort === 'newest') {
@@ -35,11 +42,15 @@ const ToDoTab = ({ todoTasks, sort, priorityFilter, fetchTasksData, setTaskOpen 
 
   return (
     <div>
-      {sortedTasks.length === 0 ||
-      (priorityFilter.length === 0
-        ? false
-        : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
-            .length === 0) ? (
+      {loading ? (
+        <div className='px-96 mx-40'>
+          <LoadingSpinner />
+        </div>
+      ) : sortedTasks.length === 0 ||
+        (priorityFilter.length === 0
+          ? false
+          : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
+              .length === 0) ? (
         <EmptyState />
       ) : (
         (priorityFilter.length === 0
@@ -63,6 +74,7 @@ const ToDoTab = ({ todoTasks, sort, priorityFilter, fetchTasksData, setTaskOpen 
               createdAt={task.createdAt}
               fetchTasksData={fetchTasksData}
               setTaskOpen={setTaskOpen}
+              setIsEditing={setIsEditing}
             />
           );
         })

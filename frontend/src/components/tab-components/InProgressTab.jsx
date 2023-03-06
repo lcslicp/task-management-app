@@ -1,7 +1,8 @@
 import React from 'react';
 
 import TaskCard from '../task-cards/defaultTaskCard';
-import EmptyState from '../EmptyState';
+import EmptyState from '../ui-states/EmptyState';
+import LoadingSpinner from '../ui-states/loadingSpinnerBlue';
 
 const InProgressTab = ({
   inProgressTasks,
@@ -9,6 +10,8 @@ const InProgressTab = ({
   priorityFilter,
   fetchTasksData,
   setTaskOpen,
+  setIsEditing,
+  loading,
 }) => {
   let sortedTasks = [...inProgressTasks];
 
@@ -37,6 +40,8 @@ const InProgressTab = ({
       .concat(sortedTasks.filter((task) => task.dueDate === 'Invalid Date'));
   }
 
+  const randomNumber = Math.floor(Math.random() * 10) + 1;
+
   return (
     <div>
       {sortedTasks.length === 0 ||
@@ -49,7 +54,7 @@ const InProgressTab = ({
         (priorityFilter.length === 0
           ? sortedTasks
           : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
-        ).map((task, id) => {
+        ).map((task) => {
           let dueDate = new Date(task.dueDate);
           let date = dueDate.toLocaleDateString('default', {
             month: 'short',
@@ -57,17 +62,24 @@ const InProgressTab = ({
             year: 'numeric',
           });
           return (
-            <TaskCard
-              id={task._id}
-              key={task._id}
-              title={task.title}
-              description={task.description}
-              priority={task.priority}
-              dueDate={date}
-              createdAt={task.createdAt}
-              fetchTasksData={fetchTasksData}
-              setTaskOpen={setTaskOpen}
-            />
+            <>
+              {loading ? (
+                <LoadingSpinner key={'loadingspinner'} />
+              ) : (
+                <TaskCard
+                  id={task._id}
+                  key={task._id}
+                  title={task.title}
+                  description={task.description}
+                  priority={task.priority}
+                  dueDate={date}
+                  createdAt={task.createdAt}
+                  fetchTasksData={fetchTasksData}
+                  setTaskOpen={setTaskOpen}
+                  setIsEditing={setIsEditing}
+                />
+              )}
+            </>
           );
         })
       )}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import taskIcon from '../assets/icons/task-icon.svg';
+import taskIcon from '../../assets/icons/task-icon.svg';
 
 const EmptyState = () => {
   return (

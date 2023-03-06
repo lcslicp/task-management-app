@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 // import TaskCard from '../TaskCard';
-import EmptyState from '../EmptyState';
+import EmptyState from '../ui-states/EmptyState';
 
 const OverdueTab = () => {
 //   const [overdueTasks, setOverdueTasks] = useState([]);

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import LoadingSpinner from '../components/loadingSpinner.jsx';
+import LoadingSpinner from '../components/ui-states/loadingSpinner.jsx';
 
 import axios from '../api/axios.js';
 import doowitLogo from '../assets/icons/doowit-logo-colored.svg';

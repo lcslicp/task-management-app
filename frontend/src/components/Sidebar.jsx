@@ -5,7 +5,7 @@ import axios from '../api/axios';
 
 import doowitLogo from '../assets/icons/doowit-logo.svg';
 import defaultDisplayphoto from '../assets/icons/default-displayphoto.svg';
-import LoadingSpinner from './loadingSpinner';
+import LoadingSpinner from './ui-states/loadingSpinner';
 import dashIcon from '../assets/icons/dashboard-icon.svg';
 import sortIcon from '../assets/icons/sort-icon.svg';
 import filterIcon from '../assets/icons/filter-icon.svg';

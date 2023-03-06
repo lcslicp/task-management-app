@@ -23,10 +23,6 @@ const TaskCard = ({
     dropdown === 'hidden' ? setDropdown('visible') : setDropdown('hidden');
   };
 
-  const handleEdit = async () => {
-    await axios.put(`/edit/${id}`).catch((error) => console.error(error));
-  };
-
   const openModal = () => {
     setTaskOpen(true);
   };
@@ -49,11 +45,8 @@ const TaskCard = ({
   };
 
   return (
-    <div
-      className='p-6 max-w-sm pl-8 bg-white rounded-lg border border-lightergray shadow-md hover:grey h-fit mb-8 break-inside-avoid cursor-pointer'
-      onClick={() => handleClick(id)}
-    >
-      <div className='flex justify-end '>
+    <div className='p-6 max-w-sm pl-8 bg-white rounded-lg border border-lightergray shadow-md hover:grey h-fit mb-8 break-inside-avoid cursor-pointer'>
+      <div className='flex justify-end pt-7'>
         <button
           id='dropdownButton'
           className='sm:inline-block text-gray-500 rounded-lg text-sm'
@@ -73,17 +66,9 @@ const TaskCard = ({
         <div
           id='dropdown'
           style={{ visibility: `${dropdown}` }}
-          className='relative -left-5 z-10 w-24 text-base list-none bg-lightergray rounded divide-y divide-gray-100 shadow'
+          className='relative -left-5 -top-8 z-10 w-24 text-base list-none bg-lightergray rounded divide-y divide-gray-100 shadow'
         >
-          <ul className='py-1' aria-labelledby='dropdownButton'>
-            <li>
-              <button
-                onClick={handleEdit}
-                className='block py-2 px-4 w-full text-sm text-gray-700 hover:bg-gray-100'
-              >
-                Edit
-              </button>
-            </li>
+          <ul aria-labelledby='dropdownButton'>
             <li>
               <button
                 onClick={handleDelete}
@@ -95,7 +80,7 @@ const TaskCard = ({
           </ul>
         </div>
       </div>
-      <div className='flex flex-col -mt-14'>
+      <div className='flex flex-col -mt-14' onClick={() => handleClick(id)}>
         <h1 className='text-2xl font-bold tracking-tight text-darkblue pb-4'>
           {title}
         </h1>

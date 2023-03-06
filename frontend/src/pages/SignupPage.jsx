@@ -4,7 +4,7 @@ import axios from '../api/axios.js';
 
 import doowitLogo from '../assets/icons/doowit-logo-colored.svg';
 import signUpImage from '../assets/images/signuppage-img.png';
-import LoadingSpinner from '../components/loadingSpinner.jsx';
+import LoadingSpinner from '../components/ui-states/loadingSpinner';
 
 const SIGNUP_URL = '/signup';
 

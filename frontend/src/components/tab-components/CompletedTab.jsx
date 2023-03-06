@@ -1,7 +1,8 @@
 import React from 'react';
 
 import TaskCard from '../task-cards/completedTaskCard';
-import EmptyState from '../EmptyState';
+import EmptyState from '../ui-states/EmptyState';
+import LoadingSpinner from '../ui-states/loadingSpinnerBlue';
 
 const CompletedTab = ({
   completedTasks,
@@ -9,6 +10,8 @@ const CompletedTab = ({
   priorityFilter,
   fetchTasksData,
   setTaskOpen,
+  setIsEditing,
+  loading,
 }) => {
   let sortedTasks = [...completedTasks];
 
@@ -57,17 +60,24 @@ const CompletedTab = ({
             year: 'numeric',
           });
           return (
-            <TaskCard
-              id={task._id}
-              key={id}
-              title={task.title}
-              description={task.description}
-              priority={task.priority}
-              dueDate={date}
-              createdAt={task.createdAt}
-              fetchTasksData={fetchTasksData}
-              setTaskOpen={setTaskOpen}
-            />
+            <>
+            {loading ? (
+              <LoadingSpinner key={'loadingspinner'} />
+            ) : (
+              <TaskCard
+                id={task._id}
+                key={task._id}
+                title={task.title}
+                description={task.description}
+                priority={task.priority}
+                dueDate={date}
+                createdAt={task.createdAt}
+                fetchTasksData={fetchTasksData}
+                setTaskOpen={setTaskOpen}
+                setIsEditing={setIsEditing}
+              />
+            )}
+          </>
           );
         })
       )}

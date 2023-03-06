@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import editIcon from '../assets/icons/edit-icon.svg';
 import deleteIcon from '../assets/icons/delete-icon.svg';
+import LoadingSpinner from './ui-states/loadingSpinnerBlue';
 
 const Task = ({
   taskId,
@@ -15,25 +16,31 @@ const Task = ({
   taskOpen,
   setTaskOpen,
   onUpdate,
+  isEditing,
+  setIsEditing,
+  loading,
+  addTodo,
+  addInProgress,
+  addCompleted,
 }) => {
 
+  const randomNumber = Math.floor(Math.random() * 10) + 1;
 
   const currentTask = {
-    _id: taskId,
+    _id: `${taskId}${randomNumber}`,
     title: taskTitle,
     description: taskDescription,
     status: taskStatus,
     priority: taskPriority,
     dueDate: taskDue,
     createdAt: taskDate,
-  }
+  };
 
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState();
   const navigate = useNavigate();
 
@@ -45,21 +52,28 @@ const Task = ({
 
   const handleEdit = () => {
     setIsEditing(true);
-    setEditedTask(currentTask)
+    setEditedTask(currentTask);
   };
 
   const handleInputChange = (name, value) => {
-    setEditedTask((oldTask) => ({ ...oldTask, [name]: value }))
-  }
+    setEditedTask((oldTask) => ({ ...oldTask, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-      await axios.put(`/edit/${editedTask._id}`, editedTask, config).then((response) => {
-        onUpdate(response)
+    await axios
+      .put(`/edit/${editedTask._id}`, editedTask, config)
+      .then((response) => {
+        onUpdate(response);
+        {response.data.task.status === 'To Do'
+      ? addTodo(response.data.task)
+      : response.status === 'In Progress'
+      ? addInProgress(response.data.task)
+      : addCompleted(response.data.task)}
       })
-      
-      setIsEditing(false);
-  }
+
+    setIsEditing(false);
+  };
 
   let due = new Date(taskDue);
   let createdAt = new Date(taskDate);
@@ -104,6 +118,7 @@ const Task = ({
                     ></path>
                   </svg>
                 </button>
+
                 {isEditing ? (
                   <div className='py-6 px-6 lg:px-8'>
                     <form onSubmit={handleSubmit} className='space-y-6 '>
@@ -114,7 +129,9 @@ const Task = ({
                         id='title'
                         name='title'
                         value={editedTask.title}
-                        onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(e.target.name, e.target.value)
+                        }
                         required
                       />
                       <div
@@ -124,8 +141,10 @@ const Task = ({
                         <select
                           name='status'
                           className='w-32 h-8 border-none bg-darkblue text-white text-xs rounded-md mr-4 '
-                        value={editedTask.status}
-                        onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                          value={editedTask.status}
+                          onChange={(e) =>
+                            handleInputChange(e.target.name, e.target.value)
+                          }
                           required
                         >
                           <option value='' disabled>
@@ -138,8 +157,10 @@ const Task = ({
                         <select
                           name='priority'
                           className='w-32 h-8 border-darkblue text-xs rounded-md'
-                        value={editedTask.priority}
-                        onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                          value={editedTask.priority}
+                          onChange={(e) =>
+                            handleInputChange(e.target.name, e.target.value)
+                          }
                           required
                         >
                           <option value='' disabled>
@@ -161,8 +182,10 @@ const Task = ({
                             type='date'
                             name='dueDate'
                             className='bg-lightgray border-none text-xs rounded-md'
-                        value={editedTask.dueDate}
-                        onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                            value={editedTask.dueDate}
+                            onChange={(e) =>
+                              handleInputChange(e.target.name, e.target.value)
+                            }
                           />
                         </div>
                       </div>
@@ -175,7 +198,9 @@ const Task = ({
                         id='description'
                         name='description'
                         value={editedTask.description || ''}
-                        onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(e.target.name, e.target.value)
+                        }
                       ></textarea>
                       <div className='w-full flex justify-end'>
                         <div className='flex flex-row w-2/3 space-x-4'>
@@ -195,6 +220,10 @@ const Task = ({
                         </div>
                       </div>
                     </form>
+                  </div>
+                ) : loading ? (
+                  <div className='w-full'>
+                    <LoadingSpinner />
                   </div>
                 ) : (
                   <div className='py-6 px-6 lg:px-8'>
@@ -239,21 +268,20 @@ const Task = ({
                       >
                         {' '}
                         {taskStatus}
-                        
                       </p>
-                      </div>
-                      <p className='text-grey text-xs pt-4 pb-1 font-normal '>
-                        Date Added: {createdDate}
-                      </p>
-                      <p className='text-xs font-bold text-darkblue '>
-                        Due Date:{' '}
-                        {dueDate == 'Invalid Date' ? 'Unknown' : dueDate}{' '}
-                      </p>
+                    </div>
+                    <p className='text-grey text-xs pt-4 pb-1 font-normal '>
+                      Date Added: {createdDate}
+                    </p>
+                    <p className='text-xs font-bold text-darkblue '>
+                      Due Date:{' '}
+                      {dueDate == 'Invalid Date' ? 'Unknown' : dueDate}{' '}
+                    </p>
 
-                      <p className='text-sm font-normal text-grey pr-2 py-10 whitespace-pre-line leading-6'>
-                        {taskDescription}
-                      </p>
-                    
+                    <p className='text-sm font-normal text-grey pr-2 py-10 whitespace-pre-line leading-6'>
+                      {taskDescription}
+                    </p>
+
                     <button
                       type='button'
                       className='absolute bottom-3 right-3.5 bg-transparent hover:bg-lightgray hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center mr-6'

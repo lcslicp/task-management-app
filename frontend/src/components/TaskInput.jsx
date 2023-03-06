@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from '../api/axios';
+import LoadingSpinner from './ui-states/loadingSpinner';
 
 const TaskInput = ({
   taskTitle,
@@ -12,8 +13,12 @@ const TaskInput = ({
   setTaskPriority,
   taskDue,
   setTaskDue,
+  addTodo,
+  addInProgress,
+  addCompleted,
 }) => {
   const [popup, setPopup] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const token = JSON.parse(localStorage.getItem('token'));
   const CREATE_TASK_URL = '/compose/newtask';
@@ -32,6 +37,7 @@ const TaskInput = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     axios
       .post(
         CREATE_TASK_URL,
@@ -44,13 +50,22 @@ const TaskInput = ({
         },
         config
       )
+      .then((response) =>
+        response.data.status === 'To Do'
+          ? addTodo(response.data)
+          : response.data.status === 'In Progress'
+          ? addInProgress(response.data)
+          : addCompleted(response.data)
+      )
       .then(() => handleFormReset())
       .then(() => handleModalClose())
+      .then(() => setIsLoading(false))
       .catch((error) => console.error(error));
   };
 
   const handleModalOpen = () => {
     setPopup(!popup);
+    handleFormReset();
   };
 
   const handleModalClose = () => {
@@ -173,9 +188,11 @@ const TaskInput = ({
                         </button>
                         <button
                           type='submit'
-                          className='w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center'
+                          className='w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold text-center'
                         >
-                          Add Task
+                          <div>
+                            {isLoading ? <LoadingSpinner /> : 'Add Task'}
+                          </div>
                         </button>
                       </div>
                     </div>
