@@ -12,5 +12,6 @@ router.get('/task/:id', TaskController.getSingleTask);
 router.get('/tasks/todo', TaskController.getTodoTasks);
 router.get('/tasks/inprogress', TaskController.getInProgressTasks);
 router.get('/tasks/completed', TaskController.getCompletedTasks);
+router.get('/search', TaskController.searchTasks);
 
 export default router;

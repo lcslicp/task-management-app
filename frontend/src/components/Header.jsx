@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import jwt_decode from 'jwt-decode';
 import axios from '../api/axios';
+import SearchBar from './SearchBar';
 
 const Header = () => {
   const options = {
@@ -34,7 +35,7 @@ const Header = () => {
   ];
 
   return (
-    <header className='flex flex-col pt-8 pl-80 pr-8 bg-white fixed w-full border-4 border-white z-20 drop-shadow-md'>
+    <header className='flex flex-col pt-8 pl-80 pr-8 bg-white fixed w-full border-4 border-white z-20 '>
       <nav className='bg-white border-lightgray px-8 sm:px-4 py-2.5 rounded'>
         <div className='container flex flex-row justify-between items-center mx-auto'>
           <div>
@@ -56,12 +57,7 @@ const Header = () => {
                 </li>
               ))}
             </ul>
-            <input
-              type='text'
-              id='search-navbar'
-              className='block p-2 pl-4 w-full h-1/3 text-gray-900 bg-lightgray rounded-lg border border-gray-300 sm:text-sm focus:ring-lightgray focus:border-grey  '
-              placeholder='Search...'
-            />
+            <SearchBar />
           </div>
         </div>
       </nav>

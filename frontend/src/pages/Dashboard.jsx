@@ -201,8 +201,6 @@ const Dashboard = () => {
         />
       ),
     },
-
-    { id: '4', key: '4', tabTitle: 'OVERDUE', tabContent: <OverdueTab /> },
   ];
 
   const [activeStatusTab, setActiveStatusTab] = useState(tabdata[0].id);

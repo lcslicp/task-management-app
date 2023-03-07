@@ -74,7 +74,7 @@ const TaskInput = ({
 
   return (
     <div>
-      <div className='fixed right-0 top-24 pt-8 mr-12 z-20'>
+      <div className='fixed right-0 top-24 pt-8 mr-12 z-10'>
         <button
           className='block text-white font-bold bg-brightblue hover:bg-brighterblue rounded-lg text-sm px-5 py-2.5 text-center'
           type='button'

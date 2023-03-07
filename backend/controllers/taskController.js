@@ -1,6 +1,5 @@
 import Task from '../models/Task.js';
 
-//Create New Task
 const addTask = async (req, res) => {
   const { title, description, status, priority, dueDate, createdAt } = req.body;
 
@@ -25,7 +24,6 @@ const addTask = async (req, res) => {
   }
 };
 
-//Update existing Task
 const editTask = async (req, res) => {
   const { title, description, status, priority, dueDate } = req.body;
   try {
@@ -46,7 +44,6 @@ const editTask = async (req, res) => {
   }
 };
 
-//Delete existing task
 const deleteTask = async (req, res) => {
   try {
     await Task.findOneAndDelete({
@@ -62,7 +59,6 @@ const deleteTask = async (req, res) => {
   }
 };
 
-//GET all tasks
 const getAllTasks = async (req, res) => {
   try {
     const tasks = await Task.find({ user: req.user.id }).sort({ createdAt: 1 });
@@ -75,7 +71,6 @@ const getAllTasks = async (req, res) => {
   }
 };
 
-//GET Todo Tasks
 const getTodoTasks = async (req, res) => {
   try {
     const tasks = await Task.find({
@@ -91,7 +86,6 @@ const getTodoTasks = async (req, res) => {
   }
 };
 
-//GET In Progress Tasks
 const getInProgressTasks = async (req, res) => {
   try {
     const tasks = await Task.find({
@@ -107,7 +101,6 @@ const getInProgressTasks = async (req, res) => {
   }
 };
 
-//GET getCompleted Tasks
 const getCompletedTasks = async (req, res) => {
   try {
     const tasks = await Task.find({
@@ -122,7 +115,7 @@ const getCompletedTasks = async (req, res) => {
     });
   }
 };
-//GET specific task
+
 const getSingleTask = async (req, res) => {
   try {
     const task = await Task.findOne({
@@ -132,6 +125,20 @@ const getSingleTask = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       error: 'Task not found.',
+      message: error.message,
+    });
+  } 
+};
+
+const searchTasks = async (req, res) => {
+  try {
+    const query = req.query.title;
+    console.log(query);
+    const tasks = await Task.find({ title: { $regex: query, $options: 'i' } });
+    res.json(tasks);
+  } catch (error) {
+    res.status(404).json({
+      error: 'No tasks found.',
       message: error.message,
     });
   }
@@ -146,6 +153,7 @@ const TaskController = {
   getInProgressTasks,
   getCompletedTasks,
   getSingleTask,
+  searchTasks,
 };
 
 export default TaskController;
