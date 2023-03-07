@@ -12,6 +12,7 @@ const CompletedTab = ({
   setTaskOpen,
   setIsEditing,
   loading,
+  setCompletedTasks
 }) => {
   let sortedTasks = [...completedTasks];
 
@@ -75,6 +76,7 @@ const CompletedTab = ({
               fetchTasksData={fetchTasksData}
               setTaskOpen={setTaskOpen}
               setIsEditing={setIsEditing}
+              setCompletedTasks={setCompletedTasks}
             />
           );
         })

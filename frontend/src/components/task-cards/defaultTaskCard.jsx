@@ -7,10 +7,13 @@ const TaskCard = ({
   title,
   description,
   priority,
+  status,
   dueDate,
   createdAt,
   fetchTasksData,
   setTaskOpen,
+  setTodoTasks,
+  setInProgressTasks,
 }) => {
   const [dropdown, setDropdown] = useState('hidden');
   const navigate = useNavigate();
@@ -34,14 +37,14 @@ const TaskCard = ({
   };
 
   const handleDelete = async () => {
-    await axios
-      .delete(`/${id}`, config)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .then(toggleTask())
-      .then(window.location.reload())
-      .catch((error) => console.error(error));
+    let taskStatus;
+    status === 'To Do' ? taskStatus = 1 : taskStatus = 2;
+    try {
+      await axios.delete(`${id}`, config);
+      taskStatus === 1 ? setTodoTasks(prevTasks => prevTasks.filter(task => task._id !== id)) : setInProgressTasks(prevTasks => prevTasks.filter(task => task._id !== id))
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -81,7 +84,7 @@ const TaskCard = ({
         </div>
       </div>
       <div className='flex flex-col -mt-14' onClick={() => handleClick(id)}>
-        <h1 className='text-2xl font-bold tracking-tight text-darkblue pb-4'>
+        <h1 className='text-2xl font-bold tracking-tight text-darkblue pb-4 w-72 '>
           {title}
         </h1>
         <p

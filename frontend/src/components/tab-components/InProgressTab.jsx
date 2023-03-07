@@ -6,6 +6,8 @@ import LoadingSpinner from '../ui-states/loadingSpinnerBlue';
 
 const InProgressTab = ({
   inProgressTasks,
+  setTodoTasks,
+  setInProgressTasks,
   sort,
   priorityFilter,
   fetchTasksData,
@@ -77,6 +79,8 @@ const InProgressTab = ({
               fetchTasksData={fetchTasksData}
               setTaskOpen={setTaskOpen}
               setIsEditing={setIsEditing}
+              setTodoTasks={setTodoTasks}
+              setInProgressTasks={setInProgressTasks}
             />
           );
         })

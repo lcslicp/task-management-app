@@ -11,6 +11,7 @@ const TaskCard = ({
   createdAt,
   fetchTasksData,
   setTaskOpen,
+  setCompletedTasks,
 }) => {
   const [dropdown, setDropdown] = useState('hidden');
   const navigate = useNavigate();
@@ -24,14 +25,14 @@ const TaskCard = ({
   };
 
   const handleDelete = async () => {
-    await axios
-      .delete(`/${id}`, config)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .then(toggleTask())
-      .then(window.location.reload())
-      .catch((error) => console.error(error));
+    try {
+      await axios.delete(`${id}`, config);
+      setCompletedTasks((prevTasks) =>
+        prevTasks.filter((task) => task._id !== id)
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const openModal = () => {
@@ -45,9 +46,7 @@ const TaskCard = ({
   };
 
   return (
-    <div
-      className='p-6 max-w-sm pl-8 bg-grey bg-opacity-10 rounded-lg border hover:grey max-h-96 mb-8 break-inside-avoid cursor-pointer'
-    >
+    <div className='p-6 max-w-sm pl-8 bg-grey bg-opacity-10 rounded-lg border hover:grey max-h-96 mb-8 break-inside-avoid cursor-pointer'>
       <div className='flex justify-end pt-7'>
         <button
           id='dropdownButton'
@@ -83,7 +82,7 @@ const TaskCard = ({
         </div>
       </div>
       <div className='flex flex-col -mt-14' onClick={() => handleClick(id)}>
-        <h1 className='text-2xl font-bold tracking-tight text-black pb-4'>
+        <h1 className='text-2xl font-bold tracking-tight text-black pb-4 w-72'>
           {title}
         </h1>
         <p

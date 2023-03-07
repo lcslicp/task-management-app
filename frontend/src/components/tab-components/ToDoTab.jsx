@@ -6,6 +6,8 @@ import LoadingSpinner from '../ui-states/loadingSpinnerBlue';
 
 const ToDoTab = ({
   todoTasks,
+  setTodoTasks,
+  setInProgressTasks,
   sort,
   priorityFilter,
   fetchTasksData,
@@ -70,11 +72,14 @@ const ToDoTab = ({
               title={task.title}
               description={task.description}
               priority={task.priority}
+              status={task.status}
               dueDate={date}
               createdAt={task.createdAt}
               fetchTasksData={fetchTasksData}
               setTaskOpen={setTaskOpen}
               setIsEditing={setIsEditing}
+              setTodoTasks={setTodoTasks}
+              setInProgressTasks={setInProgressTasks}
             />
           );
         })

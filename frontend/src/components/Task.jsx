@@ -22,6 +22,9 @@ const Task = ({
   addTodo,
   addInProgress,
   addCompleted,
+  setTodoTasks,
+  setInProgressTasks,
+  setCompletedTasks,
 }) => {
   const currentTask = {
     _id: taskId,
@@ -50,6 +53,33 @@ const Task = ({
   const handleEdit = () => {
     setIsEditing(true);
     setEditedTask(currentTask);
+  };
+
+  const handleDelete = async (taskId, taskStatus) => {
+    let status;
+    taskStatus === 'To Do'
+      ? (status = 1)
+      : taskStatus === 'In Progress'
+      ? (status = 2)
+      : (status = 3);
+    console.log(status);
+    try {
+      await axios.delete(`${taskId}`, config);
+      status === 1
+        ? setTodoTasks((prevTasks) =>
+            prevTasks.filter((task) => task._id !== taskId)
+          )
+        : status === 2
+        ? setInProgressTasks((prevTasks) =>
+            prevTasks.filter((task) => task._id !== taskId)
+          )
+        : setCompletedTasks((prevTasks) =>
+            prevTasks.filter((task) => task._id !== taskId)
+          );
+      handleModalClose();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleInputChange = (name, value) => {
@@ -292,7 +322,7 @@ const Task = ({
                     <button
                       type='button'
                       className='absolute bottom-3 right-2.5 bg-transparent hover:bg-lightgray hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center'
-                      onClick={handleModalClose}
+                      onClick={() => handleDelete(taskId, taskStatus)}
                     >
                       <img src={deleteIcon} className='w-4 h-4' />{' '}
                     </button>

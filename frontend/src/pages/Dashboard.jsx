@@ -150,6 +150,8 @@ const Dashboard = () => {
       tabContent: (
         <ToDoTab
           todoTasks={todoTasks}
+          setTodoTasks={setTodoTasks}
+          setInProgressTasks={setInProgressTasks}
           priorityFilter={priorityFilter}
           sort={sort}
           taskOpen={taskOpen}
@@ -168,6 +170,8 @@ const Dashboard = () => {
       tabContent: (
         <InProgressTab
           inProgressTasks={inProgressTasks}
+          setTodoTasks={setTodoTasks}
+          setInProgressTasks={setInProgressTasks}
           priorityFilter={priorityFilter}
           sort={sort}
           taskOpen={taskOpen}
@@ -193,6 +197,7 @@ const Dashboard = () => {
           fetchTasksData={fetchTasksData}
           setIsEditing={setIsEditing}
           loading={state.loadingCompletedTab}
+          setCompletedTasks={setCompletedTasks}
         />
       ),
     },
@@ -256,6 +261,9 @@ const Dashboard = () => {
           addTodo={addTodo}
           addInProgress={addInProgress}
           addCompleted={addCompleted}
+          setTodoTasks={setTodoTasks}
+          setInProgressTasks={setInProgressTasks}
+          setCompletedTasks={setCompletedTasks}
         />
       </div>
     </div>
