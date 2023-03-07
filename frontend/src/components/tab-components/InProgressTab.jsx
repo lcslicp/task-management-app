@@ -44,11 +44,15 @@ const InProgressTab = ({
 
   return (
     <div>
-      {sortedTasks.length === 0 ||
-      (priorityFilter.length === 0
-        ? false
-        : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
-            .length === 0) ? (
+      {loading ? (
+        <div className='px-96 mx-40'>
+          <LoadingSpinner />
+        </div>
+      ) : sortedTasks.length === 0 ||
+        (priorityFilter.length === 0
+          ? false
+          : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
+              .length === 0) ? (
         <EmptyState />
       ) : (
         (priorityFilter.length === 0
@@ -62,24 +66,18 @@ const InProgressTab = ({
             year: 'numeric',
           });
           return (
-            <>
-              {loading ? (
-                <LoadingSpinner key={'loadingspinner'} />
-              ) : (
-                <TaskCard
-                  id={task._id}
-                  key={task._id}
-                  title={task.title}
-                  description={task.description}
-                  priority={task.priority}
-                  dueDate={date}
-                  createdAt={task.createdAt}
-                  fetchTasksData={fetchTasksData}
-                  setTaskOpen={setTaskOpen}
-                  setIsEditing={setIsEditing}
-                />
-              )}
-            </>
+            <TaskCard
+              id={task._id}
+              key={task._id}
+              title={task.title}
+              description={task.description}
+              priority={task.priority}
+              dueDate={date}
+              createdAt={task.createdAt}
+              fetchTasksData={fetchTasksData}
+              setTaskOpen={setTaskOpen}
+              setIsEditing={setIsEditing}
+            />
           );
         })
       )}

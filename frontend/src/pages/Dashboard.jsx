@@ -104,16 +104,28 @@ const Dashboard = () => {
     setTaskDue(updatedTask.dueDate);
   };
 
-  const addTodo = (newTask) => {
-    setTodoTasks((prevState) => [...prevState, newTask]);
+  const addTodo = (updatedTask) => {
+    setTodoTasks((prevState) =>
+      prevState.map((task) =>
+        task._id === updatedTask._id ? updatedTask : task
+      )
+    );
   };
 
-  const addInProgress = (newTask) => {
-    setInProgressTasks((prevState) => [...prevState, newTask]);
+  const addInProgress = (updatedTask) => {
+    setInProgressTasks((prevState) =>
+      prevState.map((task) =>
+        task._id === updatedTask._id ? updatedTask : task
+      )
+    );
   };
 
-  const addCompleted = (newTask) => {
-    setCompletedTasks((prevState) => [...prevState, newTask]);
+  const addCompleted = (updatedTask) => {
+    setCompletedTasks((prevState) =>
+      prevState.map((task) =>
+        task._id === updatedTask._id ? updatedTask : task
+      )
+    );
   };
 
   const sortOldest = () => {

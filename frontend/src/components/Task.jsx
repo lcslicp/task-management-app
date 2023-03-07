@@ -23,11 +23,8 @@ const Task = ({
   addInProgress,
   addCompleted,
 }) => {
-
-  const randomNumber = Math.floor(Math.random() * 10) + 1;
-
   const currentTask = {
-    _id: `${taskId}${randomNumber}`,
+    _id: taskId,
     title: taskTitle,
     description: taskDescription,
     status: taskStatus,
@@ -65,12 +62,14 @@ const Task = ({
       .put(`/edit/${editedTask._id}`, editedTask, config)
       .then((response) => {
         onUpdate(response);
-        {response.data.task.status === 'To Do'
-      ? addTodo(response.data.task)
-      : response.status === 'In Progress'
-      ? addInProgress(response.data.task)
-      : addCompleted(response.data.task)}
-      })
+        {
+          response.data.task.status === 'To Do'
+            ? addTodo(response.data.task)
+            : response.data.task.status === 'In Progress'
+            ? addInProgress(response.data.task)
+            : addCompleted(response.data.task);
+        }
+      });
 
     setIsEditing(false);
   };

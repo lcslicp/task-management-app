@@ -47,7 +47,6 @@ const TaskCard = ({
   return (
     <div
       className='p-6 max-w-sm pl-8 bg-grey bg-opacity-10 rounded-lg border hover:grey max-h-96 mb-8 break-inside-avoid cursor-pointer'
-      onClick={() => handleClick(id)}
     >
       <div className='flex justify-end pt-7'>
         <button
