@@ -10,8 +10,7 @@ const ToDoTab = ({
   setInProgressTasks,
   sort,
   priorityFilter,
-  fetchTasksData,
-  setTaskOpen,
+  handleTaskOpen,
   setIsEditing,
   loading,
 }) => {
@@ -75,8 +74,7 @@ const ToDoTab = ({
               status={task.status}
               dueDate={date}
               createdAt={task.createdAt}
-              fetchTasksData={fetchTasksData}
-              setTaskOpen={setTaskOpen}
+              handleTaskOpen={handleTaskOpen}
               setIsEditing={setIsEditing}
               setTodoTasks={setTodoTasks}
               setInProgressTasks={setInProgressTasks}

@@ -3,7 +3,7 @@ import jwt_decode from 'jwt-decode';
 import axios from '../api/axios';
 import SearchBar from './SearchBar';
 
-const Header = () => {
+const Header = ({handleTaskOpen}) => {
   const options = {
     month: 'long',
     year: 'numeric',
@@ -30,7 +30,7 @@ const Header = () => {
 
   const links = [
     { id: 1, href: '/', label: 'About' },
-    { id: 2, href: '/', label: 'Github' },
+    { id: 2, href: 'https://github.com/lcslicp/task-management-app', label: 'Github' },
     { id: 3, href: '/', label: 'Help' },
   ];
 
@@ -57,7 +57,7 @@ const Header = () => {
                 </li>
               ))}
             </ul>
-            <SearchBar />
+            <SearchBar handleTaskOpen={handleTaskOpen} />
           </div>
         </div>
       </nav>

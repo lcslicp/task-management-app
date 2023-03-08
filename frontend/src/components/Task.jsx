@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import editIcon from '../assets/icons/edit-icon.svg';
 import deleteIcon from '../assets/icons/delete-icon.svg';
-import LoadingSpinner from './ui-states/loadingSpinnerBlue';
+import LoadingSpinner from './ui-states/loadingSpinner';
 
 const Task = ({
   taskId,
@@ -42,6 +42,7 @@ const Task = ({
   };
 
   const [editedTask, setEditedTask] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleModalClose = () => {
@@ -88,6 +89,7 @@ const Task = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     await axios
       .put(`/edit/${editedTask._id}`, editedTask, config)
       .then((response) => {
@@ -99,7 +101,8 @@ const Task = ({
             ? addInProgress(response.data.task)
             : addCompleted(response.data.task);
         }
-      });
+      })
+      .then(setIsLoading(false));
 
     setIsEditing(false);
   };
@@ -244,7 +247,9 @@ const Task = ({
                             type='submit'
                             className='w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center'
                           >
-                            Save Task
+                            <div>
+                              {isLoading ? <LoadingSpinner /> : 'Save Task'}
+                            </div>
                           </button>
                         </div>
                       </div>

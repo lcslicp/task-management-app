@@ -1,6 +1,5 @@
 import axios from '../../api/axios';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const TaskCard = ({
   id,
@@ -10,13 +9,11 @@ const TaskCard = ({
   status,
   dueDate,
   createdAt,
-  fetchTasksData,
-  setTaskOpen,
   setTodoTasks,
   setInProgressTasks,
+  handleTaskOpen,
 }) => {
   const [dropdown, setDropdown] = useState('hidden');
-  const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -26,22 +23,18 @@ const TaskCard = ({
     dropdown === 'hidden' ? setDropdown('visible') : setDropdown('hidden');
   };
 
-  const openModal = () => {
-    setTaskOpen(true);
-  };
-
-  const handleClick = (id) => {
-    fetchTasksData(id);
-    openModal();
-    navigate(`/${id}`);
-  };
-
   const handleDelete = async () => {
     let taskStatus;
-    status === 'To Do' ? taskStatus = 1 : taskStatus = 2;
+    status === 'To Do' ? (taskStatus = 1) : (taskStatus = 2);
     try {
       await axios.delete(`${id}`, config);
-      taskStatus === 1 ? setTodoTasks(prevTasks => prevTasks.filter(task => task._id !== id)) : setInProgressTasks(prevTasks => prevTasks.filter(task => task._id !== id))
+      taskStatus === 1
+        ? setTodoTasks((prevTasks) =>
+            prevTasks.filter((task) => task._id !== id)
+          )
+        : setInProgressTasks((prevTasks) =>
+            prevTasks.filter((task) => task._id !== id)
+          );
     } catch (error) {
       console.error(error);
     }
@@ -83,7 +76,7 @@ const TaskCard = ({
           </ul>
         </div>
       </div>
-      <div className='flex flex-col -mt-14' onClick={() => handleClick(id)}>
+      <div className='flex flex-col -mt-14' onClick={() => handleTaskOpen(id)}>
         <h1 className='text-2xl font-bold tracking-tight text-darkblue pb-4 w-72 '>
           {title}
         </h1>

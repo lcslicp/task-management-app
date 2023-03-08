@@ -10,8 +10,7 @@ const InProgressTab = ({
   setInProgressTasks,
   sort,
   priorityFilter,
-  fetchTasksData,
-  setTaskOpen,
+  handleTaskOpen,
   setIsEditing,
   loading,
 }) => {
@@ -76,8 +75,7 @@ const InProgressTab = ({
               priority={task.priority}
               dueDate={date}
               createdAt={task.createdAt}
-              fetchTasksData={fetchTasksData}
-              setTaskOpen={setTaskOpen}
+              handleTaskOpen={handleTaskOpen}
               setIsEditing={setIsEditing}
               setTodoTasks={setTodoTasks}
               setInProgressTasks={setInProgressTasks}

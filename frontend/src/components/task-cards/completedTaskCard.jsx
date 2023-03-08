@@ -9,8 +9,7 @@ const TaskCard = ({
   priority,
   dueDate,
   createdAt,
-  fetchTasksData,
-  setTaskOpen,
+  handleTaskOpen,
   setCompletedTasks,
 }) => {
   const [dropdown, setDropdown] = useState('hidden');
@@ -33,16 +32,6 @@ const TaskCard = ({
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const openModal = () => {
-    setTaskOpen(true);
-  };
-
-  const handleClick = (id) => {
-    fetchTasksData(id);
-    openModal();
-    navigate(`/${id}`);
   };
 
   return (
@@ -81,7 +70,7 @@ const TaskCard = ({
           </ul>
         </div>
       </div>
-      <div className='flex flex-col -mt-14' onClick={() => handleClick(id)}>
+      <div className='flex flex-col -mt-14' onClick={() => handleTaskOpen(id)}>
         <h1 className='text-2xl font-bold tracking-tight text-black pb-4 w-72'>
           {title}
         </h1>

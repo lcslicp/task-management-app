@@ -8,11 +8,10 @@ const CompletedTab = ({
   completedTasks,
   sort,
   priorityFilter,
-  fetchTasksData,
-  setTaskOpen,
+  handleTaskOpen,
   setIsEditing,
   loading,
-  setCompletedTasks
+  setCompletedTasks,
 }) => {
   let sortedTasks = [...completedTasks];
 
@@ -73,8 +72,7 @@ const CompletedTab = ({
               priority={task.priority}
               dueDate={date}
               createdAt={task.createdAt}
-              fetchTasksData={fetchTasksData}
-              setTaskOpen={setTaskOpen}
+              handleTaskOpen={handleTaskOpen}
               setIsEditing={setIsEditing}
               setCompletedTasks={setCompletedTasks}
             />

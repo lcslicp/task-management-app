@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import axios from '../api/axios';
 import { initialState, reducer } from '../reducers/loadingStates';
+import { useNavigate } from 'react-router-dom';
 
 import TaskInput from '../components/TaskInput';
 import Header from '../components/Header';
@@ -10,7 +11,6 @@ import Sidebar from '../components/Sidebar';
 import ToDoTab from '../components/tab-components/ToDoTab';
 import InProgressTab from '../components/tab-components/InProgressTab';
 import CompletedTab from '../components/tab-components/CompletedTab';
-import OverdueTab from '../components/tab-components/Overdue';
 import Task from '../components/Task';
 
 const Dashboard = () => {
@@ -30,6 +30,7 @@ const Dashboard = () => {
   const [taskOpen, setTaskOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
+  const navigate = useNavigate();
 
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
@@ -128,6 +129,12 @@ const Dashboard = () => {
     );
   };
 
+  const handleTaskOpen = (id) => {
+    fetchTasksData(id);
+    setTaskOpen(true);
+    navigate(`/${id}`);
+  };
+
   const sortOldest = () => {
     setSort('oldest');
   };
@@ -155,10 +162,9 @@ const Dashboard = () => {
           priorityFilter={priorityFilter}
           sort={sort}
           taskOpen={taskOpen}
-          setTaskOpen={setTaskOpen}
-          fetchTasksData={fetchTasksData}
           setIsEditing={setIsEditing}
           loading={state.loadingTodoTab}
+          handleTaskOpen={handleTaskOpen}
         />
       ),
     },
@@ -175,8 +181,7 @@ const Dashboard = () => {
           priorityFilter={priorityFilter}
           sort={sort}
           taskOpen={taskOpen}
-          setTaskOpen={setTaskOpen}
-          fetchTasksData={fetchTasksData}
+          handleTaskOpen={handleTaskOpen}
           setIsEditing={setIsEditing}
           loading={state.loadingInProgressTab}
         />
@@ -193,11 +198,10 @@ const Dashboard = () => {
           priorityFilter={priorityFilter}
           sort={sort}
           taskOpen={taskOpen}
-          setTaskOpen={setTaskOpen}
-          fetchTasksData={fetchTasksData}
           setIsEditing={setIsEditing}
           loading={state.loadingCompletedTab}
           setCompletedTasks={setCompletedTasks}
+          handleTaskOpen={handleTaskOpen}
         />
       ),
     },
@@ -220,7 +224,7 @@ const Dashboard = () => {
         sortDueDate={sortDueDate}
       />
       <div className='flex flex-col w-full'>
-        <Header />
+        <Header handleTaskOpen={handleTaskOpen} />
         <TabNavigation
           tabdata={tabdata}
           activeStatusTab={activeStatusTab}
