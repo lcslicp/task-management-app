@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import LandingPage from './pages/LandingPage';
+import EditProfile from './components/EditProfile';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
         <Route path='/' element={<ProtectedRoutes />}>
         <Route path='/dashboard'  element={<Dashboard />} />
         <Route path='/:id' element={<Dashboard />} />
+        <Route path='/profile' element={<EditProfile />} />
         {/* catch all  */}
         </Route>
       </Routes>

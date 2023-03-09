@@ -12,6 +12,7 @@ import ToDoTab from '../components/tab-components/ToDoTab';
 import InProgressTab from '../components/tab-components/InProgressTab';
 import CompletedTab from '../components/tab-components/CompletedTab';
 import Task from '../components/Task';
+import EditProfile from '../components/EditProfile';
 
 const Dashboard = () => {
   const [todoTasks, setTodoTasks] = useState([]);
@@ -267,6 +268,7 @@ const Dashboard = () => {
           setInProgressTasks={setInProgressTasks}
           setCompletedTasks={setCompletedTasks}
         />
+        <EditProfile />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import axios from '../api/axios';
 import editIcon from '../assets/icons/edit-icon.svg';
 import deleteIcon from '../assets/icons/delete-icon.svg';
 import LoadingSpinner from './ui-states/loadingSpinner';
+import LoadingSpinnerBlue from './ui-states/loadingSpinnerBlue';
 
 const Task = ({
   taskId,
@@ -257,7 +258,7 @@ const Task = ({
                   </div>
                 ) : loading ? (
                   <div className='w-full'>
-                    <LoadingSpinner />
+                    <LoadingSpinnerBlue />
                   </div>
                 ) : (
                   <div className='py-6 px-6 lg:px-8'>
