@@ -18,30 +18,20 @@ const Sidebar = ({
   setSort,
   sortOldest,
   sortDueDate,
+  setProfileModalOpen,
+  firstName,
+  lastName,
+  email,
 }) => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
-  const decoded = jwt_decode(token);
-  const id = decoded.user;
-  const USER_URL = `/user/${id}`;
-  const [firstName, setFirstName] = useState('Luv');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [toggleSort, setToggleSort] = useState(false);
   const [toggleFilter, setToggleFilter] = useState(false);
 
-  const getUser = async () => {
-    await axios.get(USER_URL).then((response) => {
-      setFirstName(response?.data?.firstName);
-      setLastName(response?.data?.lastName);
-      setEmail(response?.data?.email);
-    });
+  const handleModalOpen = () => {
+    setProfileModalOpen(true);
   };
-
-  useEffect(() => {
-    getUser();
-  }, []);
 
   const handleLogout = () => {
     setLoading(true);
@@ -110,7 +100,7 @@ const Sidebar = ({
           <li id='logo'>
             <img src={doowitLogo} className='w-2/3 h-auto pt-14 pb-8' />
           </li>
-          <li className='flex items-center space-x-4 pb-6' id='user-info'>
+          <li className='flex items-center space-x-4 pb-2' id='user-info'>
             <img
               src={defaultDisplayphoto}
               className='w-10 h-10 rounded-full border-4 border-white'
@@ -121,6 +111,14 @@ const Sidebar = ({
               </div>
               <div className='text-xs text-white'>{email}</div>
             </div>
+          </li>
+          <li className='flex items-center pl-14 pb-8'>
+            <button
+              className='text-xs bg-lightgray font-bold py-1 px-3 rounded-lg text-grey border border-lightgray text-center hover:opacity-80 self-center my-auto'
+              onClick={handleModalOpen}
+            >
+              Edit Profile
+            </button>
           </li>
           <li>
             <a

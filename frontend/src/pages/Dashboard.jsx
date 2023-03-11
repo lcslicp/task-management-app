@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import axios from '../api/axios';
+import jwt_decode from 'jwt-decode';
 import { initialState, reducer } from '../reducers/loadingStates';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,7 +29,15 @@ const Dashboard = () => {
   const [taskPriority, setTaskPriority] = useState('');
   const [taskDue, setTaskDue] = useState('');
   const [taskDate, setTaskDate] = useState('');
+
+  const [userId, setUserId] = useState();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const [taskOpen, setTaskOpen] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const navigate = useNavigate();
@@ -37,9 +46,12 @@ const Dashboard = () => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
+  const decoded = jwt_decode(token);
+  const decodedId = decoded.user;
   const TODO_TASK_URL = '/tasks/todo';
   const INPROGRESS_TASK_URL = '/tasks/inprogress';
   const COMPLETED_TASK_URL = '/tasks/completed';
+  const USER_URL = `/user/${decodedId}`;
 
   const fetchTodoData = async () => {
     dispatch({ type: 'SET_LOADING_TODOTAB' });
@@ -130,10 +142,24 @@ const Dashboard = () => {
     );
   };
 
+  const getUser = async () => {
+    await axios.get(USER_URL).then((response) => {
+      setUserId(response?.data?.id);
+      setFirstName(response?.data?.firstName);
+      setLastName(response?.data?.lastName);
+      setEmail(response?.data?.email);
+    });
+  };
+
   const handleTaskOpen = (id) => {
     fetchTasksData(id);
     setTaskOpen(true);
     navigate(`/${id}`);
+  };
+
+  const handleProfileModalClose = () => {
+    setProfileModalOpen(false);
+    navigate('/dashboard');
   };
 
   const sortOldest = () => {
@@ -149,6 +175,10 @@ const Dashboard = () => {
     fetchInProgresssData();
     fetchCompletedData();
   }, []);
+
+  useEffect(() => {
+    getUser();
+  }, [firstName, lastName, email]);
 
   const tabdata = [
     {
@@ -223,9 +253,13 @@ const Dashboard = () => {
         setSort={setSort}
         sortOldest={sortOldest}
         sortDueDate={sortDueDate}
+        setProfileModalOpen={setProfileModalOpen}
+        firstName={firstName}
+        lastName={lastName}
+        email={email}
       />
       <div className='flex flex-col w-full'>
-        <Header handleTaskOpen={handleTaskOpen} />
+        <Header firstName={firstName} handleTaskOpen={handleTaskOpen} />
         <TabNavigation
           tabdata={tabdata}
           activeStatusTab={activeStatusTab}
@@ -268,7 +302,17 @@ const Dashboard = () => {
           setInProgressTasks={setInProgressTasks}
           setCompletedTasks={setCompletedTasks}
         />
-        <EditProfile />
+        <EditProfile
+          handleProfileModalClose={handleProfileModalClose}
+          profileModalOpen={profileModalOpen}
+          firstName={firstName}
+          setFirstName={setFirstName}
+          lastName={lastName}
+          setLastName={setLastName}
+          email={email}
+          setEmail={setEmail}
+          userId={userId}
+        />
       </div>
     </div>
   );

@@ -91,6 +91,7 @@ const reqUser = async (req, res) => {
   try {
     const user = await User.findOne({ _id: id });
     res.json({
+      id: user._id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -100,10 +101,42 @@ const reqUser = async (req, res) => {
   }
 };
 
+const editUser = async (req, res) => {
+  const { email, firstName, lastName, password: plainTextPassword } = req.body;
+
+  const password = await bcrypt.hash(plainTextPassword, 10);
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        email,
+        firstName,
+        lastName,
+        password,
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    res.status(200).json({ message: 'User updated.', user });
+  } catch (error) {
+    res.status(400).json({
+      error: 'Edit unsuccessful, please try again.',
+      message: error.message,
+    });
+  }
+};
+
 const UserController = {
   signup,
   authenticateUser,
   reqUser,
+  editUser,
 };
 
 export default UserController;

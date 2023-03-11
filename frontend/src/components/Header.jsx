@@ -1,30 +1,11 @@
-import { useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
-import axios from '../api/axios';
 import SearchBar from './SearchBar';
 
-const Header = ({handleTaskOpen}) => {
+const Header = ({firstName, handleTaskOpen}) => {
   const options = {
     month: 'long',
     year: 'numeric',
     day: 'numeric',
   };
-  const token = localStorage.getItem('token');
-  const decoded = jwt_decode(token);
-  const id = decoded.user;
-  const USER_URL = `/user/${id}`;
-
-  const [firstName, setFirstName] = useState('Luv');
-
-  const getUser = async () => {
-    await axios.get(USER_URL).then((response) => {
-      setFirstName(response?.data?.firstName);
-    });
-  };
-
-  useEffect(() => {
-    getUser();
-  }, []);
 
   const now = new Date().toLocaleDateString('default', options);
 
