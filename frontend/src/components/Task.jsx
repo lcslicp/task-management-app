@@ -20,9 +20,9 @@ const Task = ({
   isEditing,
   setIsEditing,
   loading,
-  addTodo,
-  addInProgress,
-  addCompleted,
+  updateTodo,
+  updateInProgress,
+  updateCompleted,
   setTodoTasks,
   setInProgressTasks,
   setCompletedTasks,
@@ -97,10 +97,10 @@ const Task = ({
         onUpdate(response);
         {
           response.data.task.status === 'To Do'
-            ? addTodo(response.data.task)
+            ? updateTodo(response.data.task)
             : response.data.task.status === 'In Progress'
-            ? addInProgress(response.data.task)
-            : addCompleted(response.data.task);
+            ? updateInProgress(response.data.task)
+            : updateCompleted(response.data.task);
         }
       })
       .then(setIsLoading(false));

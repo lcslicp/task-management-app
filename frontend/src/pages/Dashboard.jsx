@@ -15,6 +15,9 @@ import CompletedTab from '../components/tab-components/CompletedTab';
 import Task from '../components/Task';
 import EditProfile from '../components/EditProfile';
 
+
+
+
 const Dashboard = () => {
   const [todoTasks, setTodoTasks] = useState([]);
   const [inProgressTasks, setInProgressTasks] = useState([]);
@@ -34,7 +37,7 @@ const Dashboard = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [userImage, setUserImage] = useState({file: []});
 
   const [taskOpen, setTaskOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
@@ -118,7 +121,20 @@ const Dashboard = () => {
     setTaskDue(updatedTask.dueDate);
   };
 
-  const addTodo = (updatedTask) => {
+  const addTodo = (newTask) => {
+    setTodoTasks((prevState) => [...prevState, newTask]);
+  };
+
+  const addInProgress = (newTask) => {
+    setInProgressTasks((prevState) => [...prevState, newTask]);
+  };
+
+  const addCompleted = (newTask) => {
+    setCompletedTasks((prevState) => [...prevState, newTask]);
+  };
+
+  const updateTodo = (updatedTask) => {
+    console.log(todoTasks);
     setTodoTasks((prevState) =>
       prevState.map((task) =>
         task._id === updatedTask._id ? updatedTask : task
@@ -126,7 +142,8 @@ const Dashboard = () => {
     );
   };
 
-  const addInProgress = (updatedTask) => {
+  const updateInProgress = (updatedTask) => {
+    console.log(inProgressTasks);
     setInProgressTasks((prevState) =>
       prevState.map((task) =>
         task._id === updatedTask._id ? updatedTask : task
@@ -134,7 +151,7 @@ const Dashboard = () => {
     );
   };
 
-  const addCompleted = (updatedTask) => {
+  const updateCompleted = (updatedTask) => {
     setCompletedTasks((prevState) =>
       prevState.map((task) =>
         task._id === updatedTask._id ? updatedTask : task
@@ -143,11 +160,13 @@ const Dashboard = () => {
   };
 
   const getUser = async () => {
-    await axios.get(USER_URL).then((response) => {
-      setUserId(response?.data?.id);
-      setFirstName(response?.data?.firstName);
-      setLastName(response?.data?.lastName);
-      setEmail(response?.data?.email);
+    await axios.get(USER_URL, config).then((response) => {
+      const { id, firstName, lastName, email, userImage } = response?.data;
+      setUserId(id);
+      setFirstName(firstName);
+      setLastName(lastName);
+      setEmail(email);
+      setUserImage(userImage);
     });
   };
 
@@ -178,7 +197,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getUser();
-  }, [firstName, lastName, email]);
+  }, [firstName, lastName, email, userImage]);
 
   const tabdata = [
     {
@@ -257,6 +276,9 @@ const Dashboard = () => {
         firstName={firstName}
         lastName={lastName}
         email={email}
+        userImage={userImage}
+        setUserImage={setUserImage}
+        decodedId={decodedId}
       />
       <div className='flex flex-col w-full'>
         <Header firstName={firstName} handleTaskOpen={handleTaskOpen} />
@@ -295,9 +317,9 @@ const Dashboard = () => {
           isEditing={isEditing}
           setIsEditing={setIsEditing}
           loading={state.loadingTaskModal}
-          addTodo={addTodo}
-          addInProgress={addInProgress}
-          addCompleted={addCompleted}
+          updateTodo={updateTodo}
+          updateInProgress={updateInProgress}
+          updateCompleted={updateCompleted}
           setTodoTasks={setTodoTasks}
           setInProgressTasks={setInProgressTasks}
           setCompletedTasks={setCompletedTasks}
@@ -312,6 +334,8 @@ const Dashboard = () => {
           email={email}
           setEmail={setEmail}
           userId={userId}
+          userImage={userImage}
+          setUserImage={setUserImage}
         />
       </div>
     </div>

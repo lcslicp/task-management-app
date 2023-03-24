@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
 import axios from '../api/axios';
-import profilePic from '../assets/icons/default-displayphoto.svg';
+import defaultPhoto from '../assets/icons/default-displayphoto.svg';
 
 const EditProfile = ({
   handleProfileModalClose,
@@ -12,37 +13,73 @@ const EditProfile = ({
   email,
   setEmail,
   userId,
+  userImage,
+  setUserImage,
 }) => {
-  const firstNameRef = useRef(null);
-  const lastNameRef = useRef(null);
-  const emailRef = useRef(null);
+
+  const [fileName, setFileName] = useState('No file chosen.');
+  const [imagePreview, setImagePreview] = useState();
+  const [selectedFile, setSelectedFile] =useState(null);
 
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { 
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}` },
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('firstName', firstName)
+    formData.append('lastName', lastName)
+    formData.append('email', email)
+    formData.append('userImage', selectedFile);
+
     await axios
       .put(
-        `/edit/user/${userId}`,
-        {
-          firstName: firstNameRef.current.value,
-          lastName: lastNameRef.current.value,
-          email: emailRef.current.value,
-          password: 'doowit',
-        },
+        `/edit/user/${userId}`, formData,
         config
       )
       .then((response) => {
-        setFirstName(response?.data?.firstName);
-        setLastName(response?.data?.lastName);
-        setEmail(response?.data?.email);
-        handleProfileModalClose();
+        setFirstName(response?.data?.firstName)
+        setLastName(response?.data?.lastName)
+        setEmail(response?.data?.email)
+        setUserImage(response?.data?.userImage);
       })
       .catch((error) => console.error(error));
   };
+
+  const handleImageChange = (e) => {
+    const uploadedImage = e.target.files[0];
+    setFileName(uploadedImage.name)
+    setSelectedFile(uploadedImage)
+      setImagePreview(userImage)
+    if (uploadedImage) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result)
+      }
+      reader.readAsDataURL(uploadedImage);
+    }
+  }
+
+  const loadDefaultPhoto = () => {
+      setImagePreview(userImage)
+      console.log(`imagepreview:${imagePreview}`);
+  }
+
+  const handleImageClick = () => {
+    document.getElementById('imageInput').click();
+  }
+
+  const handleRemoveClick = () => {
+    setSelectedFile(null);
+    setImagePreview(defaultPhoto)
+    document.getElementById('imageInput').value = null;
+    setFileName('No file chosen.')
+  }
 
   return (
     <>
@@ -81,17 +118,27 @@ const EditProfile = ({
                   <form onSubmit={handleSubmit} className='space-y-6'>
                     <div className='flex flex-col gap-4'>
                       <div className='flex flex-row pr-8 gap-6 '>
+                        <input type='file' accept='image/*' onChange={handleImageChange}
+                        id='imageInput'
+                        className='hidden' />
                         <img
-                          src={profilePic}
+                          src={imagePreview}
                           alt=''
-                          className=' border-lightergray w-16 h-16 rounded-full'
+                          className=' border-lightergray w-16 h-16 rounded-full object-cover'
                         />
-                        <button className='text-xs  font-bold py-2 px-3 rounded-lg text-brightblue border border-brightblue text-center hover:opacity-80 self-center my-auto'>
+                        <div>
+                        <p className='text-xs italic pb-2 truncate max-w-xs max-h-10 overflow-hidden'>{fileName}</p>
+                        
+                        <button className='text-xs  font-bold py-2 px-3 rounded-lg text-brightblue border border-brightblue text-center hover:opacity-80 self-center my-auto mr-4' onClick={handleImageClick}>
                           Update Photo
                         </button>
-                        <button className='text-xs bg-lightgray font-bold py-2 px-3 rounded-lg text-grey border border-lightgray text-center hover:opacity-80 self-center my-auto'>
+                        <button className='text-xs bg-lightgray font-bold py-2 px-3 rounded-lg text-grey border border-lightgray text-center hover:opacity-80 self-center my-auto'
+                        onClick={handleRemoveClick}
+                        >
                           Remove
                         </button>
+                        </div>
+                        
                       </div>
                       <div className='flex flex-col w-full'>
                         <div className='pt-4'>
@@ -105,10 +152,10 @@ const EditProfile = ({
                             type='text'
                             maxLength={11}
                             className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block p-2.5 w-full'
+                            autoComplete='off'
                             id='firstName'
                             name='firstName'
                             defaultValue={firstName}
-                            ref={firstNameRef}
                           />
                         </div>
                         <div className='pt-4'>
@@ -125,7 +172,6 @@ const EditProfile = ({
                             id='lastName'
                             name='lastName'
                             defaultValue={lastName}
-                            ref={lastNameRef}
                           />
                         </div>
                         <div className='pt-4'>
@@ -141,7 +187,6 @@ const EditProfile = ({
                             id='email'
                             name='email'
                             defaultValue={email}
-                            ref={emailRef}
                           />
                         </div>
                         <div className='pt-8 pb-4 flex flex-row place-content-between items-center'>
@@ -165,7 +210,7 @@ const EditProfile = ({
                           </button>
 
                           <button
-                            type='submit'
+                            type='button'
                             className='w-full text-black bg-lightgray focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center hover:brightness-90'
                             onClick={() => handleProfileModalClose()}
                           >

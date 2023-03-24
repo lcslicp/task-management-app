@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import jwt_decode from 'jwt-decode';
 import axios from '../api/axios';
 
-import doowitLogo from '../assets/icons/doowit-logo.svg';
-import defaultDisplayphoto from '../assets/icons/default-displayphoto.svg';
 import LoadingSpinner from './ui-states/loadingSpinner';
 import dashIcon from '../assets/icons/dashboard-icon.svg';
 import sortIcon from '../assets/icons/sort-icon.svg';
 import filterIcon from '../assets/icons/filter-icon.svg';
 import logoutIcon from '../assets/icons/logout-icon.svg';
+import DoowitLogo from '../assets/icons/doowit-logo.svg';
+import defaultPhoto from '../assets/icons/default-displayphoto.svg';
+// import dd from '../../../uploads/vvvv.jpg'
 
 const Sidebar = ({
   priorityFilter,
@@ -22,12 +22,18 @@ const Sidebar = ({
   firstName,
   lastName,
   email,
+  userImage,
 }) => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [toggleSort, setToggleSort] = useState(false);
   const [toggleFilter, setToggleFilter] = useState(false);
+
+  const token = JSON.parse(localStorage.getItem('token'));
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   const handleModalOpen = () => {
     setProfileModalOpen(true);
@@ -98,12 +104,12 @@ const Sidebar = ({
       <div className='h-screen overflow-y-auto py-4 px-8 bg-darkblue'>
         <ul className='space-y-2'>
           <li id='logo'>
-            <img src={doowitLogo} className='w-2/3 h-auto pt-14 pb-8' />
+            <img src={DoowitLogo} className='w-2/3 h-auto pt-14 pb-8' />
           </li>
           <li className='flex items-center space-x-4 pb-2' id='user-info'>
             <img
-              src={defaultDisplayphoto}
-              className='w-10 h-10 rounded-full border-4 border-white'
+              src={userImage}
+              className='w-10 h-10 rounded-full border-4 border-white object-cover'
             />
             <div className='space-y-1'>
               <div className='font-bold text-white text-base'>

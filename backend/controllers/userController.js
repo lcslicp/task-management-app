@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import 'path';
 
 import User from '../models/User.js';
 
@@ -27,6 +28,13 @@ const signup = async (req, res) => {
     password: hashedPwd,
   });
 
+  if(req.file) {
+    user.userImage = req.file.path
+  }
+  else {
+    user.userImage = './default.svg';
+  }
+
   const accessToken = jwt.sign(
     { user: user._id },
     '' + process.env.ACCESS_TOKEN_SECRET,
@@ -38,12 +46,15 @@ const signup = async (req, res) => {
     httpOnly: true,
   });
 
+  user.save();
+
   if (user) {
     res.status(201).json({
       _id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
+      userImage: user.userImage,
       token: accessToken,
     });
   } else {
@@ -60,7 +71,7 @@ const authenticateUser = async (req, res) => {
   const foundUser = await User.findOne({ email: email });
   if (!foundUser) return res.sendStatus(401); //Unauthorized
 
-  const matchPwd = await bcrypt.compare(password, foundUser.password);
+  const matchPwd = bcrypt.compare(password, foundUser.password);
   if (matchPwd) {
     const accessToken = jwt.sign(
       { user: foundUser._id },
@@ -95,25 +106,30 @@ const reqUser = async (req, res) => {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      userImage: user.userImage,
     });
   } catch (error) {
     console.error;
   }
 };
 
-const editUser = async (req, res) => {
-  const { email, firstName, lastName, password: plainTextPassword } = req.body;
 
-  const password = await bcrypt.hash(plainTextPassword, 10);
+const editUser = async (req, res) => {
+  const { email, firstName, lastName } = req.body;
+
+
+  let updatedUser = {
+    email,
+    firstName,
+    lastName,
+    userImage: req.file?.path.replace('frontend\\public\\', './'),
+  };
+  console.log(`req.file: ${updatedUser.userImage}`);
+console.log(req.file);
   try {
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      {
-        email,
-        firstName,
-        lastName,
-        password,
-      },
+      updatedUser,
       {
         new: true,
       }
