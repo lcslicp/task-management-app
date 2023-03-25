@@ -127,14 +127,13 @@ const getSingleTask = async (req, res) => {
       error: 'Task not found.',
       message: error.message,
     });
-  } 
+  }
 };
 
 const searchTasks = async (req, res) => {
   try {
     const query = req.query.title;
-    console.log(query);
-    const tasks = await Task.find({ title: { $regex: query, $options: 'i' } });
+    const tasks = await Task.find({user: req.user.id, title: { $regex: query, $options: 'i' } });
     res.json(tasks);
   } catch (error) {
     res.status(404).json({

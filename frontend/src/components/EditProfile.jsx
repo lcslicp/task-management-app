@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import axios from '../api/axios';
 import defaultPhoto from '../assets/icons/default-displayphoto.svg';
 
@@ -13,73 +12,81 @@ const EditProfile = ({
   email,
   setEmail,
   userId,
-  userImage,
   setUserImage,
+  imagePreview,
+  setImagePreview,
 }) => {
-
   const [fileName, setFileName] = useState('No file chosen.');
-  const [imagePreview, setImagePreview] = useState();
-  const [selectedFile, setSelectedFile] =useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const imageInputRef = useRef();
+  const firstNameRef = useRef();
+  const lastNameRef = useRef();
+  const emailRef = useRef();
 
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
-    headers: { 
+    headers: {
       'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${token}` },
+      'Authorization': `Bearer ${token}`,
+    },
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append('firstName', firstName)
-    formData.append('lastName', lastName)
-    formData.append('email', email)
-    formData.append('userImage', selectedFile);
-
-    await axios
-      .put(
-        `/edit/user/${userId}`, formData,
-        config
-      )
-      .then((response) => {
-        setFirstName(response?.data?.firstName)
-        setLastName(response?.data?.lastName)
-        setEmail(response?.data?.email)
-        setUserImage(response?.data?.userImage);
-      })
-      .catch((error) => console.error(error));
+  const handleFormReset = () => {
+    imageInputRef.current.files = null;
+    setFileName('No file chosen.');
+    handleProfileModalClose();
   };
 
   const handleImageChange = (e) => {
     const uploadedImage = e.target.files[0];
-    setFileName(uploadedImage.name)
-    setSelectedFile(uploadedImage)
-      setImagePreview(userImage)
+
     if (uploadedImage) {
+      setFileName(uploadedImage.name);
+      setSelectedFile(uploadedImage);
       const reader = new FileReader();
-      reader.onload = () => {
-        setImagePreview(reader.result)
-      }
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
       reader.readAsDataURL(uploadedImage);
     }
-  }
+  };
 
-  const loadDefaultPhoto = () => {
-      setImagePreview(userImage)
-      console.log(`imagepreview:${imagePreview}`);
-  }
+  const handleUpdateImage = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('userImage', selectedFile);
 
-  const handleImageClick = () => {
+    await axios
+      .put(`/edit/user/${userId}`, formData, config)
+      .then((response) => {
+        setUserImage(response?.data.userImage);
+        handleFormReset();
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = {
+      firstName: firstNameRef.current.value,
+      lastName: lastNameRef.current.value,
+      email: emailRef.current.value,
+    };
+
+    try {
+      const response = await axios.put(`/edit/user/${userId}`, data, config);
+      setFirstName(response?.data?.firstName);
+      setLastName(response?.data?.lastName);
+      setEmail(response?.data?.email);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleImageClick = (e) => {
+    e.preventDefault();
     document.getElementById('imageInput').click();
-  }
-
-  const handleRemoveClick = () => {
-    setSelectedFile(null);
-    setImagePreview(defaultPhoto)
-    document.getElementById('imageInput').value = null;
-    setFileName('No file chosen.')
-  }
+  };
 
   return (
     <>
@@ -115,32 +122,54 @@ const EditProfile = ({
                     Edit Profile
                   </h1>
 
-                  <form onSubmit={handleSubmit} className='space-y-6'>
+                  <div className='space-y-6'>
                     <div className='flex flex-col gap-4'>
-                      <div className='flex flex-row pr-8 gap-6 '>
-                        <input type='file' accept='image/*' onChange={handleImageChange}
-                        id='imageInput'
-                        className='hidden' />
+                      <form className='flex flex-row pr-8 gap-6 '>
+                        <input
+                          type='file'
+                          accept='image/*'
+                          onChange={handleImageChange}
+                          id='imageInput'
+                          className='hidden'
+                          ref={imageInputRef}
+                        />
                         <img
                           src={imagePreview}
                           alt=''
                           className=' border-lightergray w-16 h-16 rounded-full object-cover'
                         />
                         <div>
-                        <p className='text-xs italic pb-2 truncate max-w-xs max-h-10 overflow-hidden'>{fileName}</p>
-                        
-                        <button className='text-xs  font-bold py-2 px-3 rounded-lg text-brightblue border border-brightblue text-center hover:opacity-80 self-center my-auto mr-4' onClick={handleImageClick}>
-                          Update Photo
-                        </button>
-                        <button className='text-xs bg-lightgray font-bold py-2 px-3 rounded-lg text-grey border border-lightgray text-center hover:opacity-80 self-center my-auto'
-                        onClick={handleRemoveClick}
-                        >
-                          Remove
-                        </button>
+                          <p className='text-xs italic truncate w-28 max-h-10 overflow-hidden'>
+                            {fileName}
+                          </p>
+
+                          <button
+                            className='text-xs  font-bold py-2 px-3 rounded-lg text-brightblue border border-brightblue text-center hover:opacity-80 self-center my-auto mr-4'
+                            onClick={handleImageClick}
+                          >
+                            Upload
+                          </button>
+
+                          <button
+                            type='submit'
+                            onClick={handleUpdateImage}
+                            className='w-fit text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-xs font-bold text-center mt-4 px-4 py-2'
+                            style={{
+                              visibility:
+                                fileName !== 'No file chosen.'
+                                  ? 'visible'
+                                  : 'hidden',
+                            }}
+                          >
+                            Update Photo
+                          </button>
                         </div>
-                        
-                      </div>
-                      <div className='flex flex-col w-full'>
+                      </form>
+
+                      <form
+                        onSubmit={handleSubmit}
+                        className='flex flex-col w-full'
+                      >
                         <div className='pt-4'>
                           <label
                             htmlFor='firstName'
@@ -155,6 +184,7 @@ const EditProfile = ({
                             autoComplete='off'
                             id='firstName'
                             name='firstName'
+                            ref={firstNameRef}
                             defaultValue={firstName}
                           />
                         </div>
@@ -171,6 +201,7 @@ const EditProfile = ({
                             className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block p-2.5 w-full'
                             id='lastName'
                             name='lastName'
+                            ref={lastNameRef}
                             defaultValue={lastName}
                           />
                         </div>
@@ -186,6 +217,7 @@ const EditProfile = ({
                             className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block p-2.5 w-full'
                             id='email'
                             name='email'
+                            ref={emailRef}
                             defaultValue={email}
                           />
                         </div>
@@ -217,9 +249,9 @@ const EditProfile = ({
                             Cancel
                           </button>
                         </div>
-                      </div>
+                      </form>
                     </div>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>

@@ -40,11 +40,11 @@ const SearchBar = ({ handleTaskOpen }) => {
       />
 
       {searchResults.length > 0 && searchInput.length > 0 && (
-        <ul className='fixed bg-white px-7 rounded-lg z-50 top-24 right-32 ml-4 w-1/3 drop-shadow-md'>
-          {searchResults.map((result) =>
-            isLoading ? (
+        <ul className='fixed bg-white px-7 rounded-lg z-50 top-24 right-96 mr-3 w-1/3 drop-shadow-md'>
+          {isLoading ? (
               <LoadingSpinner className='w-1 h-1' />
             ) : (
+              searchResults.map((result) =>
               <li
                 key={result._id}
                 className=' border-b border-solid  border-gray-400 pb-3 pt-3 cursor-pointer'

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
 
 const TaskCard = ({
@@ -13,7 +12,6 @@ const TaskCard = ({
   setCompletedTasks,
 }) => {
   const [dropdown, setDropdown] = useState('hidden');
-  const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem('token'));
   const config = {
     headers: { Authorization: `Bearer ${token}` },

@@ -38,6 +38,7 @@ const Dashboard = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [userImage, setUserImage] = useState({file: []});
+  const [imagePreview, setImagePreview] =useState({file: []});
 
   const [taskOpen, setTaskOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
@@ -134,7 +135,6 @@ const Dashboard = () => {
   };
 
   const updateTodo = (updatedTask) => {
-    console.log(todoTasks);
     setTodoTasks((prevState) =>
       prevState.map((task) =>
         task._id === updatedTask._id ? updatedTask : task
@@ -143,7 +143,6 @@ const Dashboard = () => {
   };
 
   const updateInProgress = (updatedTask) => {
-    console.log(inProgressTasks);
     setInProgressTasks((prevState) =>
       prevState.map((task) =>
         task._id === updatedTask._id ? updatedTask : task
@@ -167,6 +166,7 @@ const Dashboard = () => {
       setLastName(lastName);
       setEmail(email);
       setUserImage(userImage);
+      setImagePreview(userImage)
     });
   };
 
@@ -194,6 +194,8 @@ const Dashboard = () => {
     fetchInProgresssData();
     fetchCompletedData();
   }, []);
+
+
 
   useEffect(() => {
     getUser();
@@ -334,8 +336,9 @@ const Dashboard = () => {
           email={email}
           setEmail={setEmail}
           userId={userId}
-          userImage={userImage}
           setUserImage={setUserImage}
+          imagePreview={imagePreview}
+          setImagePreview={setImagePreview}
         />
       </div>
     </div>

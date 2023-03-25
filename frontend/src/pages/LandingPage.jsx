@@ -6,24 +6,12 @@ import LandingpageLottie from '../assets/animations/LandingpageLottie';
 
 const LandingPage = () => {
 
-  const links = [
-    { id: 1, href: '/', label: 'About' },
-    { id: 2, href: '/', label: 'Github' },
-    { id: 3, href: '/', label: 'Help' },
-  ];
-
   return (
     <section className='w-screen h-screen flex flex-row'>
       <div className='flex flex-col w-3/5 pl-24 pt-12'>
         <div id='header' className='flex flex-row items-center'>
           <img src={doowitLogo} className='w-1/5 h-auto pr-8' />
-          <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-40 gap-5 z-10'>
-            {links.map((link) => (
-              <li key={link.id} className='block py-2 pr-4 pl-3 ml-12 text-black font-semibold hover:text-brightblue md:p-0'>
-                <a href={link.href}>{link.label}</a>
-              </li>
-            ))}
-          </ul>
+          
         </div>
 
         <div id='slogan' className='w-2/3 '>
