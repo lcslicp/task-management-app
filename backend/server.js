@@ -4,6 +4,8 @@ import cors from 'cors';
 import logger from 'morgan';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import errorHandler from './middleware/errorHandler.js';
 
 import taskRoutes from './routes/taskRoutes.js';
@@ -17,13 +19,15 @@ const app = express();
 app.use(logger('dev'));
 app.use(cors({
     credentials: true,
-    origin: ['http://localhost:3000']
+    origin: ['https://doowit.netlify.app/']
 }));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.static('uploads'));
+app.get('/', (req, res) => { res.send('Hello from Express!')});
 app.use('/', userRoutes);
 app.use('/', verifyJWT);
 app.use('/', taskRoutes);
@@ -35,6 +39,12 @@ mongoose.connect(process.env.DB_HOST, {
     useUnifiedTopology: true
 }).then(() => console.log('Established connection with MongoDB.')).catch(console.error);
 
-const PORT = process.env.PORT || 5000;
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('frontend/dist' ));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
+    })
+}
 
 app.listen(PORT, console.log(`Server running in Port ${PORT}`));
