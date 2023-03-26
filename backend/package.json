@@ -12,7 +12,7 @@
     "start": "node backend/server.js",
     "server": "node backend/server.js",
     "dev": "concurrently \"npm run server\" \"npm run start\"",
-    "build": "vite build",
+    "build": "cd frontend && npm install && npm run build",
     "preview": "vite preview"
   },
   "repository": {
