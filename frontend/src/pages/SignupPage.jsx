@@ -21,7 +21,6 @@ const SignupPage = () => {
 
   const [userFirstName, setUserFirstName] = useState('');
   const [userLastName, setUserLastName] = useState('');
-
   const [userEmail, setUserEmail] = useState('');
 
   const [pwd, setPwd] = useState('');
@@ -105,12 +104,6 @@ const SignupPage = () => {
       errRef.current.focus();
     }
   };
-
-  const links = [
-    { id: 1, href: '/', label: 'About' },
-    { id: 2, href: '/', label: 'Github' },
-    { id: 3, href: '/', label: 'Help' },
-  ];
 
   return (
     <section className='w-screen h-screen flex flex-row'>
@@ -245,18 +238,6 @@ const SignupPage = () => {
       </div>
       <div className='bg-brightblue w-2/3 flex flex-col overflow-x-hidden'>
         <div className='flex flex-row items-center justify-end gap-10 pt-12'>
-          <ul className='flex mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium pr-24 gap-5 z-10'>
-            {links.map((link) => (
-              <li key={link.id}>
-                <a
-                  href={link.href}
-                  className='block py-2 pl-3 ml-12 text-white font-semibold md:p-0 hover:brightness-90'
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div>

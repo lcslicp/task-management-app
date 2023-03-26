@@ -28,10 +28,9 @@ const signup = async (req, res) => {
     password: hashedPwd,
   });
 
-  if(req.file) {
-    user.userImage = req.file.path
-  }
-  else {
+  if (req.file) {
+    user.userImage = req.file.path;
+  } else {
     user.userImage = './default.svg';
   }
 
@@ -69,7 +68,7 @@ const authenticateUser = async (req, res) => {
     return res.sendStatus(400).json({ message: 'All fields are required.' });
 
   const foundUser = await User.findOne({ email: email });
-  if (!foundUser) return res.sendStatus(401); //Unauthorized
+  if (!foundUser) return res.sendStatus(404);
 
   const matchPwd = bcrypt.compare(password, foundUser.password);
   if (matchPwd) {
@@ -107,16 +106,15 @@ const reqUser = async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       userImage: user.userImage,
+      password: user.password,
     });
   } catch (error) {
     console.error;
   }
 };
 
-
 const editUser = async (req, res) => {
   const { email, firstName, lastName } = req.body;
-
 
   let updatedUser = {
     email,
@@ -125,15 +123,11 @@ const editUser = async (req, res) => {
     userImage: req.file?.path.replace('frontend\\public\\', './'),
   };
   console.log(`req.file: ${updatedUser.userImage}`);
-console.log(req.file);
+  console.log(req.file);
   try {
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      updatedUser,
-      {
-        new: true,
-      }
-    );
+    const user = await User.findByIdAndUpdate(req.params.id, updatedUser, {
+      new: true,
+    });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
@@ -148,11 +142,36 @@ console.log(req.file);
   }
 };
 
+const updatePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const id = req.params.id;
+
+  const foundUser = await User.findOne({ _id: id });
+  if (!foundUser) return res.sendStatus(404);
+
+  const matchPwd = await bcrypt.compare(oldPassword, foundUser.password);
+
+  if (!matchPwd) {
+    return res.status(401).json({ error: 'Old password is incorrect' });
+  }
+
+  const hashedPwd = await bcrypt.hash(newPassword, 10);
+
+  foundUser.password = hashedPwd;
+
+  await foundUser.save();
+  res.status(200).json({
+    message: 'Password updated.',
+    foundUser,
+  });
+};
+
 const UserController = {
   signup,
   authenticateUser,
   reqUser,
   editUser,
+  updatePassword,
 };
 
 export default UserController;

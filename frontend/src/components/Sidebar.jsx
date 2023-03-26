@@ -30,11 +30,6 @@ const Sidebar = ({
   const [toggleSort, setToggleSort] = useState(false);
   const [toggleFilter, setToggleFilter] = useState(false);
 
-  const token = JSON.parse(localStorage.getItem('token'));
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-
   const handleModalOpen = () => {
     setProfileModalOpen(true);
   };
@@ -101,7 +96,7 @@ const Sidebar = ({
 
   return (
     <aside className='w-72 fixed z-30' aria-label='Sidebar'>
-      <div className='h-screen overflow-y-auto py-4 px-8 bg-darkblue'>
+      <div className='h-screen overflow-y-auto py-4 px-8 bg-brightblue'>
         <ul className='space-y-2'>
           <li id='logo'>
             <img src={DoowitLogo} className='w-2/3 h-auto pt-14 pb-8' />

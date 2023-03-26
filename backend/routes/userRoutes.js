@@ -7,8 +7,12 @@ const router = Router();
 
 router.post('/signup', UserController.signup);
 router.post('/login', UserController.authenticateUser);
-router.get('/user/:id', UserController.reqUser );
-router.put('/edit/user/:id', upload.single('userImage'), UserController.editUser);
-
+router.get('/user/:id', UserController.reqUser);
+router.put(
+  '/edit/user/:id',
+  upload.single('userImage'),
+  UserController.editUser
+);
+router.put('/edit/pwd/:id', UserController.updatePassword);
 
 export default router;

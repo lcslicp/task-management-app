@@ -39,11 +39,13 @@ const SearchBar = ({ handleTaskOpen }) => {
         placeholder='Search Task...'
       />
 
-      {searchResults.length > 0 && searchInput.length > 0 && (
+      {searchInput.length > 0 && (
         <ul className='fixed bg-white px-7 rounded-lg z-50 top-24 right-96 mr-3 w-1/3 drop-shadow-md'>
           {isLoading ? (
               <LoadingSpinner className='w-1 h-1' />
-            ) : (
+            ) : searchResults.length === 0 ? (<p className='text-sm text-darkblue italic py-5'>
+            No tasks found.
+          </p>) : (
               searchResults.map((result) =>
               <li
                 key={result._id}

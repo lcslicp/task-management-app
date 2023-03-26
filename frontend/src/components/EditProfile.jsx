@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import axios from '../api/axios';
-import defaultPhoto from '../assets/icons/default-displayphoto.svg';
 
 const EditProfile = ({
   handleProfileModalClose,
@@ -15,6 +14,7 @@ const EditProfile = ({
   setUserImage,
   imagePreview,
   setImagePreview,
+  setPasswordModalOpen,
 }) => {
   const [fileName, setFileName] = useState('No file chosen.');
   const [selectedFile, setSelectedFile] = useState(null);
@@ -78,6 +78,7 @@ const EditProfile = ({
       setFirstName(response?.data?.firstName);
       setLastName(response?.data?.lastName);
       setEmail(response?.data?.email);
+      handleProfileModalClose();
     } catch (error) {
       console.error(error);
     }
@@ -86,6 +87,11 @@ const EditProfile = ({
   const handleImageClick = (e) => {
     e.preventDefault();
     document.getElementById('imageInput').click();
+  };
+
+  const openPasswordModal = () => {
+    handleProfileModalClose();
+    setPasswordModalOpen(true);
   };
 
   return (
@@ -221,18 +227,7 @@ const EditProfile = ({
                             defaultValue={email}
                           />
                         </div>
-                        <div className='pt-8 pb-4 flex flex-row place-content-between items-center'>
-                          <p className='text-xs font-bold opacity-80 uppercase'>
-                            Change Password
-                          </p>
-                          <button
-                            className='text-xs  font-bold py-2 px-3 rounded-lg
-                        bg-lightergray text-gray border text-center hover:opacity-80 self-center my-auto'
-                          >
-                            Update Password
-                          </button>
-                        </div>
-                        <span className='w-full border-b'></span>
+
                         <div className='flex flex-row w-full space-x-4 pt-9'>
                           <button
                             type='submit'
@@ -250,6 +245,19 @@ const EditProfile = ({
                           </button>
                         </div>
                       </form>
+                      <span className='pt-8 w-full border-b'></span>
+                      <div className=' pb-4 flex flex-row place-content-between items-center'>
+                        <p className='text-xs font-bold opacity-80 uppercase'>
+                          Change Password
+                        </p>
+                        <button
+                          onClick={openPasswordModal}
+                          className='text-xs  font-bold py-2 px-3 rounded-lg
+                        bg-lightergray text-gray border text-center hover:opacity-80 self-center my-auto'
+                        >
+                          Update Password
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

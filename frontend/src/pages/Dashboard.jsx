@@ -14,9 +14,7 @@ import InProgressTab from '../components/tab-components/InProgressTab';
 import CompletedTab from '../components/tab-components/CompletedTab';
 import Task from '../components/Task';
 import EditProfile from '../components/EditProfile';
-
-
-
+import ChangePassword from '../components/ChangePassword';
 
 const Dashboard = () => {
   const [todoTasks, setTodoTasks] = useState([]);
@@ -37,12 +35,14 @@ const Dashboard = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [userImage, setUserImage] = useState({file: []});
-  const [imagePreview, setImagePreview] =useState({file: []});
+  const [userImage, setUserImage] = useState({ file: [] });
+  const [currentPwd, setCurrentPwd] = useState('');
+  const [imagePreview, setImagePreview] = useState({ file: [] });
 
   const [taskOpen, setTaskOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const navigate = useNavigate();
 
@@ -160,13 +160,14 @@ const Dashboard = () => {
 
   const getUser = async () => {
     await axios.get(USER_URL, config).then((response) => {
-      const { id, firstName, lastName, email, userImage } = response?.data;
+      const { id, firstName, lastName, email, userImage, password } =
+        response?.data;
       setUserId(id);
       setFirstName(firstName);
       setLastName(lastName);
       setEmail(email);
       setUserImage(userImage);
-      setImagePreview(userImage)
+      setImagePreview(userImage);
     });
   };
 
@@ -195,11 +196,9 @@ const Dashboard = () => {
     fetchCompletedData();
   }, []);
 
-
-
   useEffect(() => {
     getUser();
-  }, [firstName, lastName, email, userImage]);
+  }, [firstName, lastName, email, userImage, currentPwd]);
 
   const tabdata = [
     {
@@ -339,6 +338,13 @@ const Dashboard = () => {
           setUserImage={setUserImage}
           imagePreview={imagePreview}
           setImagePreview={setImagePreview}
+          setPasswordModalOpen={setPasswordModalOpen}
+        />
+        <ChangePassword
+          userId={userId}
+          passwordModalOpen={passwordModalOpen}
+          setPasswordModalOpen={setPasswordModalOpen}
+          setProfileModalOpen={setProfileModalOpen}
         />
       </div>
     </div>

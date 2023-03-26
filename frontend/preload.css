@@ -1,11 +1,12 @@
 .preload {
-    background-color: #2C3344;
-    width: 100vw;
-    height: 100vh;
+    background-color: #ffffff;
+    width: 90vw;
+    height: 90vh;
     padding: 0;
-    margin: -10px;
-    display: grid;
-    place-items: center;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
     transition: cubic-bezier(0.075, 0.82, 0.165, 1);
   }
