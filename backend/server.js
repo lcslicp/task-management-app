@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
+const __dirname = fileURLToPath(import.meta.url);
 import errorHandler from './middleware/errorHandler.js';
 
 import taskRoutes from './routes/taskRoutes.js';
@@ -15,7 +16,7 @@ import verifyJWT from './middleware/veriryJWT.js';
 dotenv.config();
 
 const app = express();
-
+const PORT = process.env.PORT || 5000;
 app.use(logger('dev'));
 app.use(cors({
     credentials: true,
