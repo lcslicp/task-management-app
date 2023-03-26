@@ -7,7 +7,7 @@ import homepageImage from '../assets/images/homepage-img.png'
 const LandingPage = () => {
 
   return (
-    <section className='w-screen h-screen flex flex-row'>
+    <section className='w-screen h-screen flex flex-row place-content-between'>
       <div className='flex flex-col w-3/5 pl-24 pt-12'>
         <div id='header' className='flex flex-row items-center'>
           <img src={doowitLogo} className='w-1/5 h-auto pr-8' />
@@ -34,8 +34,8 @@ const LandingPage = () => {
           </Link>
         </div>
       </div>
-      <div className='flex flex-col  bg-brightblue w-2/5 pl-24 pt-12'>
-        <div id='header' className='flex flex-row items-center justify-end pr-24 gap-10 z-10'>
+      <div className='flex flex-col bg-brightblue w-fit pt-12'>
+        <div id='header' className='flex flex-row items-center justify-end px-24 gap-10 z-10'>
           <Link
             to={'/login'}
             className='text-white font-bold hover:brightness-90 text-sm px-5 py-2.5 text-center '
