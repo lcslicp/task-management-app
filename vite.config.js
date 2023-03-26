@@ -11,6 +11,7 @@ build: {
   rollupOptions: {
     external: [
       /^node:.*/,
+      'library-name',
     ]
   }
 }
