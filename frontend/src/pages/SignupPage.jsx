@@ -237,17 +237,15 @@ const SignupPage = () => {
         </div>
       </div>
       <div className='bg-brightblue w-2/3 flex flex-col overflow-x-hidden'>
-        <div className='flex flex-row items-center justify-end gap-10 pt-12'>
-        </div>
 
-        <div>
-          <h2 className='text-5xl text-white pt-12 pl-24 w-2/3'>
+        <div className='flex-col items-center justify-center'>
+          <h2 className='text-4xl text-white pt-24 px-64 w-full text-left '>
             Join the Doowit community today!
           </h2>
           <img
             src={signUpImage}
             alt='task cards'
-            className='ml-5 pl-12 pr-24 pt-1 w-full  h-auto'
+            className='ml-5 pl-12 pr-24 pt-5 w-full h-auto'
           />
         </div>
       </div>

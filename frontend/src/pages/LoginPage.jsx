@@ -140,7 +140,7 @@ const LoginPage = () => {
       </div>
       <div className='bg-brightblue w-2/3 flex flex-col'>
         <div>
-          <h2 className='text-5xl text-white pt-24 pl-24 w-full'>
+          <h2 className='text-4xl text-white pt-24 pl-24 w-full'>
             Welcome back to Doowit!
           </h2>
           <p className='text-2xl text-white pt-1 pl-24 w-2/3'>
@@ -149,7 +149,7 @@ const LoginPage = () => {
           <img
             src={loginImage}
             alt='task cards'
-            className='pl-32 pr-8 pt-1 w-3/4  h-auto'
+            className=' px-20 pt-8 w-full  h-auto'
           />
         </div>
       </div>

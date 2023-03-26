@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import doowitLogo from '../assets/icons/doowit-logo-colored.svg';
-import LandingpageLottie from '../assets/animations/LandingpageLottie';
+import homepageImage from '../assets/images/homepage-img.png'
 
 const LandingPage = () => {
 
@@ -50,8 +50,8 @@ const LandingPage = () => {
           </Link>
         </div>
       </div>
-      <div id='animation' className='absolute right-12 w-2/3 pt-24 floating'>
-        <LandingpageLottie />
+      <div className='absolute right-12 w-1/2 pt-40 px-10 mr-16'>
+        <img src={homepageImage} alt='Doowit' />
         </div>
     </section>
   );
