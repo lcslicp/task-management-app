@@ -11,7 +11,7 @@ build: {
   rollupOptions: {
     external: [
       /^node:.*/,
-      'jwt-decode'
+      '/node_modules/jwt-decode'
     ]
   }
 }
