@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 5000;
 app.use(logger('dev'));
 app.use(cors({
     credentials: true,
-    origin: ['https://doowit.netlify.app/']
+    origin: ['https://doowit.lesliepn.info/']
 }));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
