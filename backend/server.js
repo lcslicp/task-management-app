@@ -20,12 +20,12 @@ const PORT = process.env.PORT || 5000;
 app.use(logger('dev'));
 app.use(cors({
     credentials: true,
-    origin: ['https://doowit.lesliepn.info/']
+    origin: ['https://doowit.lesliepn.info']
 }));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'https://doowit.lesliepn.info/');
+    res.header('Access-Control-Allow-Origin', 'https://doowit.lesliepn.info');
     res.header('Access-Control-Allow-Credentials', true);
     next();
   });
