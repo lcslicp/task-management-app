@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import axios from '../api/axios';
-import jwt_decode from 'jwt-decode';
+// import jwt_decode from 'jwt-decode';
+import { decodeToken } from 'react-jwt';
 import { initialState, reducer } from '../reducers/loadingStates';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,7 +37,6 @@ const Dashboard = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [userImage, setUserImage] = useState({ file: [] });
-  const [currentPwd, setCurrentPwd] = useState('');
   const [imagePreview, setImagePreview] = useState({ file: [] });
 
   const [taskOpen, setTaskOpen] = useState(false);
@@ -50,7 +50,8 @@ const Dashboard = () => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  const decoded = jwt_decode(token);
+  // const decoded = jwt_decode(token);
+  const decoded = decodeToken(token);
   const decodedId = decoded.user;
   const TODO_TASK_URL = '/tasks/todo';
   const INPROGRESS_TASK_URL = '/tasks/inprogress';
@@ -198,7 +199,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getUser();
-  }, [firstName, lastName, email, userImage, currentPwd]);
+  }, [firstName, lastName, email, userImage]);
 
   const tabdata = [
     {
