@@ -1,5 +1,8 @@
-import multer from 'multer';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import multer from 'multer';
+
+const __dirname = fileURLToPath(import.meta.url);
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
