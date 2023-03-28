@@ -30,9 +30,9 @@ app.use(function (req, res, next) {
     next();
   });
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'frontend/public')));
 
-app.use(express.static('uploads'));
+// app.use(express.static('uploads'));
 app.get('/', (req, res) => { res.send('Hello from Express!')});
 app.use('/', userRoutes);
 app.use('/', verifyJWT);
