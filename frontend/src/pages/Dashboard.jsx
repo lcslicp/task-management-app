@@ -170,15 +170,12 @@ const Dashboard = () => {
       setEmail(email);
       setImagePath(userImage)
       setImagePreview(userImage);
-      console.log(`imagepath: ${imagePath}`);
     });
   };
 
   const getProfileImage = async () => {
     let profileImage = imagePath.replace('public', '');
-    console.log(`profile image: ${profileImage}`);
-    const response = await axios.get(profileImage)
-    console.log(`response: ${response}`);
+    const response = await axios.get(`${profileImage}`)
     setUserImage(response)
   }
 
