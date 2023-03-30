@@ -16,7 +16,7 @@ import verifyJWT from './middleware/verifyJWT.js';
 dotenv.config();
 const app = express();
 
-app.use(express.static('public'));
+
 
 const PORT = process.env.PORT || 5000;
 app.use(logger('dev'));
@@ -24,6 +24,7 @@ app.use(cors({
     credentials: true,
     origin: ['https://doowit.lesliepn.info']
 }));
+app.use(express.static('public'));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(function (req, res, next) {
