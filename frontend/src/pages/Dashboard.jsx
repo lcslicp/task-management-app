@@ -36,6 +36,7 @@ const Dashboard = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [imagePath, setImagePath] = useState();
   const [userImage, setUserImage] = useState({ file: [] });
   const [imagePreview, setImagePreview] = useState({ file: [] });
 
@@ -161,16 +162,22 @@ const Dashboard = () => {
 
   const getUser = async () => {
     await axios.get(USER_URL, config).then((response) => {
-      const { id, firstName, lastName, email, userImage, password } =
+      const { id, firstName, lastName, email, userImage } =
         response?.data;
       setUserId(id);
       setFirstName(firstName);
       setLastName(lastName);
       setEmail(email);
-      setUserImage(userImage);
+      setImagePath(userImage)
       setImagePreview(userImage);
     });
   };
+
+  const getProfileImage = async () => {
+    let profileImage = imagePath.replace('public', '');
+    const response = await axios.get(profileImage)
+    setUserImage(response)
+  }
 
   const handleTaskOpen = (id) => {
     fetchTasksData(id);
@@ -199,7 +206,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     getUser();
-  }, [firstName, lastName, email, userImage]);
+  }, [firstName, lastName, email, imagePath]);
+
+  useEffect(() => {
+    getProfileImage()
+  }, [imagePath]);
 
   const tabdata = [
     {
