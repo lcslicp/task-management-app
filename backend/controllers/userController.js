@@ -31,7 +31,7 @@ const signup = async (req, res) => {
   if (req.file) {
     user.userImage = req.file.path;
   } else {
-    user.userImage = './default.svg';
+    user.userImage = 'public/default.svg';
   }
 
   const accessToken = jwt.sign(
