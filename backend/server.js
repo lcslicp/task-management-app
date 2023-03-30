@@ -11,11 +11,13 @@ import errorHandler from './middleware/errorHandler.js';
 
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import verifyJWT from './middleware/veriryJWT.js';
+import verifyJWT from './middleware/verifyJWT.js';
 
 dotenv.config();
-
 const app = express();
+
+app.use(express.static('public'));
+
 const PORT = process.env.PORT || 5000;
 app.use(logger('dev'));
 app.use(cors({
@@ -30,7 +32,7 @@ app.use(function (req, res, next) {
     next();
   });
 app.use(cookieParser());
-app.use('/uploads', express.static(path.join(__dirname, 'frontend/public')));
+
 
 // app.use(express.static('uploads'));
 app.get('/', (req, res) => { res.send('Hello from Express!')});
