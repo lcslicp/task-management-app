@@ -174,9 +174,10 @@ const Dashboard = () => {
   };
 
   const getProfileImage = async () => {
-    let profileImage = imagePath.replace('public', '');
-    const response = await axios.get(`${profileImage}`)
-    setUserImage(response)
+    let profileImage = imagePath?.replace('public', '');
+    const response = await axios.get(`${profileImage}`, { responseType: 'blob' })
+    const url = URL.createObjectURL(response.data);
+    setUserImage(url);
   }
 
   const handleTaskOpen = (id) => {
