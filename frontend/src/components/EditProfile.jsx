@@ -13,6 +13,7 @@ const EditProfile = ({
   userId,
   setUserImage,
   imagePreview,
+  setImagePath,
   setImagePreview,
   setPasswordModalOpen,
 }) => {
@@ -59,7 +60,7 @@ const EditProfile = ({
     await axios
       .put(`/edit/user/${userId}`, formData, config)
       .then((response) => {
-        setUserImage(response?.data.userImage);
+        setImagePath(response?.data.userImage);
         handleFormReset();
       })
       .catch((error) => console.error(error));

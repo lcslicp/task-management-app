@@ -169,7 +169,6 @@ const Dashboard = () => {
       setLastName(lastName);
       setEmail(email);
       setImagePath(userImage)
-      setImagePreview(userImage);
     });
   };
 
@@ -178,6 +177,7 @@ const Dashboard = () => {
     const response = await axios.get(`${profileImage}`, { responseType: 'blob' })
     const url = URL.createObjectURL(response.data);
     setUserImage(url);
+    setImagePreview(url);
   }
 
   const handleTaskOpen = (id) => {
@@ -351,6 +351,7 @@ const Dashboard = () => {
           setUserImage={setUserImage}
           imagePreview={imagePreview}
           setImagePreview={setImagePreview}
+          setImagePath={setImagePath}
           setPasswordModalOpen={setPasswordModalOpen}
         />
         <ChangePassword
