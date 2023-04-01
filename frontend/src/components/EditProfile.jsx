@@ -11,7 +11,6 @@ const EditProfile = ({
   email,
   setEmail,
   userId,
-  setUserImage,
   imagePreview,
   setImagePath,
   setImagePreview,
