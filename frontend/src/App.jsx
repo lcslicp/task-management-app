@@ -16,7 +16,7 @@ function App() {
       <Routes>
         {/* public routes */}
         <Route element={<PublicRoutes />} >
-        <Route path='/' element={<LandingPage />} />
+        <Route path='/' element={<LoginPage />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/login' element={<LoginPage />} />
         </Route>
