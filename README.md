@@ -1,6 +1,6 @@
 # Doowit
 
-Doowit is a personal task management app use to store, organize and prioritize your tasks.
+Doowit is a personal task management app used to store, organize and prioritize your tasks.
 
 Visit here: https://doowit.lcslicp.dev/
 
@@ -42,7 +42,7 @@ Create an `.env` file in the root directory and populate these variables:
 4. ACCESS_TOKEN_SECRET
 5. REFRESH_TOKEN_SECRET
 
-Copy & paste the connection string from MongoDB as your value for `DB_HOST`. Make sure to update the `<password>` in the string.
+Copy & paste the connection string from MongoDB as your value for `DB_HOST`. Make sure to update the `<password>` in the connection string.
 
 ```
 DB_HOST=sampleconnectionstring
@@ -58,3 +58,4 @@ DB_HOST=sampleconnectionstring
 6. [jwt-decode](https://www.npmjs.com/package/jwt-decode)
 7. [JWT](https://jwt.io/)
 8. [Multer](https://www.npmjs.com/package/multer)
+9. [MongoDB] (https://www.mongodb.com/docs/)
