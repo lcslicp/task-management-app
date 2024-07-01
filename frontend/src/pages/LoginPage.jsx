@@ -69,13 +69,13 @@ const LoginPage = () => {
   };
 
   return (
-    <section className='w-screen h-screen flex flex-row'>
-      <div className='flex flex-col w-2/5 pl-32 pt-48'>
+    <section className='w-full h-full flex flex-row content-center'>
+      <div className='flex flex-col w-1/2 px-20 justify-center h-screen'>
         <a href='/'>
-          <img src={doowitLogo} className='w-1/4 h-auto pr-8' />
+          <img src={doowitLogo} className='w-40 h-auto' />
         </a>
-        <h2 className='text-5xl font-bold text-darkblue pt-4'>Log in</h2>
-        <p className='text-sm w-2/3 pt-5 pb-8'>
+        <h2 className='text-xl font-bold text-darkblue pt-4 text-left'>Log in</h2>
+        <p className='text-sm w-2/3 pb-4'>
           Please enter your login details.
         </p>
         <div>
@@ -89,7 +89,7 @@ const LoginPage = () => {
             </p>
           </div>
 
-          <form onSubmit={handleLoginSubmit}>
+          <form onSubmit={handleLoginSubmit} className='w-full'>
             <label htmlFor='email'></label>
             <input
               type='email'
@@ -100,7 +100,7 @@ const LoginPage = () => {
               autoComplete='off'
               onChange={(e) => setUserEmail(e.target.value)}
               required
-              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-2/3 p-2.5 mt-6'
+              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-full p-2.5 mt-6'
             />
             <label htmlFor='password'></label>
             <input
@@ -110,7 +110,7 @@ const LoginPage = () => {
               value={pwd}
               onChange={(e) => setPwd(e.target.value)}
               required
-              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-2/3 p-2.5 mt-6'
+              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-full p-2.5 mt-6'
             />
             <div className='pt-4'>
               <input
@@ -122,7 +122,7 @@ const LoginPage = () => {
             </div>
 
             <div>
-              <button className='w-1/4 text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center disabled:bg-grey disabled:opacity-30 disabled:cursor-not-allowed mt-8 flex justify-center'>
+              <button className='w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center disabled:bg-grey disabled:opacity-30 disabled:cursor-not-allowed mt-8 flex justify-center'>
                 {loading ? <LoadingSpinner /> : 'Log in'}
               </button>
               <p className='text-xs pt-4'>
