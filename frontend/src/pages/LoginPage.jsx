@@ -7,6 +7,7 @@ import doowitLogo from '../assets/icons/doowit-logo-colored.svg';
 import loginImage from '../assets/images/loginpage-img.png';
 
 const LOGIN_URL = '/login';
+const DEMO_URL = '/demouser';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -67,6 +68,24 @@ const LoginPage = () => {
       errRef.current.focus();
     }
   };
+
+  const handleLoginDemoUser = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(DEMO_URL,
+        {
+         headers: { 'Content-Type': 'application/json' },
+         withCredentials: true, 
+        });
+        localStorage.setItem('token', JSON.stringify(response?.data?.token));
+        navigate('/dashboard')
+        setLoading(false)
+    } catch (error) {
+      setLoading(false);
+      setErrMsg('No Server Response');
+      console.log(error);
+    }
+  }
 
   return (
     <section className='w-full h-full flex flex-row content-center'>
@@ -132,7 +151,7 @@ const LoginPage = () => {
                   className='font-bold hover:italic hover:underline'
                 >
                   Sign Up.
-                </Link>
+                </Link> <br /> Or <a href="#" onClick={handleLoginDemoUser} className='font-bold hover:italic hover:underline'>Log in as Demo User.</a> 
               </p>
             </div>
           </form>
