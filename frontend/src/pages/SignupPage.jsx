@@ -106,12 +106,12 @@ const SignupPage = () => {
   };
 
   return (
-    <section className='w-screen h-screen flex flex-row'>
-      <div className='flex flex-col w-2/5 pl-32 pt-32'>
+    <section className='w-full h-full flex flex-row content-center'>
+      <div className='flex flex-col w-1/2 px-20 h-screen justify-center'>
         <a href='/home'>
-          <img src={doowitLogo} className='w-1/4 h-auto pr-8' />
+          <img src={doowitLogo} className='w-40 h-auto' />
         </a>
-        <h2 className='text-5xl font-bold text-darkblue pt-4'>Sign up</h2>
+        <h2 className='text-xl font-bold text-darkblue pt-4 text-left'>Sign up</h2>
         <p className='text-sm w-2/3 pt-5 pb-4'>Create your account.</p>
         <div>
           <div className={errMsg ? 'block' : 'hidden'}>
@@ -124,30 +124,32 @@ const SignupPage = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSignupSubmit}>
-            <label htmlFor='firstname'></label>
-            <input
-              type='text'
-              id='firstname'
-              autoComplete='off'
-              placeholder='First Name'
-              ref={userRef}
-              value={userFirstName}
-              onChange={(e) => setUserFirstName(e.target.value)}
-              required
-              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 inline-block w-36 p-2.5 mt-6 mr-4'
-            />
-            <label htmlFor='lastname'></label>
-            <input
-              type='text'
-              id='lastname'
-              autoComplete='off'
-              placeholder='Last Name'
-              value={userLastName}
-              onChange={(e) => setUserLastName(e.target.value)}
-              required
-              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 inline-block w-36 p-2.5 mt-6'
-            />
+          <form onSubmit={handleSignupSubmit} className='w-full'>
+          <div className='w-full flex flex-row'>
+              <label htmlFor='firstname'></label>
+              <input
+                type='text'
+                id='firstname'
+                autoComplete='off'
+                placeholder='First Name'
+                ref={userRef}
+                value={userFirstName}
+                onChange={(e) => setUserFirstName(e.target.value)}
+                required
+                className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 inline-block p-2.5 mt-6 mr-4 w-1/2'
+              />
+              <label htmlFor='lastname'></label>
+              <input
+                type='text'
+                id='lastname'
+                autoComplete='off'
+                placeholder='Last Name'
+                value={userLastName}
+                onChange={(e) => setUserLastName(e.target.value)}
+                required
+                className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 inline-block p-2.5 mt-6 w-1/2'
+              />
+            </div>
             <label htmlFor='email'></label>
             <input
               type='email'
@@ -156,7 +158,7 @@ const SignupPage = () => {
               value={userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
               required
-              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-2/3 p-2.5 mt-6'
+              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-full p-2.5 mt-6'
             />
             <label htmlFor='pwd'></label>
             <input
@@ -170,7 +172,7 @@ const SignupPage = () => {
               aria-describedby='pwdnote'
               onFocus={() => setPwdFocus(true)}
               onBlur={() => setPwdFocus(false)}
-              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-2/3 p-2.5 mt-6'
+              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-full p-2.5 mt-6'
             />
             <div
               id='pwdnote'
@@ -199,7 +201,7 @@ const SignupPage = () => {
               aria-describedby='confirmnote'
               onFocus={() => setMatchFocus(true)}
               onBlur={() => setMatchFocus(false)}
-              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-2/3 p-2.5 mt-6'
+              className='bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-full p-2.5 mt-6'
             />
             <div
               id='confirmnote'
@@ -220,7 +222,7 @@ const SignupPage = () => {
             <div>
               <button
                 disabled={!validPwd || !validMatch ? true : false}
-                className='w-1/4 text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center disabled:bg-grey disabled:opacity-30 disabled:cursor-not-allowed mt-8 flex justify-center'
+                className='w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center disabled:bg-grey disabled:opacity-30 disabled:cursor-not-allowed mt-8 flex justify-center'
               >
                 {loading ? <LoadingSpinner /> : 'Sign Up'}
               </button>
@@ -236,16 +238,16 @@ const SignupPage = () => {
           </form>
         </div>
       </div>
-      <div className='bg-brightblue w-2/3 flex flex-col overflow-x-hidden'>
+      <div className='bg-brightblue w-1/2 flex flex-col h-screen fixed right-0'>
 
-        <div className='flex-col items-center justify-center'>
-          <h2 className='text-4xl text-white pt-24 px-64 w-full text-left '>
-            Join the Doowit community today!
+        <div className='flex-col items-center justify-center m-auto'>
+          <h2 className='text-3xl text-white w-full text-center justify-center pb-4'>
+            Join the Doowit <br /> community today!
           </h2>
           <img
             src={signUpImage}
             alt='task cards'
-            className='ml-5 pl-12 pr-24 pt-5 w-full h-auto'
+            className='w-full h-auto px-14'
           />
         </div>
       </div>
