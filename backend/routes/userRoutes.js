@@ -7,6 +7,7 @@ const router = Router();
 
 router.post('/signup', UserController.signup);
 router.post('/login', UserController.authenticateUser);
+router.post('/demouser', UserController.createDemoUser);
 router.get('/user/:id', UserController.reqUser);
 router.put(
   '/edit/user/:id',

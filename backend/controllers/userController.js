@@ -113,6 +113,58 @@ const reqUser = async (req, res) => {
   }
 };
 
+const createDemoUser = async (req, res) => {
+
+  const demoEmail = `demo${Math.random().toString(36).substr(2,9)}@email.com`
+
+  const demoUser = {
+    firstName: 'Demo',
+    lastName: 'User',
+    email: demoEmail,
+    password: 'demo',
+  }
+
+  const duplicate = await User.findOne({ email: demoUser.email });
+  if (duplicate) return res.sendStatus(409);
+
+  const hashedPwd = await bcrypt.hash(demoUser.password, 10);
+
+  try {
+    const user = await User.create({
+      firstName: demoUser.firstName,
+      lastName: demoUser.lastName,
+      email: demoUser.email,
+      password: hashedPwd,
+      userImage: './default.svg'
+    });
+
+    const accessToken = jwt.sign(
+      { user: user._id },
+      '' + process.env.ACCESS_TOKEN_SECRET,
+      {expiresIn: '1d'}
+      )
+
+      res.cookie('jwt', accessToken, {
+        maxAge: maxAge * 1000,
+        httpOnly: true,
+      })
+
+      user.save()
+
+      res.status(201).json({
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        userImage: user.userImage,
+        token: accessToken,
+      })
+  } catch (error) {
+    res.status(500).json({message: error.message });
+  }
+
+}
+
 const editUser = async (req, res) => {
   const { email, firstName, lastName } = req.body;
 
@@ -169,6 +221,7 @@ const updatePassword = async (req, res) => {
 const UserController = {
   signup,
   authenticateUser,
+  createDemoUser,
   reqUser,
   editUser,
   updatePassword,
