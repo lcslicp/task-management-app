@@ -58,4 +58,4 @@ DB_HOST=sampleconnectionstring
 6. [jwt-decode](https://www.npmjs.com/package/jwt-decode)
 7. [JWT](https://jwt.io/)
 8. [Multer](https://www.npmjs.com/package/multer)
-9. [MongoDB] (https://www.mongodb.com/docs/)
+9. [MongoDB](https://www.mongodb.com/docs/)
