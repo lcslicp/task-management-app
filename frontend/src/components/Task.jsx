@@ -262,7 +262,7 @@ const Task = ({
                   </div>
                 ) : (
                   <div className='py-6 px-6 lg:px-8'>
-                    <h1 className='text-3xl font-bold tracking-tight text-darkblue pb-6 pt-6'>
+                    <h1 className='text-2xl font-semibold tracking-tight text-darkblue pb-6 pt-6'>
                       {taskTitle}
                     </h1>
                     <div className='flex flex-row gap-4 pb-2'>

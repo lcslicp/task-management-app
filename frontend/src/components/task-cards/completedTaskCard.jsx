@@ -33,7 +33,7 @@ const TaskCard = ({
   };
 
   return (
-    <div className='p-6 max-w-sm pl-8 bg-grey bg-opacity-10 rounded-lg border hover:grey max-h-96 mb-8 break-inside-avoid cursor-pointer'>
+    <div className='p-6 max-w-sm pl-8 bg-grey bg-opacity-10 rounded-lg border hover:grey max-h-96 mb-8 break-inside-avoid cursor-pointer break-words'>
       <div className='flex justify-end pt-7'>
         <button
           id='dropdownButton'
@@ -69,7 +69,7 @@ const TaskCard = ({
         </div>
       </div>
       <div className='flex flex-col -mt-14' onClick={() => handleTaskOpen(id)}>
-        <h1 className='text-2xl font-bold tracking-tight text-black pb-4 w-72'>
+        <h1 className='text-base font-semibold tracking-tight text-black pb-2 break-words'>
           {title}
         </h1>
         <p
