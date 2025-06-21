@@ -2,7 +2,7 @@
 
 Doowit is a personal task management app used to store, organize and prioritize your tasks.
 
-Visit here: https://doowit.lcslicp.dev/
+Visit here: https://doowit.lcslicp.xyz/
 
 ### Tech Stack
 
