@@ -41,6 +41,8 @@ const ToDoTab = ({
       .concat(sortedTasks.filter((task) => task.dueDate === 'Invalid Date'));
   }
 
+  const cardColors = ['bg-softerblue', 'bg-softeryellow', 'bg-softergreen', 'bg-white']
+
   return (
     <div>
       {loading ? (
@@ -57,13 +59,16 @@ const ToDoTab = ({
         (priorityFilter.length === 0
           ? sortedTasks
           : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
-        ).map((task) => {
+        ).map((task, index) => {
           let dueDate = new Date(task.dueDate);
           let date = dueDate.toLocaleDateString('default', {
             month: 'short',
             day: 'numeric',
             year: 'numeric',
           });
+
+          const bgColorClass = cardColors[index % cardColors.length];
+
           return (
             <TaskCard
               id={task._id}
@@ -78,6 +83,7 @@ const ToDoTab = ({
               setIsEditing={setIsEditing}
               setTodoTasks={setTodoTasks}
               setInProgressTasks={setInProgressTasks}
+              bgColor={bgColorClass}
             />
           );
         })

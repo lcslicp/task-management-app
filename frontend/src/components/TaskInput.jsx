@@ -76,11 +76,11 @@ const TaskInput = ({
     <div>
       <div className='fixed right-0 top-24 pt-8 mr-12 z-10'>
         <button
-          className='block text-white font-bold bg-brightblue hover:bg-brighterblue rounded-lg text-sm px-5 py-2.5 text-center'
+          className='block text-white bg-black hover:bg-transparent hover:text-black hover:border hover:border-black rounded-lg text-sm px-10 py-2.5 text-center'
           type='button'
           onClick={handleModalOpen}
         >
-          Add New Task
+          + New Task
         </button>
       </div>
 
@@ -181,14 +181,14 @@ const TaskInput = ({
                       <div className='flex flex-row w-2/3 space-x-4'>
                         <button
                           type='submit'
-                          className='w-full text-black bg-lightgray focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center hover:brightness-90'
+                          className='w-full text-black bg-lightgray border border-transparent focus:outline-none focus:ring-lightgray rounded-lg text-sm px-5 py-2.5 text-center hover:border hover:border-black hover:bg-transparent'
                           onClick={handleModalClose}
                         >
                           Cancel
                         </button>
                         <button
                           type='submit'
-                          className='w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold text-center'
+                          className='w-full text-white bg-black hover:bg-transparent border border-transparent hover:text-black hover:border-black focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm text-center'
                         >
                           <div>
                             {isLoading ? <LoadingSpinner /> : 'Add Task'}

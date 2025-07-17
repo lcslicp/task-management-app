@@ -261,7 +261,7 @@ const Dashboard = () => {
   const [activeStatusTab, setActiveStatusTab] = useState(tabdata[0].id);
 
   return (
-    <div className='flex flex-row'>
+    <div className='flex flex-row bg-offwhite'>
       <Sidebar
         activeStatusTab={activeStatusTab}
         todoTasks={todoTasks}

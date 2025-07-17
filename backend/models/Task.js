@@ -28,8 +28,8 @@ const TaskSchema = new Schema({
         type: String,
     },
     createdAt: {
-        type: String,
-        default: new Date().toLocaleDateString('default'),
+        type: Date,
+        default: Date.now,
     }
 });
 

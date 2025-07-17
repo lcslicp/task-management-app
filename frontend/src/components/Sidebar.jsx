@@ -8,8 +8,6 @@ import sortIcon from '../assets/icons/sort-icon.svg';
 import filterIcon from '../assets/icons/filter-icon.svg';
 import logoutIcon from '../assets/icons/logout-icon.svg';
 import DoowitLogo from '../assets/icons/doowit-logo.svg';
-import defaultPhoto from '../assets/icons/default-displayphoto.svg';
-// import dd from '../../../uploads/vvvv.jpg'
 
 const Sidebar = ({
   priorityFilter,
@@ -96,8 +94,8 @@ const Sidebar = ({
 
   return (
     <aside className='w-72 fixed z-30' aria-label='Sidebar'>
-      <div className='h-screen overflow-y-auto py-4 px-8 bg-brightblue'>
-        <ul className='space-y-2'>
+      <div className='h-screen overflow-y-auto py-4 px-8 bg-black'>
+        <ul className='space-y-2 border border-red-500'>
           <li id='logo'>
             <img src={DoowitLogo} className='w-2/3 h-auto pt-14 pb-8' />
           </li>
