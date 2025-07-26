@@ -41,12 +41,12 @@ const ToDoTab = ({
       .concat(sortedTasks.filter((task) => task.dueDate === 'Invalid Date'));
   }
 
-  const cardColors = ['bg-softerblue', 'bg-softeryellow', 'bg-softergreen', 'bg-white']
+  const cardColors = ['bg-softerblue', 'bg-softeryellow', 'bg-softergreen', 'bg-offwhite']
 
   return (
     <div>
       {loading ? (
-        <div className='px-96 mx-40'>
+        <div className='px-10 mx-40'>
           <LoadingSpinner />
         </div>
       ) : sortedTasks.length === 0 ||

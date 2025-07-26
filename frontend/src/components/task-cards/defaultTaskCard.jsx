@@ -65,7 +65,7 @@ const TaskCard = ({
   }
 
   return (
-    <div className={`p-6 max-w-sm pl-8 rounded-2xl h-fit mb-8 break-inside-avoid cursor-pointer ${bgColor}`}>
+    <div className={`p-6 max-w-sm pl-8 rounded-2xl h-fit mb-5 break-inside-avoid cursor-pointer ${bgColor}`}>
       <div className='flex justify-end pt-7'>
         <button
           id='dropdownButton'

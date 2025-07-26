@@ -261,7 +261,8 @@ const Dashboard = () => {
   const [activeStatusTab, setActiveStatusTab] = useState(tabdata[0].id);
 
   return (
-    <div className='flex flex-row bg-offwhite'>
+    <main className='flex flex-row w-full h-full'>
+      <aside className='bg-black fixed top-0 left-0 h-full w-[15%]'>
       <Sidebar
         activeStatusTab={activeStatusTab}
         todoTasks={todoTasks}
@@ -281,7 +282,9 @@ const Dashboard = () => {
         setUserImage={setUserImage}
         decodedId={decodedId}
       />
-      <div className='flex flex-col w-full'>
+      </aside>
+      
+      <section className='flex flex-col w-[85%] ml-[15%]' aria-label='Sidebar'>
         <Header firstName={firstName} handleTaskOpen={handleTaskOpen} />
         <TabNavigation
           tabdata={tabdata}
@@ -346,8 +349,8 @@ const Dashboard = () => {
           setPasswordModalOpen={setPasswordModalOpen}
           setProfileModalOpen={setProfileModalOpen}
         />
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 
