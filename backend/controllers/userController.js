@@ -28,12 +28,6 @@ const signup = async (req, res) => {
     password: hashedPwd,
   });
 
-  if (req.file) {
-    user.userImage = req.file.path;
-  } else {
-    user.userImage = './default.svg';
-  }
-
   const accessToken = jwt.sign(
     { user: user._id },
     '' + process.env.ACCESS_TOKEN_SECRET,
@@ -135,7 +129,6 @@ const createDemoUser = async (req, res) => {
       lastName: demoUser.lastName,
       email: demoUser.email,
       password: hashedPwd,
-      userImage: './default.svg'
     });
 
     const accessToken = jwt.sign(
@@ -156,7 +149,6 @@ const createDemoUser = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        userImage: user.userImage,
         token: accessToken,
       })
   } catch (error) {

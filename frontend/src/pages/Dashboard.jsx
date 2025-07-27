@@ -275,17 +275,16 @@ const Dashboard = () => {
         sortOldest={sortOldest}
         sortDueDate={sortDueDate}
         setProfileModalOpen={setProfileModalOpen}
-        firstName={firstName}
-        lastName={lastName}
         email={email}
-        userImage={userImage}
-        setUserImage={setUserImage}
         decodedId={decodedId}
       />
       </aside>
       
       <section className='flex flex-col w-[85%] ml-[15%]' aria-label='Sidebar'>
-        <Header firstName={firstName} handleTaskOpen={handleTaskOpen} />
+        <Header firstName={firstName} 
+        lastName={lastName}
+        userImage={userImage}
+        handleTaskOpen={handleTaskOpen} />
         <TabNavigation
           tabdata={tabdata}
           activeStatusTab={activeStatusTab}
