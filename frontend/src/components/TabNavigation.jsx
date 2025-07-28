@@ -7,7 +7,7 @@ const TabNavigation = ({ tabdata, activeStatusTab, setActiveStatusTab }) => {
       onClick={() => setActiveStatusTab(tab.id)}
       className={
         activeStatusTab === tab.id
-          ? 'px-8 inline-block p-4 rounded-t-lg border-b-2 text-black border-black hover:text-brightblue hover:border-brighterblue cursor-pointer '
+          ? 'px-8 inline-block p-4 rounded-t-lg border-b-2 text-black border-black hover:text-brightblue  cursor-pointer '
           : 'px-8 inline-block p-4 text-gray rounded-t-lg border-b cursor-pointer'
       }
     >
@@ -26,11 +26,11 @@ const TabNavigation = ({ tabdata, activeStatusTab, setActiveStatusTab }) => {
   ));
 
   return (
-    <div className='pt-28'>
-      <div className='text-normal font-medium text-center border-b fixed bg-white z-10 w-full '>
-        <ul className='flex flex-row -mb-px px-8 mt-4'>{statusTabTitles}</ul>
+    <div className='px-10'>
+      <div className='flex font-medium text-center bg-white z-10 w-full bg-offwhite border border-red-500 items-center justify-center' id='navigation'>
+        <ul className=''>{statusTabTitles}</ul>
       </div>
-      <div className='px-5 pt-24 pb-5'>
+      <div className=' pt-24 pb-5'>
         <div
           id='tab-contents'
           className='w-full columns-3 break-inside-avoid gap-5'

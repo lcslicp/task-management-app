@@ -262,7 +262,7 @@ const Dashboard = () => {
 
   return (
     <main className='flex flex-row w-full h-full'>
-      <aside className='bg-black fixed top-0 left-0 h-full w-[15%]'>
+      <aside className='bg-black fixed top-0 left-0 h-full w-[15%]' aria-label='Sidebar'>
       <Sidebar
         activeStatusTab={activeStatusTab}
         todoTasks={todoTasks}
@@ -280,7 +280,7 @@ const Dashboard = () => {
       />
       </aside>
       
-      <section className='flex flex-col w-[85%] ml-[15%]' aria-label='Sidebar'>
+      <section className='flex flex-col w-[85%] ml-[15%]' >
         <Header firstName={firstName} 
         lastName={lastName}
         userImage={userImage}

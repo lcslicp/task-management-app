@@ -28,9 +28,9 @@ const SearchBar = ({ handleTaskOpen }) => {
   }, [searchInput]);
 
   return (
-    <>
+    <div className='bg-white rounded-xl w-full'>
     <label htmlFor='search-navbar'></label>
-    <div className='relative w-full max-w-sm'>
+    <div className='relative w-full'>
       <svg
         className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-coolgray'
         aria-hidden='true'
@@ -56,35 +56,35 @@ const SearchBar = ({ handleTaskOpen }) => {
         className='block w-full p-4 h-10 ps-10 pl-10 text-sm text-darkgray border-none rounded-xl bg-offwhite focus:ring-coolgray focus:border-coolgray placeholder-coolgray'
         placeholder='Search Task...'
       />
-    </div>
-
 
       {searchInput.length > 0 && (
-        <ul className='fixed bg-white px-7 rounded-lg z-50 top-24 right-96 mr-3 w-1/3 drop-shadow-md'>
+        <ul className='absolute bg-white rounded-xl z-50 mt-2 w-full border border-offwhite py-4'>
           {isLoading ? (
               <LoadingSpinner className='w-1 h-1' />
-            ) : searchResults.length === 0 ? (<p className='text-sm text-darkblue italic py-5'>
+            ) : searchResults.length === 0 ? (<p className='text-base px-10 italic text-center text-darkgray opacity-50'>
             No tasks found.
           </p>) : (
               searchResults.map((result) =>
               <li
                 key={result._id}
-                className=' border-b border-solid  border-gray-400 pb-3 pt-3 cursor-pointer'
+                className='cursor-pointer px-10 hover:bg-offwhite pb-2'
                 on
                 onClick={() => handleTaskOpen(result._id)}
               >
-                <p className='text-sm text-darkblue font-bold'>
+                <p className='text-base text-darkgray font-base'>
                   {result.title}
                 </p>
-                <span className='text-xs text-grey pb-4'>
-                  in {result.status}
+                <span className='text-xs text-coolgray font-bold uppercase'>
+                  {result.status}
                 </span>
               </li>
             )
           )}
         </ul>
       )}
-    </>
+    </div>
+      
+    </div>
   );
 };
 
