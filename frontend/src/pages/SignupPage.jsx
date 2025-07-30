@@ -122,19 +122,21 @@ const SignupPage = () => {
   };
 
   const handleLoginDemoUser = async () => {
-    setLoading(true);
+    navigate("/demo-loading")
     try {
-      const response = await axios.post(DEMO_URL, {
+      const response = await axios.post(DEMO_URL, null, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-      localStorage.setItem("token", JSON.stringify(response?.data?.token));
-      navigate("/dashboard");
-      setLoading(false);
+      if (token) {
+        localStorage.setItem("token", JSON.stringify(token));
+        navigate("/dashboard");
+      } else {
+        throw new Error("Invalid response.");
+      }  
     } catch (error) {
-      setLoading(false);
-      setErrMsg("No Server Response");
-      console.log(error);
+      setErrMsg("Failed to create demo account. Try again.");
+      navigate("/signup")
     }
   };
 
@@ -145,7 +147,7 @@ const SignupPage = () => {
         id="leftside-content"
       >
         <div
-          className="text-center flex flex-col items-center gap-4"
+          className="text-left flex flex-col items-start gap-4 w-[60%]"
           id="leftside-copy"
         >
           <h2 className="text-4xl font-semibold">

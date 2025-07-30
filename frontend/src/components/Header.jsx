@@ -23,7 +23,7 @@ const Header = ({ firstName, lastName, userImage, handleTaskOpen }) => {
         <SearchBar handleTaskOpen={handleTaskOpen} />
       </div>
       <div className='flex flex-row flex-shrink-0 items-center gap-3'>
-        {userImage ? <img src={userImage} alt='profile image' className='w-6 h-6 border-2 rounded-lg' /> : <span className='w-10 h-10 bg-green-400 text-white rounded-full border-2 border-green-200 flex items-center justify-center text-xs font-bold'> {initials}</span> }
+        {userImage ? <img src={userImage} alt='profile image' className='w-6 h-6 border-2 rounded-lg' /> : <span className='w-10 h-10 bg-brandblue text-white rounded-full border-2 border-softblue flex items-center justify-center text-base font-medium'> {initials}</span> }
       
         <p className='font-medium text-togglegray text-lg'>{firstName} {lastName}</p>
       </div>

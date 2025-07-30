@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import EditProfile from "./components/EditProfile";
+import DemoLoadingScreen from "./pages/DemoLoadingScreen";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route element={<PublicRoutes />}>
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/demo-loading" element={<DemoLoadingScreen />}></Route>
       </Route>
       {/* protected routes  */}
       <Route path="/" element={<ProtectedRoutes />}>
