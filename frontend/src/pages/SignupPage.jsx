@@ -4,7 +4,6 @@ import axios from "../api/axios.js";
 
 import doowitLogo from "../assets/icons/doowitlogo-colored.svg";
 import signupImg from "../assets/images/signup-mockup.svg";
-import LoadingSpinner from "../components/ui-states/loadingSpinner";
 
 const SIGNUP_URL = "/signup";
 const DEMO_URL = "/demouser";
@@ -140,7 +139,7 @@ const SignupPage = () => {
   };
 
   return (
-    <section className="flex w-full h-screen" id="signup_screen">
+    <section className="flex w-full h-screen" id="signup-screen">
       <div
         className="flex flex-col items-center justify-center gap-4 w-[55%] bg-brandblack text-white"
         id="leftside-content"
@@ -200,7 +199,7 @@ const SignupPage = () => {
         <form
           onSubmit={handleSignupSubmit}
           className="w-full flex flex-col gap-4"
-          id="signup_form"
+          id="signup-form"
         >
           <div className="flex flex-row gap-4" id="full-name">
             <div className="flex flex-col w-1/2">
@@ -241,7 +240,7 @@ const SignupPage = () => {
               />
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col" id="email">
             <label
               htmlFor="email"
               className="uppercase font-medium text-xs text-togglegray pb-2"
@@ -259,7 +258,7 @@ const SignupPage = () => {
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col" id="password">
             <label
               htmlFor="pwd"
               className="uppercase font-medium text-xs text-togglegray pb-2"
