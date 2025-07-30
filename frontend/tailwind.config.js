@@ -8,26 +8,27 @@ module.exports = {
     extend: {},
     colors: {
       transparent: 'transparent',
-      'black': '#0D0D0D',
+      'brandblack': '#0D0D0D',
       'white': '#FFFFFF',
       'offwhite': '#F2F6FF',
+      'cardwhite': '#F9F9F9',
       'softgreen': '#CFFFC7',
       'softergreen': '#ECF5F4',
-      'green': '#71D260',
+      'brandgreen': '#71D260',
       'softyellow': '#FFF1A7',
       'softeryellow': '#FFF4D8',
-      'yellow': '#C9AA10',
+      'brandyellow': '#C9AA10',
       'softblue': '#D8DAF7',
       'softerblue': '#F1EDFE',
-      'blue': '#5564E8',
+      'brandblue': '#5564E8',
       'softred': '#FFD8D7',
-      'red': '#FF968A',
+      'brandred': '#FF968A',
       'lightgray': '#F9F9F9',
       'coolgray': '#AFB1D9',
       'hovergray': '#242424',
       'darkgray': '#575757',
       'togglegray': '#353535',
-      'gray': '#898989'
+      'brandgray': '#898989'
     }
   },
   plugins: [

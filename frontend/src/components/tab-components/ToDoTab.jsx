@@ -41,7 +41,7 @@ const ToDoTab = ({
       .concat(sortedTasks.filter((task) => task.dueDate === 'Invalid Date'));
   }
 
-  const cardColors = ['bg-softerblue', 'bg-softeryellow', 'bg-softergreen', 'bg-offwhite']
+  const cardColors = ['bg-softerblue', 'bg-softeryellow', 'bg-softergreen', 'bg-cardwhite']
 
   return (
     <div>

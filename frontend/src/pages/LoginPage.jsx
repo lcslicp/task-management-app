@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/ui-states/loadingSpinner.jsx';
 
 import axios from '../api/axios.js';
-import doowitLogo from '../assets/icons/doowit-logo-colored.svg';
+import doowitLogo from '../assets/icons/doowitlogo-colored.svg';
 import loginImage from '../assets/images/loginpage-img.png';
 
 const LOGIN_URL = '/login';
