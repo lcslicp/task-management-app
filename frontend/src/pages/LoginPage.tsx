@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import axios from "../api/axios.js";
+import { AxiosError } from "axios";
 import doowitLogo from "../assets/icons/doowitlogo-colored.svg";
 import loginImage from "../assets/images/login-mockup.svg";
 
@@ -10,17 +11,18 @@ const LOGIN_URL = "/login";
 const LoginPage = () => {
   const navigate = useNavigate();
 
-  const emailRef = useRef();
-  const errRef = useRef();
+  const emailRef = useRef<HTMLInputElement>(null);
+  const errRef = useRef<HTMLInputElement>(null);
 
-  const [userEmail, setUserEmail] = useState("");
-  const [pwd, setPwd] = useState("");
-  const [errMsg, setErrMsg] = useState("");
-  const [passwordVisibility, setPasswordVisibility] = useState("password");
-  const [loading, setLoading] = useState(false);
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [pwd, setPwd] = useState<string>("");
+  const [errMsg, setErrMsg] = useState<string>("");
+  const [passwordVisibility, setPasswordVisibility] =
+    useState<string>("password");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    emailRef.current.focus();
+    emailRef.current?.focus();
   }, []);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ const LoginPage = () => {
       : setPasswordVisibility("password");
   };
 
-  const handleLoginSubmit = async (e) => {
+  const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -54,16 +56,17 @@ const LoginPage = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      if (!error?.response) {
+      const err = error as AxiosError;
+      if (!err?.response) {
         setErrMsg("No Server Response");
-      } else if (error.response?.status === 400) {
+      } else if (err.response?.status === 400) {
         setErrMsg("Invalid credentials, please try again.");
-      } else if (error.response?.status === 401) {
+      } else if (err.response?.status === 401) {
         setErrMsg("Invalid credentials, please try again.");
       } else {
         setErrMsg("Login Failed");
       }
-      errRef.current.focus();
+      errRef.current?.focus();
     }
   };
 
@@ -155,7 +158,7 @@ const LoginPage = () => {
             <div className="relative">
               <div
                 className="absolute inset-y-0 right-0 flex items-center pe-3 pr-3"
-                onClick={() => togglePassword("password")}
+                onClick={() => togglePassword()}
               >
                 {passwordVisibility === "text" ? (
                   <svg

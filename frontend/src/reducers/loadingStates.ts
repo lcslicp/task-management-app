@@ -1,3 +1,5 @@
+import { LoadingAction, LoadingSate } from "../types/state";
+
 export const initialState = {
     loadingTodoTab: false,
     loadingInProgressTab: false,
@@ -6,7 +8,7 @@ export const initialState = {
 
 }
 
-export const reducer = (state, action) => {
+export const reducer = (state: LoadingSate, action: LoadingAction) => {
     switch (action.type) {
         case 'SET_LOADING_TODOTAB':
             return {...state, loadingTodoTab: true };

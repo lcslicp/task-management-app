@@ -1,7 +1,8 @@
 import axios from "../../api/axios";
 import { useState } from "react";
+import { TaskCardtype } from "../../types/task";
 
-const TaskCard = ({
+const TaskCard: React.FC<TaskCardtype> = ({
   id,
   title,
   description,
@@ -11,11 +12,12 @@ const TaskCard = ({
   createdAt,
   setTodoTasks,
   setInProgressTasks,
+  setCompletedTasks,
   handleTaskOpen,
   bgColor,
 }) => {
   const [dropdown, setDropdown] = useState("hidden");
-  const token = JSON.parse(localStorage.getItem("token"));
+  const token = JSON.parse(localStorage.getItem("token") || "{}");
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
@@ -41,9 +43,9 @@ const TaskCard = ({
     }
   };
 
-  const getRelativeTime = (createdAt) => {
-    const now = new Date();
-    const dateCreated = new Date(createdAt);
+  const getRelativeTime = (createdAt: Date) => {
+    const now = new Date().getTime();
+    const dateCreated = new Date(createdAt).getTime();
     const diffInMs = now - dateCreated;
 
     const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
@@ -81,7 +83,7 @@ const TaskCard = ({
               case "Urgent":
                 return "text-sm bg-softred border border-red-300  rounded-full px-3 h-fit py-1 text-center inline-flex items-center gap-2";
               default:
-                return null;
+                return undefined;
             }
           })()}
         >
@@ -97,7 +99,7 @@ const TaskCard = ({
                 case "Urgent":
                   return "rounded-full bg-red-400 h-3 w-3";
                 default:
-                  return null;
+                  return undefined;
               }
             })()}
           ></span>{" "}
@@ -150,7 +152,7 @@ const TaskCard = ({
               : description
             : ""}
         </p>
-        <span className='block border-t border-black opacity-25 h-1 my-4 w-full'></span>
+        <span className="block border-t border-black opacity-25 h-1 my-4 w-full"></span>
         <div className="flex flex-row gap-2 items-center">
           <svg
             width="14"
@@ -176,7 +178,12 @@ const TaskCard = ({
           >
             <circle cx="2" cy="2.5" r="2" fill="#BABABA" />
           </svg>
-          <p className="text-sm text-gray-500 font-light" id="taskcard-date_created">Created {getRelativeTime(createdAt)}</p>
+          <p
+            className="text-sm text-gray-500 font-light"
+            id="taskcard-date_created"
+          >
+            Created {getRelativeTime(createdAt)}
+          </p>
         </div>
       </div>
     </div>

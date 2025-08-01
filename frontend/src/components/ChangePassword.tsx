@@ -1,26 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from '../api/axios';
+import { PasswordModal } from '../types/user';
+import { AxiosError } from 'axios';
 axios;
 
-const ChangePassword = ({
+const ChangePassword: React.FC<PasswordModal> = ({
   passwordModalOpen,
   setPasswordModalOpen,
   userId,
   setProfileModalOpen,
 }) => {
-  const [status, setStatus] = useState(null);
-  const [passwordVisibility, setPasswordVisibility] = useState('password');
-  const [newPwd, setNewPwd] = useState();
-  const [pwdFocus, setPwdFocus] = useState(false);
-  const [isValidPwd, setIsValidPwd] = useState(false);
-  const [confirmPwd, setConfirmPwd] = useState();
-  const [validMatch, setValidMatch] = useState(false);
-  const [matchFocus, setMatchFocus] = useState(false);
-  const [pwdUpdated, setpwdUpdated] = useState(false);
-  const oldPwdRef = useRef();
-  const pwdRef = useRef();
-  const confirmPwdRef = useRef();
-  const token = JSON.parse(localStorage.getItem('token'));
+  const [status, setStatus] = useState<string | null>(null);
+  const [passwordVisibility, setPasswordVisibility] = useState<string>('password');
+  const [newPwd, setNewPwd] = useState<string | null>(null);
+  const [pwdFocus, setPwdFocus] = useState<boolean>(false);
+  const [isValidPwd, setIsValidPwd] = useState<boolean>(false);
+  const [confirmPwd, setConfirmPwd] = useState<string>('');
+  const [validMatch, setValidMatch] = useState<boolean>(false);
+  const [matchFocus, setMatchFocus] = useState<boolean>(false);
+  const [pwdUpdated, setpwdUpdated] = useState<boolean>(false);
+  const oldPwdRef = useRef<HTMLInputElement>(null);
+  const pwdRef = useRef<HTMLInputElement>(null);
+  const confirmPwdRef = useRef<HTMLInputElement>(null);
+  const token = JSON.parse(localStorage.getItem('token') || "{}");
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
@@ -48,17 +50,18 @@ const ChangePassword = ({
   };
 
   useEffect(() => {
+    if (newPwd === null) return;
     const result = PWD_REGEX.test(newPwd);
     setIsValidPwd(result);
     const match = newPwd === confirmPwd;
     setValidMatch(match);
   }, [newPwd, confirmPwd]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const pwd = {
-      oldPassword: oldPwdRef.current.value,
-      newPassword: pwdRef.current.value,
+      oldPassword: oldPwdRef.current?.value,
+      newPassword: pwdRef.current?.value,
     };
     if (isValidPwd && validMatch) {
       try {
@@ -67,7 +70,8 @@ const ChangePassword = ({
         setpwdUpdated(true);
         setTimeout(handleClosePwdModal, 3000);
       } catch (error) {
-        if (error.response && error.response.status === 401) {
+        const err = error as AxiosError;
+        if (err.response && err.response.status === 401) {
           setStatus('Old password is incorrect, please try again.');
         } else {
           console.error(error);
@@ -82,7 +86,7 @@ const ChangePassword = ({
         <section>
           <div
             id='edit-profile'
-            tabIndex='-1'
+            tabIndex={-1}
             className='overflow-y-auto overflow-x-hidden fixed z-50 pt-14 w-full inset-0 h-modal md:h-full'
           >
             <div className='relative p-4 w-1/3 h-full md:h-auto inset-x-1/3 inset-y-16'>
@@ -110,13 +114,12 @@ const ChangePassword = ({
                     Update Password
                   </h1>
                   <p
-                    className={`text-xs text-center w-full mt-4 p-4 rounded-lg ${
-                      status == null
+                    className={`text-xs text-center w-full mt-4 p-4 rounded-lg ${status == null
                         ? 'hidden'
                         : status.includes('success')
-                        ? 'border border-brightblue text-brightblue'
-                        : 'text-white visible bg-grey'
-                    }`}
+                          ? 'border border-brightblue text-brightblue'
+                          : 'text-white visible bg-grey'
+                      }`}
                   >
                     {status}
                   </p>

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios.js";
+import { AxiosError } from "axios";
 
 import doowitLogo from "../assets/icons/doowitlogo-colored.svg";
 import signupImg from "../assets/images/signup-mockup.svg";
@@ -12,33 +13,32 @@ const DEMO_URL = "/demouser";
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 const SignupPage = () => {
-  const userRef = useRef();
-  const errRef = useRef();
+  const userRef = useRef<HTMLInputElement>(null);
+  const errRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
 
-  const [userFirstName, setUserFirstName] = useState("");
-  const [userLastName, setUserLastName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
+  const [userFirstName, setUserFirstName] = useState<string>("");
+  const [userLastName, setUserLastName] = useState<string>("");
+  const [userEmail, setUserEmail] = useState<string>("");
 
-  const [pwd, setPwd] = useState("");
-  const [validPwd, setValidPwd] = useState(false);
-  const [pwdFocus, setPwdFocus] = useState(false);
-  const [passwordVisibility, setPasswordVisibility] = useState("password");
+  const [pwd, setPwd] = useState<string>("");
+  const [validPwd, setValidPwd] = useState<boolean>(false);
+  const [pwdFocus, setPwdFocus] = useState<boolean>(false);
+  const [passwordVisibility, setPasswordVisibility] =
+    useState<string>("password");
   const [confirmPasswordVisibility, setConfirmPasswordVisibility] =
-    useState("password");
+    useState<string>("password");
 
-  const [matchPwd, setMatchPwd] = useState("");
-  const [validMatch, setValidMatch] = useState(false);
-  const [matchFocus, setMatchFocus] = useState(false);
+  const [matchPwd, setMatchPwd] = useState<string>("");
+  const [validMatch, setValidMatch] = useState<boolean>(false);
+  const [matchFocus, setMatchFocus] = useState<boolean>(false);
 
-  const [errMsg, setErrMsg] = useState("hidden");
-  const [loading, setLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState<string>("hidden");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    userRef.current.focus();
+    userRef.current?.focus();
   }, []);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const SignupPage = () => {
     setMatchPwd("");
   };
 
-  const togglePassword = (field) => {
+  const togglePassword = (field: string) => {
     if (field === "password") {
       setPasswordVisibility((prev) =>
         prev === "password" ? "text" : "password"
@@ -80,7 +80,7 @@ const SignupPage = () => {
     /\d/.test(pwd) &&
     pwdContainsSpecialChar;
 
-  const handleSignupSubmit = async (e) => {
+  const handleSignupSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     const valid = PWD_REGEX.test(pwd);
@@ -109,34 +109,35 @@ const SignupPage = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      if (!error?.response) {
+      const err = error as AxiosError;
+      if (!err?.response) {
         setErrMsg("No Server Response");
         console.log(error);
-      } else if (error.response?.status === 409) {
+      } else if (err.response?.status === 409) {
         setErrMsg("Email address already in use.");
       } else {
         setErrMsg("Failed to create account.");
       }
-      errRef.current.focus();
+      errRef.current?.focus();
     }
   };
 
   const handleLoginDemoUser = async () => {
-    navigate("/demo-loading")
+    navigate("/demo-loading");
     try {
-      const response = await axios.post(DEMO_URL, null, {
+      const response = await axios.post(DEMO_URL, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-      if (token) {
-        localStorage.setItem("token", JSON.stringify(token));
+      if (response.data.token) {
+        localStorage.setItem("token", JSON.stringify(response.data.token));
         navigate("/dashboard");
       } else {
         throw new Error("Invalid response.");
-      }  
+      }
     } catch (error) {
       setErrMsg("Failed to create demo account. Try again.");
-      navigate("/signup")
+      navigate("/signup");
     }
   };
 
@@ -328,7 +329,7 @@ const SignupPage = () => {
                   }`}
                 >
                   <svg
-                    class="w-3.5 h-3.5 me-2 text-brandgreen shrink-0"
+                    className="w-3.5 h-3.5 me-2 text-brandgreen shrink-0"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -344,7 +345,7 @@ const SignupPage = () => {
                   }`}
                 >
                   <svg
-                    class="w-3.5 h-3.5 me-2 text-brandgreen shrink-0"
+                    className="w-3.5 h-3.5 me-2 text-brandgreen shrink-0"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -361,7 +362,7 @@ const SignupPage = () => {
                   }`}
                 >
                   <svg
-                    class="w-3.5 h-3.5 me-2 text-brandgreen shrink-0"
+                    className="w-3.5 h-3.5 me-2 text-brandgreen shrink-0"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
