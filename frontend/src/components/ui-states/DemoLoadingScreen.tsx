@@ -1,4 +1,5 @@
-import logomark from '../assets/icons/doowit-logomark.svg';
+import React from "react";
+import logomark from "../../assets/icons/doowit-logomark.svg";
 
 const DemoLoadingScreen = () => {
   return (

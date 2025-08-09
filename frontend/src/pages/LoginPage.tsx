@@ -1,33 +1,38 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import axios from "../api/axios.js";
-import { AxiosError } from "axios";
 import doowitLogo from "../assets/icons/doowitlogo-colored.svg";
 import loginImage from "../assets/images/login-mockup.svg";
-
-const LOGIN_URL = "/login";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../app/store.js";
+import {
+  setEmail,
+  setError,
+  setIsUserLoading,
+} from "../features/auth/authSlice.js";
+import { loginUser } from "../features/auth/authThunks.js";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const emailRef = useRef<HTMLInputElement>(null);
   const errRef = useRef<HTMLInputElement>(null);
 
-  const [userEmail, setUserEmail] = useState<string>("");
-  const [pwd, setPwd] = useState<string>("");
-  const [errMsg, setErrMsg] = useState<string>("");
+  const [pwd, setPwd] =useState<string>("")
+  const UserData = useSelector((state: RootState) => state.user.userData);
+  const { email } = UserData;
+  const error = useSelector((state: RootState) => state.user.error);
+  const loading = useSelector((state: RootState) => state.user.isUserLoading);
   const [passwordVisibility, setPasswordVisibility] =
     useState<string>("password");
-  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     emailRef.current?.focus();
   }, []);
 
   useEffect(() => {
-    setErrMsg("");
-  }, [userEmail, pwd]);
+    dispatch(setError(""));
+  }, [email, pwd]);
 
   const togglePassword = () => {
     passwordVisibility === "password"
@@ -35,40 +40,23 @@ const LoginPage = () => {
       : setPasswordVisibility("password");
   };
 
+  console.log(email, pwd)
+
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ email: userEmail, password: pwd }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      localStorage.setItem("token", JSON.stringify(response?.data?.token));
+    dispatch(setIsUserLoading(true));
+    const response = await dispatch(loginUser({ email, pwd }));
+
+    if (loginUser.fulfilled.match(response)) {
+      dispatch(setEmail(""));
+      setPwd("")
       navigate("/dashboard");
-      setUserEmail("");
-      setPwd("");
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      const err = error as AxiosError;
-      if (!err?.response) {
-        setErrMsg("No Server Response");
-      } else if (err.response?.status === 400) {
-        setErrMsg("Invalid credentials, please try again.");
-      } else if (err.response?.status === 401) {
-        setErrMsg("Invalid credentials, please try again.");
-      } else {
-        setErrMsg("Login Failed");
-      }
+    } else {
       errRef.current?.focus();
+      navigate("/login")
     }
   };
+
 
   return (
     <section className="flex w-full h-screen" id="login-screen">
@@ -111,7 +99,7 @@ const LoginPage = () => {
 
         <div
           className={`${
-            errMsg ? "block" : "hidden"
+            error ? "block" : "hidden"
           } bg-softred text-togglegray border border-brandred rounded-lg px-3 py-2`}
           id="error-msg"
         >
@@ -120,7 +108,7 @@ const LoginPage = () => {
             aria-live="assertive"
             className="text-sm font-light text-red-500"
           >
-            {errMsg}
+            {error}
           </p>
         </div>
         <form
@@ -139,10 +127,10 @@ const LoginPage = () => {
               type="email"
               id="email"
               placeholder="Enter your email address"
-              value={userEmail}
+              value={email}
               ref={emailRef}
               autoComplete="off"
-              onChange={(e) => setUserEmail(e.target.value)}
+              onChange={(e) => dispatch(setEmail(e.target.value))}
               required
               className="bg-offwhite border-none rounded-lg placeholder-coolgray h-10 placeholder:font-light placeholder:text-sm focus:ring-coolgray focus:ring-1"
             />

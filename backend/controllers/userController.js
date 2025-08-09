@@ -1,9 +1,9 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import dotenv from 'dotenv';
-import 'path';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+import "path";
 
-import User from '../models/User.js';
+import User from "../models/User.js";
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ const signup = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   if (!firstName || !lastName || !email || !password)
-    return res.status(400).json({ message: 'All fields are required.' });
+    return res.status(400).json({ message: "All fields are required." });
 
   const duplicate = await User.findOne({ email: email });
   if (duplicate) return res.sendStatus(409);
@@ -30,11 +30,11 @@ const signup = async (req, res) => {
 
   const accessToken = jwt.sign(
     { user: user._id },
-    '' + process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: '7d' }
+    "" + process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "7d" }
   );
 
-  res.cookie('jwt', accessToken, {
+  res.cookie("jwt", accessToken, {
     maxAge: maxAge * 1000,
     httpOnly: true,
   });
@@ -57,39 +57,45 @@ const signup = async (req, res) => {
 
 //User authentication or LOGIN
 const authenticateUser = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password)
-    return res.sendStatus(400).json({ message: 'All fields are required.' });
+  try {
+    const { email, password } = req.body;
+    if (!email || !password)
+      return res.status(400).json({ message: "All fields are required." });
 
-  const foundUser = await User.findOne({ email: email });
-  if (!foundUser) return res.sendStatus(404);
+    const foundUser = await User.findOne({ email: email });
+    if (!foundUser)
+      return res.status(404).json({ message: "User not found." });
 
-  const matchPwd = bcrypt.compare(password, foundUser.password);
-  if (matchPwd) {
-    const accessToken = jwt.sign(
-      { user: foundUser._id },
-      '' + process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '7d' }
-    );
+    const matchPwd = bcrypt.compare(password, foundUser.password);
+    if (matchPwd) {
+      const accessToken = jwt.sign(
+        { user: foundUser._id },
+        "" + process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "7d" }
+      );
 
-    res.cookie('jwt', accessToken, {
-      maxAge: maxAge * 1000,
-      httpOnly: true,
-    });
+      res.cookie("jwt", accessToken, {
+        maxAge: maxAge * 1000,
+        httpOnly: true,
+      });
 
-    res.status(200).json({
-      _id: foundUser._id,
-      email: foundUser.email,
-      token: accessToken,
-    });
-  } else {
-    res.sendStatus(401);
+      res.status(200).json({
+        _id: foundUser._id,
+        email: foundUser.email,
+        token: accessToken,
+        message: "Login successful.",
+      });
+    } else {
+      res.status(401).json({ message: "Invalid credentials." });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Server error." });
   }
 };
 
 //GET User
 const reqUser = async (req, res) => {
-  const id = req.params['id'];
+  const id = req.params["id"];
   if (!id) return res.sendStatus(404);
 
   try {
@@ -108,15 +114,14 @@ const reqUser = async (req, res) => {
 };
 
 const createDemoUser = async (req, res) => {
-
-  const demoEmail = `demo${Math.random().toString(36).substr(2,9)}@email.com`
+  const demoEmail = `demo${Math.random().toString(36).substr(2, 9)}@email.com`;
 
   const demoUser = {
-    firstName: 'Demo',
-    lastName: 'User',
+    firstName: "Demo",
+    lastName: "User",
     email: demoEmail,
-    password: 'demo',
-  }
+    password: "demo",
+  };
 
   const duplicate = await User.findOne({ email: demoUser.email });
   if (duplicate) return res.sendStatus(409);
@@ -133,29 +138,28 @@ const createDemoUser = async (req, res) => {
 
     const accessToken = jwt.sign(
       { user: user._id },
-      '' + process.env.ACCESS_TOKEN_SECRET,
-      {expiresIn: '1d'}
-      )
+      "" + process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
 
-      res.cookie('jwt', accessToken, {
-        maxAge: maxAge * 1000,
-        httpOnly: true,
-      })
+    res.cookie("jwt", accessToken, {
+      maxAge: maxAge * 1000,
+      httpOnly: true,
+    });
 
-      user.save()
+    user.save();
 
-      res.status(201).json({
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        token: accessToken,
-      })
+    res.status(201).json({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      token: accessToken,
+    });
   } catch (error) {
-    res.status(500).json({message: error.message });
+    res.status(500).json({ message: error.message });
   }
-
-}
+};
 
 const editUser = async (req, res) => {
   const { email, firstName, lastName } = req.body;
@@ -164,7 +168,7 @@ const editUser = async (req, res) => {
     email,
     firstName,
     lastName,
-    userImage: req.file?.path.replace('frontend\\public\\', './'),
+    userImage: req.file?.path.replace("frontend\\public\\", "./"),
   };
   console.log(`req.file: ${updatedUser.userImage}`);
   console.log(req.file);
@@ -174,13 +178,13 @@ const editUser = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found.' });
+      return res.status(404).json({ error: "User not found." });
     }
 
-    res.status(200).json({ message: 'User updated.', user });
+    res.status(200).json({ message: "User updated.", user });
   } catch (error) {
     res.status(400).json({
-      error: 'Edit unsuccessful, please try again.',
+      error: "Edit unsuccessful, please try again.",
       message: error.message,
     });
   }
@@ -196,7 +200,7 @@ const updatePassword = async (req, res) => {
   const matchPwd = await bcrypt.compare(oldPassword, foundUser.password);
 
   if (!matchPwd) {
-    return res.status(401).json({ error: 'Old password is incorrect' });
+    return res.status(401).json({ error: "Old password is incorrect" });
   }
 
   const hashedPwd = await bcrypt.hash(newPassword, 10);
@@ -205,7 +209,7 @@ const updatePassword = async (req, res) => {
 
   await foundUser.save();
   res.status(200).json({
-    message: 'Password updated.',
+    message: "Password updated.",
     foundUser,
   });
 };

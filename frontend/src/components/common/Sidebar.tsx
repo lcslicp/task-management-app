@@ -1,37 +1,41 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import LoadingSpinner from "./ui-states/loadingSpinner";
-import logoutIcon from "../assets/icons/logout-icon.svg";
-import githubIcon from "../assets/icons/github-icon.svg";
-import feedbackIcon from "../assets/icons/feedback-icon.svg";
-import DoowitLogo from "../assets/icons/doowit-logo.svg";
-import { Sidebartype } from "../types/task";
+import logoutIcon from "../../assets/icons/logout-icon.svg";
+import githubIcon from "../../assets/icons/github-icon.svg";
+import feedbackIcon from "../../assets/icons/feedback-icon.svg";
+import DoowitLogo from "../../assets/icons/doowit-logo.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../app/store";
+import { setSort, setPriorityFilter } from "../../features/tasks/tasksSlice";
+import { logout } from "../../features/auth/authSlice";
 
-const Sidebar: React.FC<Sidebartype> = ({
-  priorityFilter,
-  setPriorityFilter,
-  sort,
-  setSort,
-  sortOldest,
-  sortDueDate,
-}) => {
+const Sidebar = () => {
   const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const priorityFilter = useSelector(
+    (state: RootState) => state.tasks.priorityFilter
+  );
+  const sort = useSelector((state: RootState) => state.tasks.sort);
   const [toggleSort, setToggleSort] = useState(false);
   const [toggleFilter, setToggleFilter] = useState(false);
   const [dashboardSelected, setDashboardSelected] = useState(true);
 
+  const sortOldest = () => {
+    dispatch(setSort("oldest"));
+  };
+
+  const sortDueDate = () => {
+    dispatch(setSort("duedate"));
+  };
+
   const handleLogout = () => {
-    setLoading(true);
     try {
-      localStorage.removeItem("token");
+      dispatch(logout())
       navigate("/login");
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
-      console.log(error);
+      console.error("Logout error:", error);
     }
   };
 
@@ -47,7 +51,7 @@ const Sidebar: React.FC<Sidebartype> = ({
   const handleSortSelected = (label: string) => {
     const isSelected = sort.includes(label);
     if (isSelected) {
-      setSort("newest");
+      dispatch(setSort("newest"));
     } else {
       setSort(label);
     }
@@ -69,7 +73,7 @@ const Sidebar: React.FC<Sidebartype> = ({
       ? priorityFilter.filter((item) => item !== label)
       : [...priorityFilter, label];
 
-    setPriorityFilter(newFilter);
+    dispatch(setPriorityFilter(newFilter));
   };
 
   useEffect(() => {
@@ -146,7 +150,7 @@ const Sidebar: React.FC<Sidebartype> = ({
                   ? "bg-hovergray text-white"
                   : "bg:transparent text-white hover:bg-hovergray"
               }`}
-              onClick={toggleSortDropdown}
+              onClick={() => toggleSortDropdown}
             >
               <svg
                 className={`w-3 h-3 opacity-50  ${
@@ -208,7 +212,7 @@ const Sidebar: React.FC<Sidebartype> = ({
                   ? "bg-white text-black"
                   : "bg:transparent text-white hover:bg-hovergray"
               }`}
-              onClick={toggleFilterDropdown}
+              onClick={() => toggleFilterDropdown}
             >
               <svg
                 className={`w-3 h-3 opacity-50 ${
@@ -230,7 +234,7 @@ const Sidebar: React.FC<Sidebartype> = ({
                     key={item.id}
                     className="flex w-full rounded-full items-center"
                     onClick={() =>
-                      setPriorityFilter([...priorityFilter, item.label])
+                      dispatch(setPriorityFilter([...priorityFilter, item.label]))
                     }
                   >
                     <input
@@ -271,7 +275,7 @@ const Sidebar: React.FC<Sidebartype> = ({
               type="button"
               onClick={handleLogout}
             >
-              {loading ? <LoadingSpinner /> : "Log Out"}
+              Log Out
             </button>
           </a>
         </div>

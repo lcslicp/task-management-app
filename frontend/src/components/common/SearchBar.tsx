@@ -1,19 +1,28 @@
-import React, { useState, useEffect } from "react";
-import axios from "../api/axios";
-import LoadingSpinner from "./ui-states/loadingSmall";
-import { TaskResponse, Tasktype } from "../types/task";
+import React from "react";
+import { useState, useEffect } from "react";
+import axios from "../../api/axios";
+import LoadingSpinner from "../ui-states/loadingSpinner";
+import { getAuthConfig } from "../../api/axiosConfig";
+import { TaskInterface } from "../../types/task";
+import { handleTaskOpen } from "../../utils/handleTaskOpen";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "../../app/store";
 
-const SearchBar = ({
-  handleTaskOpen,
-}: {
-  handleTaskOpen: (id: string) => void;
-}) => {
+const SearchBar = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
   const token = JSON.parse(localStorage.getItem("token") || "{}");
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
+const config = {
+  headers: { Authorization: `Bearer ${token}` },
+};
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const onOpen = (id: string) => {
+    dispatch(handleTaskOpen(id, navigate));
   };
 
   const fetchSearchResults = async () => {
@@ -71,17 +80,17 @@ const SearchBar = ({
                 No tasks found.
               </p>
             ) : (
-              searchResults.map((result: Tasktype) => (
+              searchResults.map((result: TaskInterface["taskData"]) => (
                 <li
-                  key={result._id}
+                  key={result.taskId}
                   className="cursor-pointer px-10 hover:bg-offwhite pb-2"
-                  onClick={() => handleTaskOpen(result._id)}
+                  onClick={() => onOpen(result.taskId)}
                 >
                   <p className="text-base text-darkgray font-base">
-                    {result.title}
+                    {result.taskTitle}
                   </p>
                   <span className="text-xs text-coolgray font-bold uppercase">
-                    {result.status}
+                    {result.taskStatus}
                   </span>
                 </li>
               ))

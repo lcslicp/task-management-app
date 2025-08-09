@@ -1,49 +1,77 @@
+import React from "react";
 import axios from "../../api/axios";
 import { useState } from "react";
-import { TaskCardtype } from "../../types/task";
-
-const TaskCard: React.FC<TaskCardtype> = ({
-  id,
-  title,
-  description,
-  priority,
-  status,
-  dueDate,
-  createdAt,
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../app/store";
+import {
   setTodoTasks,
-  setInProgressTasks,
-  setCompletedTasks,
-  handleTaskOpen,
-  bgColor,
-}) => {
+  setInprogressTasks,
+} from "../../features/tasks/tasksSlice";
+import { TaskInterface } from "../../types/task";
+import { handleTaskOpen } from "../../utils/handleTaskOpen";
+import { useNavigate } from "react-router-dom";
+import { getAuthConfig } from "../../api/axiosConfig";
+import { fetchSingleTaskData } from "../../features/tasks/taskThunks";
+import { setTaskOpen } from "../../features/tasks/taskUIslice";
+import { setCurrentTask } from "../../features/tasks/taskSlice";
+
+const TaskCard = ({ bgColor, task } : {bgColor: string, task:TaskInterface}) => {
   const [dropdown, setDropdown] = useState("hidden");
-  const token = JSON.parse(localStorage.getItem("token") || "{}");
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
+  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const config = getAuthConfig()
+  
+  const { taskId, title, description, status, priority,  createdAt,  dueDate } = task
+
+  let dueDateFormatted = new Date(dueDate).toLocaleDateString("default", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
 
   const toggleTask = () => {
     dropdown === "hidden" ? setDropdown("visible") : setDropdown("hidden");
   };
 
-  const handleDelete = async () => {
-    let taskStatus;
-    status === "To Do" ? (taskStatus = 1) : (taskStatus = 2);
+  const onOpen = async (id: string) => {
+    setLoading(true)
     try {
-      await axios.delete(`${id}`, config);
-      taskStatus === 1
-        ? setTodoTasks((prevTasks) =>
-            prevTasks.filter((task) => task._id !== id)
+      const response = await dispatch(fetchSingleTaskData(id))
+      dispatch(setTaskOpen(true))
+      dispatch(setCurrentTask(response.payload))
+      setLoading(false)
+     
+    } catch (error) {
+      setLoading(false);
+      console.error(error)
+    }
+  };
+
+  const handleDelete = async () => {
+    let status;
+    status === "To Do" ? (status = 1) : (status = 2);
+    try {
+      await axios.delete(`${taskId}`, config);
+      status === 1
+        ? dispatch(
+            setTodoTasks((prevTasks: TaskInterface[]) =>
+              prevTasks.filter((task) => task.taskId !== taskId)
+            )
           )
-        : setInProgressTasks((prevTasks) =>
-            prevTasks.filter((task) => task._id !== id)
+        : dispatch(
+            setInprogressTasks((prevTasks: TaskInterface[]) =>
+              prevTasks.filter((task) => task.taskId !== taskId)
+            )
           );
     } catch (error) {
       console.error(error);
     }
   };
 
-  const getRelativeTime = (createdAt: Date) => {
+
+  const getRelativeTime = (createdAt: string) => {
     const now = new Date().getTime();
     const dateCreated = new Date(createdAt).getTime();
     const diffInMs = now - dateCreated;
@@ -134,9 +162,9 @@ const TaskCard: React.FC<TaskCardtype> = ({
           </ul>
         </div> */}
       </div>
-      <div
+      {loading ? <h2>Loading...</h2>: (<div
         className="flex flex-col"
-        onClick={() => handleTaskOpen(id)}
+        onClick={() => onOpen(taskId)}
         id="taskcard_content"
       >
         <h2 className="text-2xl text-black font-medium" id="taskcard-title">
@@ -167,7 +195,7 @@ const TaskCard: React.FC<TaskCardtype> = ({
             />
           </svg>
           <p className="text-sm text-black font-light" id="taskcard-duedate">
-            {dueDate == "Invalid Date" ? "No Due Date" : dueDate}
+            {dueDateFormatted == "Invalid Date" ? "No Due Date" : dueDateFormatted}
           </p>{" "}
           <svg
             width="4"
@@ -185,7 +213,8 @@ const TaskCard: React.FC<TaskCardtype> = ({
             Created {getRelativeTime(createdAt)}
           </p>
         </div>
-      </div>
+      </div>)}
+      
     </div>
   );
 };

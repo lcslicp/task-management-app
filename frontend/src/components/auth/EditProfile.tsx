@@ -1,36 +1,42 @@
-import React, { useRef, useState } from "react";
-import axios from "../api/axios";
-import { EditProfileModal } from "../types/user";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../app/store";
+import { updateUserProfile } from "../../features/auth/authThunks";
+import {
+  setEmail,
+  setFirstName,
+  setLastName,
+  setUserImage,
+} from "../../features/auth/authSlice";
+import { UserInterface } from "../../types/user";
 
-const EditProfile: React.FC<EditProfileModal> = ({
+const EditProfile = ({
   handleProfileModalClose,
   profileModalOpen,
-  firstName,
-  setFirstName,
-  lastName,
-  setLastName,
-  email,
-  setEmail,
-  userId,
-  setUserImage,
-  imagePreview,
-  setImagePreview,
   setPasswordModalOpen,
+}: {
+  handleProfileModalClose: () => void;
+  profileModalOpen: boolean;
+  setPasswordModalOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [fileName, setFileName] = useState<string>("No file chosen.");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const userData = useSelector((state: RootState) => state.user.userData);
+  const dispatch = useDispatch<AppDispatch>();
+  const {
+    userId: id,
+    firstName,
+    lastName,
+    email,
+    userImage,
+    password,
+  } = userData;
+
   const imageInputRef = useRef<HTMLInputElement>(null);
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
-
-  const token = JSON.parse(localStorage.getItem("token") || "{}");
-  const config = {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${token}`,
-    },
-  };
 
   const handleFormReset = () => {
     if (imageInputRef.current) {
@@ -55,36 +61,22 @@ const EditProfile: React.FC<EditProfileModal> = ({
     }
   };
 
-  const handleUpdateImage = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData();
-
-    if (selectedFile) {
-      formData.append("userImage", selectedFile);
-    }
-
-    await axios
-      .put(`/edit/user/${userId}`, formData, config)
-      .then((response) => {
-        setUserImage(response?.data.userImage);
-        handleFormReset();
-      })
-      .catch((error) => console.error(error));
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = {
-      firstName: firstNameRef.current?.value,
-      lastName: lastNameRef.current?.value,
-      email: emailRef.current?.value,
+    const data: UserInterface["userData"] = {
+      userId: id,
+      firstName: firstNameRef.current?.value || "",
+      lastName: lastNameRef.current?.value || "",
+      email: emailRef.current?.value || "",
+      password: password,
+      userImage: userImage,
     };
 
     try {
-      const response = await axios.put(`/edit/user/${userId}`, data, config);
-      setFirstName(response?.data?.firstName);
-      setLastName(response?.data?.lastName);
-      setEmail(response?.data?.email);
+      const response = await dispatch(updateUserProfile({ id, data })).unwrap();
+      dispatch(setFirstName(response?.data?.firstName));
+      dispatch(setLastName(response?.data?.lastName));
+      dispatch(setEmail(response?.data?.email));
       handleProfileModalClose();
     } catch (error) {
       console.error(error);
@@ -168,7 +160,6 @@ const EditProfile: React.FC<EditProfileModal> = ({
 
                           <button
                             type="submit"
-                            onClick={() => handleUpdateImage}
                             className="w-fit text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-xs font-bold text-center mt-4 px-4 py-2"
                             style={{
                               visibility:

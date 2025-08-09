@@ -1,33 +1,31 @@
 import React from "react";
-
-import TaskCard from "../task-cards/defaultTaskCard";
+import { useSelector } from "react-redux";
+import TaskCard from "../tasks/defaultTaskCard";
 import EmptyState from "../ui-states/EmptyState";
 import LoadingSpinner from "../ui-states/loadingSpinnerBlue";
-import { ToDoTabtype } from "../../types/task";
+import { RootState } from "../../app/store";
 
-const ToDoTab: React.FC<ToDoTabtype> = ({
-  status,
-  todoTasks,
-  setTodoTasks,
-  setInProgressTasks,
-  setCompletedTasks,
-  sort,
-  priorityFilter,
-  handleTaskOpen,
-  loading,
-}) => {
-  let sortedTasks = [...todoTasks];
+const CompletedTab = () => {
+  const completedTasks = useSelector(
+    (state: RootState) => state.tasks.completedTasks
+  );
+  const sort = useSelector((state: RootState) => state.tasks.sort);
+  const priorityFilter = useSelector(
+    (state: RootState) => state.tasks.priorityFilter
+  );
+  const loading = useSelector((state: RootState) => state.tasks.loading);
+  let sortedTasks = [...completedTasks];
 
   if (sort === "newest") {
-    sortedTasks = [...todoTasks].sort((a, b) => {
+    sortedTasks = [...completedTasks].sort((a, b) => {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
   } else if (sort === "oldest") {
-    sortedTasks = [...todoTasks].sort((a, b) => {
+    sortedTasks = [...completedTasks].sort((a, b) => {
       return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
     });
   } else if (sort === "duedate") {
-    sortedTasks = [...todoTasks].sort((a, b) => {
+    sortedTasks = [...completedTasks].sort((a, b) => {
       if (a.dueDate === "" && b.dueDate === "") {
         return 0;
       } else if (a.dueDate === "") {
@@ -50,10 +48,11 @@ const ToDoTab: React.FC<ToDoTabtype> = ({
     "bg-cardwhite",
   ];
 
+
   return (
     <div>
       {loading ? (
-        <div className="px-10 mx-40">
+        <div className="px-96 mx-40">
           <LoadingSpinner />
         </div>
       ) : sortedTasks.length === 0 ||
@@ -67,36 +66,12 @@ const ToDoTab: React.FC<ToDoTabtype> = ({
           ? sortedTasks
           : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
         ).map((task, index) => {
-          let dueDate = new Date(task.dueDate);
-          let date = dueDate.toLocaleDateString("default", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          });
-
           const bgColorClass = cardColors[index % cardColors.length];
-
-          return (
-            <TaskCard
-              id={task._id}
-              key={task._id}
-              title={task.title}
-              description={task.description}
-              priority={task.priority}
-              status={task.status}
-              dueDate={date}
-              createdAt={task.createdAt}
-              handleTaskOpen={handleTaskOpen}
-              setTodoTasks={setTodoTasks}
-              setInProgressTasks={setInProgressTasks}
-              setCompletedTasks={setCompletedTasks}
-              bgColor={bgColorClass}
-            />
-          );
+          return <TaskCard bgColor={bgColorClass} key={index} task={task} />;
         })
       )}
     </div>
   );
 };
 
-export default ToDoTab;
+export default CompletedTab;

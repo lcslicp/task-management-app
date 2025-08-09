@@ -1,10 +1,27 @@
-import { TabNavProps } from "../types/task";
+import React from "react";
+import { useState } from "react";
+import ToDoTab from "../tabs/ToDoTab";
+import InProgressTab from "../tabs/InProgressTab";
+import CompletedTab from "../tabs/CompletedTab";
 
-const TabNavigation: React.FC<TabNavProps> = ({
-  tabdata,
-  activeStatusTab,
-  setActiveStatusTab,
-}) => {
+const TabNavigation = () => {
+  const tabdata = [
+    { id: "1", key: "1", tabTitle: "To Do", tabContent: <ToDoTab /> },
+    {
+      id: "2",
+      key: "2",
+      tabTitle: "In Progress",
+      tabContent: <InProgressTab />,
+    },
+    {
+      id: "3",
+      key: "3",
+      tabTitle: "Completed",
+      tabContent: <CompletedTab />,
+    },
+  ];
+  const [activeStatusTab, setActiveStatusTab] = useState<string>(tabdata[0].id);
+
   const statusTabTitles = tabdata.map((tab, id) => (
     <li
       key={id}

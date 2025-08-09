@@ -1,57 +1,45 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../api/axios";
-import editIcon from "../assets/icons/edit-icon.svg";
-import deleteIcon from "../assets/icons/delete-icon.svg";
-import LoadingSpinner from "./ui-states/loadingSpinner";
-import LoadingSpinnerBlue from "./ui-states/loadingSpinnerBlue";
-import { CreateTasktype, Tasktype } from "../types/task";
+import editIcon from "../../assets/icons/edit-icon.svg";
+import deleteIcon from "../../assets/icons/delete-icon.svg";
+import LoadingSpinner from "../ui-states/loadingSpinner";
+import LoadingSpinnerBlue from "../ui-states/loadingSpinnerBlue";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../app/store";
+import { setTaskOpen } from "../../features/tasks/taskUIslice";
+import {
+  setTaskDueDate,
+  setTaskDescription,
+  setTaskPriority,
+  setTaskStatus,
+  setTaskTitle,
+} from "../../features/tasks/taskSlice";
+import { deleteTask, updateTask } from "../../features/tasks/tasksThunks";
+import { TaskInterface } from "../../types/task";
 
-const Task: React.FC<CreateTasktype> = ({
-  id,
-  title,
-  description,
-  status,
-  priority,
-  dueDate,
-  createdAt,
-  taskOpen,
-  setTaskOpen,
-  onUpdate,
+const TaskModal = ({
   isEditing,
   setIsEditing,
-  loading,
-  updateTodo,
-  updateInProgress,
-  updateCompleted,
-  setTodoTasks,
-  setInProgressTasks,
-  setCompletedTasks,
+}: {
+  isEditing: boolean;
+  setIsEditing: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const currentTask: Tasktype = {
-    _id: id,
-    title,
-    description,
-    status,
-    priority,
-    dueDate,
-    createdAt,
-  };
+  const dispatch = useDispatch<AppDispatch>();
+  const [loading, setLoading] = useState(false);
+  const currentTask = useSelector((state: RootState) => state.currentTask);
 
-  const token = JSON.parse(localStorage.getItem("token") || "{}");
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-
-  const [editedTask, setEditedTask] = useState<Tasktype>(currentTask);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const taskOpen = useSelector((state: RootState) => state.taskUI.taskOpen);
+  const [editedTask, setEditedTask] = useState(currentTask);
   const navigate = useNavigate();
 
   const handleModalClose = () => {
-    setTaskOpen(false);
+    dispatch(setTaskOpen(false));
     navigate("/dashboard");
     setIsEditing(false);
   };
+
+  const { taskId, title, description, status, priority, createdAt, dueDate } =
+    currentTask;
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -59,54 +47,42 @@ const Task: React.FC<CreateTasktype> = ({
   };
 
   const handleDelete = async (taskId: string, taskStatus: string) => {
-    let status;
-    taskStatus === "To Do"
-      ? (status = 1)
-      : taskStatus === "In Progress"
-      ? (status = 2)
-      : (status = 3);
-    console.log(status);
-    try {
-      await axios.delete(`${taskId}`, config);
-      status === 1
-        ? setTodoTasks((prevTasks) =>
-            prevTasks.filter((task) => task._id !== taskId)
-          )
-        : status === 2
-        ? setInProgressTasks((prevTasks) =>
-            prevTasks.filter((task) => task._id !== taskId)
-          )
-        : setCompletedTasks((prevTasks) =>
-            prevTasks.filter((task) => task._id !== taskId)
-          );
-      handleModalClose();
-    } catch (error) {
-      console.error(error);
-    }
+    dispatch(deleteTask({ taskId, taskStatus }));
   };
 
   const handleInputChange = (name: string, value: string) => {
     setEditedTask((oldTask) => ({ ...oldTask, [name]: value }));
   };
 
+  const handleUpdate = (updatedTask: TaskInterface) => {
+    dispatch(setTaskTitle(updatedTask.title));
+    dispatch(setTaskDescription(updatedTask.description));
+    dispatch(setTaskPriority(updatedTask.priority));
+    dispatch(setTaskStatus(updatedTask.status));
+    dispatch(setTaskDueDate(updatedTask.dueDate));
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
-    await axios
-      .put(`/edit/${editedTask?._id}`, editedTask, config)
-      .then((response) => {
-        onUpdate(response);
-        {
-          response.data.task.status === "To Do"
-            ? updateTodo(response.data.task)
-            : response.data.task.status === "In Progress"
-            ? updateInProgress(response.data.task)
-            : updateCompleted(response.data.task);
-        }
-      })
-      .then(() => setIsLoading(false));
-
-    setIsEditing(false);
+    setLoading(true);
+    try {
+      const updateResult = await dispatch(
+        updateTask({
+          id: currentTask.taskId,
+          updatedData: editedTask,
+          status: currentTask.status,
+        })
+      );
+      if (updateTask.fulfilled.match(updateResult)) {
+        const updated = updateResult.payload;
+        handleUpdate(updated);
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error("Update failed", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   let due = new Date(dueDate);
@@ -162,7 +138,7 @@ const Task: React.FC<CreateTasktype> = ({
                         className="bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-full p-2.5 mt-6"
                         id="title"
                         name="title"
-                        value={editedTask?.title}
+                        value={title}
                         onChange={(e) =>
                           handleInputChange(e.target.name, e.target.value)
                         }
@@ -175,7 +151,7 @@ const Task: React.FC<CreateTasktype> = ({
                         <select
                           name="status"
                           className="w-32 h-8 border-none bg-darkblue text-white text-xs rounded-md mr-4 "
-                          value={editedTask?.status}
+                          value={status}
                           onChange={(e) =>
                             handleInputChange(e.target.name, e.target.value)
                           }
@@ -191,7 +167,7 @@ const Task: React.FC<CreateTasktype> = ({
                         <select
                           name="priority"
                           className="w-32 h-8 border-darkblue text-xs rounded-md"
-                          value={editedTask?.priority}
+                          value={priority}
                           onChange={(e) =>
                             handleInputChange(e.target.name, e.target.value)
                           }
@@ -216,7 +192,7 @@ const Task: React.FC<CreateTasktype> = ({
                             type="date"
                             name="dueDate"
                             className="bg-lightgray border-none text-xs rounded-md"
-                            value={editedTask?.dueDate}
+                            value={dueDate}
                             onChange={(e) =>
                               handleInputChange(e.target.name, e.target.value)
                             }
@@ -231,7 +207,7 @@ const Task: React.FC<CreateTasktype> = ({
                         className="bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-blue-500 focus:border-brightblue block w-full p-2.5"
                         id="description"
                         name="description"
-                        value={editedTask?.description || ""}
+                        value={description || ""}
                         onChange={(e) =>
                           handleInputChange(e.target.name, e.target.value)
                         }
@@ -250,7 +226,7 @@ const Task: React.FC<CreateTasktype> = ({
                             className="w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center"
                           >
                             <div>
-                              {isLoading ? <LoadingSpinner /> : "Save Task"}
+                              {loading ? <LoadingSpinner /> : "Save Task"}
                             </div>
                           </button>
                         </div>
@@ -263,7 +239,7 @@ const Task: React.FC<CreateTasktype> = ({
                   </div>
                 ) : (
                   <div className="py-6 px-6 lg:px-8">
-                    <h1 className="text-3xl font-bold tracking-tight text-darkblue pb-6 pt-6">
+                    <h1 className="text-3xl font-bold tracking-tight text-brandblack pb-6 pt-6">
                       {title}
                     </h1>
                     <div className="flex flex-row gap-4 pb-2">
@@ -329,7 +305,7 @@ const Task: React.FC<CreateTasktype> = ({
                     <button
                       type="button"
                       className="absolute bottom-3 right-2.5 bg-transparent hover:bg-lightgray hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-                      onClick={() => handleDelete(id, status)}
+                      onClick={() => handleDelete(taskId, status)}
                     >
                       <img src={deleteIcon} className="w-4 h-4" />{" "}
                     </button>
@@ -347,4 +323,4 @@ const Task: React.FC<CreateTasktype> = ({
   );
 };
 
-export default Task;
+export default TaskModal;

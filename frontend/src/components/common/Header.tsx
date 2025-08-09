@@ -1,12 +1,9 @@
-import { Usertype } from "../types/user";
+import React from "react";
+import { useSelector } from "react-redux";
 import SearchBar from "./SearchBar";
+import { RootState } from "../../app/store";
 
-const Header: React.FC<Usertype> = ({
-  firstName,
-  lastName,
-  userImage,
-  handleTaskOpen,
-}) => {
+const Header = () => {
   const options: Intl.DateTimeFormatOptions = {
     month: "long",
     year: "numeric",
@@ -14,6 +11,9 @@ const Header: React.FC<Usertype> = ({
   };
 
   const now = new Date().toLocaleDateString("default", options);
+  const User = useSelector((state: RootState) => state.user);
+
+  const { firstName, lastName, userImage } = User.userData;
 
   const initials = firstName[0] + lastName[0];
 
@@ -26,12 +26,12 @@ const Header: React.FC<Usertype> = ({
 
       <div className="flex flex-row w-[50%] items-center gap-5 justify-end">
         <div className="flex-grow">
-          <SearchBar handleTaskOpen={handleTaskOpen} />
+          <SearchBar />
         </div>
         <div className="flex flex-row flex-shrink-0 items-center gap-3">
           {userImage ? (
             <img
-              src={userImage}
+              src={""}
               alt="profile image"
               className="w-6 h-6 border-2 rounded-lg"
             />

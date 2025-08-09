@@ -1,21 +1,20 @@
 import React from "react";
-
-import TaskCard from "../task-cards/defaultTaskCard";
+import { useSelector } from "react-redux";
+import TaskCard from "../tasks/defaultTaskCard";
 import EmptyState from "../ui-states/EmptyState";
 import LoadingSpinner from "../ui-states/loadingSpinnerBlue";
-import { InProgressTabtype } from "../../types/task";
+import { RootState } from "../../app/store";
 
-const InProgressTab: React.FC<InProgressTabtype> = ({
-  status,
-  inProgressTasks,
-  setTodoTasks,
-  setInProgressTasks,
-  setCompletedTasks,
-  sort,
-  priorityFilter,
-  handleTaskOpen,
-  loading,
-}) => {
+const InProgressTab = () => {
+  const inProgressTasks = useSelector(
+    (state: RootState) => state.tasks.inProgressTasks
+  );
+  const sort = useSelector((state: RootState) => state.tasks.sort);
+  const priorityFilter = useSelector(
+    (state: RootState) => state.tasks.priorityFilter
+  );
+  const loading = useSelector((state: RootState) => state.tasks.loading);
+
   let sortedTasks = [...inProgressTasks];
 
   if (sort === "newest") {
@@ -43,8 +42,6 @@ const InProgressTab: React.FC<InProgressTabtype> = ({
       .concat(sortedTasks.filter((task) => task.dueDate === "Invalid Date"));
   }
 
-  const randomNumber = Math.floor(Math.random() * 10) + 1;
-
   const cardColors = [
     "bg-softerblue",
     "bg-softeryellow",
@@ -69,31 +66,8 @@ const InProgressTab: React.FC<InProgressTabtype> = ({
           ? sortedTasks
           : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
         ).map((task, index) => {
-          let dueDate = new Date(task.dueDate);
-          let date = dueDate.toLocaleDateString("default", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          });
-
           const bgColorClass = cardColors[index % cardColors.length];
-          return (
-            <TaskCard
-              id={task._id}
-              key={task._id}
-              status={status}
-              title={task.title}
-              description={task.description}
-              priority={task.priority}
-              dueDate={date}
-              createdAt={task.createdAt}
-              handleTaskOpen={handleTaskOpen}
-              setTodoTasks={setTodoTasks}
-              setInProgressTasks={setInProgressTasks}
-              setCompletedTasks={setCompletedTasks}
-              bgColor={bgColorClass}
-            />
-          );
+          return <TaskCard bgColor={bgColorClass} key={index} task={task} />;
         })
       )}
     </div>

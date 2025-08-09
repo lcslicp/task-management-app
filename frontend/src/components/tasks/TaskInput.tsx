@@ -1,69 +1,64 @@
 import React, { useState } from "react";
-import axios from "../api/axios";
-import LoadingSpinner from "./ui-states/loadingSpinner";
-import { TaskInputType } from "../types/task";
-
-const TaskInput: React.FC<TaskInputType> = ({
-  title,
-  setTaskTitle,
-  description,
+import LoadingSpinner from "../ui-states/loadingSpinner";
+import {
   setTaskDescription,
-  status,
-  setTaskStatus,
-  priority,
+  setTaskDueDate,
   setTaskPriority,
-  dueDate,
-  setTaskDue,
-  addTodo,
-  addInProgress,
+  setTaskStatus,
+  setTaskTitle,
+} from "../../features/tasks/taskSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { createTask } from "../../features/tasks/tasksThunks";
+import { AppDispatch, RootState } from "../../app/store";
+import {
   addCompleted,
-}) => {
+  addInProgress,
+  addTodo,
+} from "../../features/tasks/tasksSlice";
+
+const TaskInput = ({}) => {
   const [popup, setPopup] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const token = JSON.parse(localStorage.getItem("token") || "{}");
-  const CREATE_TASK_URL = "/compose/newtask";
-
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const status = useSelector((state: RootState) => state.task.status);
+  const title = useSelector((state: RootState) => state.task.title);
+  const description = useSelector(
+    (state: RootState) => state.task.description
+  );
+  const priority = useSelector((state: RootState) => state.task.priority);
+  const dueDate = useSelector((state: RootState) => state.task.dueDate);
 
   const handleFormReset = () => {
-    setTaskTitle("");
-    setTaskDescription("");
-    setTaskStatus("");
-    setTaskPriority("");
-    setTaskDue("");
+    dispatch(setTaskTitle(""));
+    dispatch(setTaskDescription(""));
+    dispatch(setTaskStatus(""));
+    dispatch(setTaskPriority(""));
+    dispatch(setTaskDueDate(""));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
-    axios
-      .post(
-        CREATE_TASK_URL,
-        {
-          title,
-          description,
-          status,
-          priority,
-          dueDate,
-        },
-        config
-      )
-      .then((response) =>
-        response.data.status === "To Do"
-          ? addTodo(response.data)
-          : response.data.status === "In Progress"
-          ? addInProgress(response.data)
-          : addCompleted(response.data)
-      )
-      .then(() => handleFormReset())
-      .then(() => handleModalClose())
-      .then(() => setIsLoading(false))
-      .catch((error) => console.error(error));
-  };
+    setLoading(true);
+    try {
+      const task = await dispatch(
+        createTask({ title, description, status, priority, dueDate })
+      ).unwrap();
 
+      if (task.status === "To Do") {
+        addTodo(task);
+      } else if (task.status === "In Progress") {
+        addInProgress(task);
+      } else {
+        addCompleted(task);
+      }
+      setLoading(false);
+      handleModalClose()
+      handleFormReset();
+    } catch (error) {
+      setLoading(false);
+      console.error(error);
+    }
+  };
   const handleModalOpen = () => {
     setPopup(!popup);
     handleFormReset();
@@ -121,7 +116,9 @@ const TaskInput: React.FC<TaskInputType> = ({
                       className="bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-full p-2.5 mt-6"
                       id="title"
                       value={title}
-                      onChange={(e) => setTaskTitle(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        dispatch(setTaskTitle(e.target.value))
+                      }
                       required
                     />
                     <div id="selections" className="flex flex-row items-center">
@@ -129,7 +126,9 @@ const TaskInput: React.FC<TaskInputType> = ({
                         name="status"
                         className="w-32 h-8 border-none bg-darkblue text-white text-xs rounded-md mr-4 "
                         value={status}
-                        onChange={(e) => setTaskStatus(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                          dispatch(setTaskStatus(e.target.value))
+                        }
                         required
                       >
                         <option value="" disabled>
@@ -143,7 +142,9 @@ const TaskInput: React.FC<TaskInputType> = ({
                         name="priority"
                         className="w-32 h-8 border-darkblue text-xs rounded-md"
                         value={priority}
-                        onChange={(e) => setTaskPriority(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                          dispatch(setTaskPriority(e.target.value))
+                        }
                         required
                       >
                         <option value="" disabled>
@@ -164,7 +165,9 @@ const TaskInput: React.FC<TaskInputType> = ({
                           name="duedate"
                           className="bg-lightgray border-none text-xs rounded-md"
                           value={dueDate}
-                          onChange={(e) => setTaskDue(e.target.value)}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            dispatch(setTaskDueDate(e.target.value))
+                          }
                         />
                       </div>
                     </div>
@@ -176,7 +179,9 @@ const TaskInput: React.FC<TaskInputType> = ({
                       className="bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-blue-500 focus:border-brightblue block w-full p-2.5"
                       id="description"
                       value={description}
-                      onChange={(e) => setTaskDescription(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                        dispatch(setTaskDescription(e.target.value))
+                      }
                     ></textarea>
                     <div className="w-full flex justify-end">
                       <div className="flex flex-row w-2/3 space-x-4">
@@ -191,9 +196,7 @@ const TaskInput: React.FC<TaskInputType> = ({
                           type="submit"
                           className="w-full text-white bg-black hover:bg-transparent border border-transparent hover:text-black hover:border-black focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm text-center"
                         >
-                          <div>
-                            {isLoading ? <LoadingSpinner /> : "Add Task"}
-                          </div>
+                          <div>{loading ? <LoadingSpinner /> : "Add Task"}</div>
                         </button>
                       </div>
                     </div>
