@@ -8,16 +8,14 @@ import {
   setInprogressTasks,
 } from "../../features/tasks/tasksSlice";
 import { TaskInterface } from "../../types/task";
-import { handleTaskOpen } from "../../utils/handleTaskOpen";
 import { useNavigate } from "react-router-dom";
 import { getAuthConfig } from "../../api/axiosConfig";
 import { fetchSingleTaskData } from "../../features/tasks/taskThunks";
-import { setTaskOpen } from "../../features/tasks/taskUIslice";
+import { setTaskOpen, setTaskLoading } from "../../features/tasks/taskUIslice";
 import { setCurrentTask } from "../../features/tasks/taskSlice";
 
 const TaskCard = ({ bgColor, task } : {bgColor: string, task:TaskInterface}) => {
   const [dropdown, setDropdown] = useState("hidden");
-  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const config = getAuthConfig()
@@ -36,15 +34,15 @@ const TaskCard = ({ bgColor, task } : {bgColor: string, task:TaskInterface}) => 
   };
 
   const onOpen = async (id: string) => {
-    setLoading(true)
+    dispatch(setTaskLoading(true))
     try {
       const response = await dispatch(fetchSingleTaskData(id))
       dispatch(setTaskOpen(true))
       dispatch(setCurrentTask(response.payload))
-      setLoading(false)
+      dispatch(setTaskLoading(false))
      
     } catch (error) {
-      setLoading(false);
+      dispatch(setTaskLoading(false));
       console.error(error)
     }
   };
@@ -162,7 +160,7 @@ const TaskCard = ({ bgColor, task } : {bgColor: string, task:TaskInterface}) => 
           </ul>
         </div> */}
       </div>
-      {loading ? <h2>Loading...</h2>: (<div
+      {<div
         className="flex flex-col"
         onClick={() => onOpen(taskId)}
         id="taskcard_content"
@@ -213,7 +211,7 @@ const TaskCard = ({ bgColor, task } : {bgColor: string, task:TaskInterface}) => 
             Created {getRelativeTime(createdAt)}
           </p>
         </div>
-      </div>)}
+      </div>}
       
     </div>
   );

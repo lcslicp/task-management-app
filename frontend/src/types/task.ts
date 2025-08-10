@@ -20,4 +20,5 @@ export interface TasksInterface {
 
 export interface TaskUIState {
   taskOpen: boolean;
+  taskLoading: boolean;
 }

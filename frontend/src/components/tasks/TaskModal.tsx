@@ -6,7 +6,7 @@ import LoadingSpinner from "../ui-states/loadingSpinner";
 import LoadingSpinnerBlue from "../ui-states/loadingSpinnerBlue";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
-import { setTaskOpen } from "../../features/tasks/taskUIslice";
+import { setTaskOpen, setTaskLoading } from "../../features/tasks/taskUIslice";
 import {
   setTaskDueDate,
   setTaskDescription,
@@ -25,8 +25,8 @@ const TaskModal = ({
   setIsEditing: Dispatch<SetStateAction<boolean>>;
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const [loading, setLoading] = useState(false);
   const currentTask = useSelector((state: RootState) => state.currentTask);
+  const loading = useSelector((state: RootState) => state.taskUI.taskLoading);
 
   const taskOpen = useSelector((state: RootState) => state.taskUI.taskOpen);
   const [editedTask, setEditedTask] = useState(currentTask);
@@ -62,9 +62,32 @@ const TaskModal = ({
     dispatch(setTaskDueDate(updatedTask.dueDate));
   };
 
+  const getRelativeTime = (createdAt: string) => {
+    const now = new Date().getTime();
+    const dateCreated = new Date(createdAt).getTime();
+    const diffInMs = now - dateCreated;
+
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInMinutes < 1) {
+      return "Just now";
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
+    } else if (diffInHours < 24) {
+      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
+    } else if (diffInDays < 7) {
+      return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+    } else {
+      const diffInWeeks = Math.floor(diffInDays / 7);
+      return `${diffInWeeks} week${diffInWeeks > 1 ? "s" : ""} ago`;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(setTaskLoading(true));
     try {
       const updateResult = await dispatch(
         updateTask({
@@ -81,7 +104,7 @@ const TaskModal = ({
     } catch (error) {
       console.error("Update failed", error);
     } finally {
-      setLoading(false);
+      dispatch(setTaskLoading(false));
     }
   };
 
@@ -103,32 +126,13 @@ const TaskModal = ({
       {taskOpen ? (
         <section>
           <div
-            id="task-input"
+            id="task-modal"
             tabIndex={-1}
-            className="overflow-y-auto overflow-x-hidden fixed z-50 pt-14 w-full md:inset-0 h-modal md:h-full"
+            className="overflow-y-auto overflow-x-hidden fixed z-50 top-0 right-0 left-0 z-50 flex justify-center items-center w-full inset-0 h-[calc(100%-1rem)] max-h-full"
           >
-            <div className="relative p-4 w-1/2 h-full md:h-auto inset-x-1/3 inset-y-16">
+            <div className="relative p-4 w-full max-w-2xl max-h-full">
               {/* <!-- Modal content --> */}
-              <div className="relative bg-white rounded-lg shadow">
-                <button
-                  type="button"
-                  className="absolute top-3 right-2.5 text-black bg-transparent hover:bg-lightgray hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-                  onClick={handleModalClose}
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                </button>
-
+              <div className="relative bg-white rounded-2xl shadow-sm">
                 {isEditing ? (
                   <div className="py-6 px-6 lg:px-8">
                     <form onSubmit={handleSubmit} className="space-y-6 ">
@@ -238,77 +242,166 @@ const TaskModal = ({
                     <LoadingSpinnerBlue />
                   </div>
                 ) : (
-                  <div className="py-6 px-6 lg:px-8">
-                    <h1 className="text-3xl font-bold tracking-tight text-brandblack pb-6 pt-6">
-                      {title}
-                    </h1>
-                    <div className="flex flex-row gap-4 pb-2">
-                      <p
-                        className={(() => {
-                          switch (priority) {
-                            case "Low Priority":
-                              return "border border-grey text-xs text-grey rounded-full px-2 py-2 w-28 text-center";
-                            case "Medium Priority":
-                              return "bg-lightgray text-xs text-grey rounded-full px-2 py-2 w-36 text-center";
-                            case "High Priority":
-                              return "bg-darkblue text-xs text-white rounded-full px-3 py-2 w-28 text-center";
-                            case "Urgent":
-                              return "bg-brightblue text-xs text-white rounded-full px-2 py-2 w-24 text-center";
-                            default:
-                              return undefined;
-                          }
-                        })()}
+                  <div
+                    id="task_modal"
+                    className="flex flex-col relative p-8 w-full max-w-2xl max-h-full"
+                  >
+                    <div
+                      id="main-headline"
+                      className="flex justify-between items-center font-medium"
+                    >
+                      <h2 className="text-2xl text-brandblack pb-4">{title}</h2>
+                      <button
+                        type="button"
+                        className="text-gray-400 bg-offwhite hover:bg-gray-200 hover:text-gray-900 rounded-2xl text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                        onClick={handleModalClose}
+                        data-modal-hide="static-modal"
                       >
-                        {" "}
-                        {priority}
-                      </p>
-                      <p
-                        className={(() => {
-                          switch (status) {
-                            case "To Do":
-                              return "border border-grey text-xs text-grey rounded-full px-1 py-2 w-24 text-center";
-                            case "In Progress":
-                              return "bg-lightgray text-xs text-grey rounded-full px-2 py-2 w-36 text-center";
-                            case "Completed":
-                              return "bg-darkblue text-xs text-white rounded-full px-2 py-2 w-28 text-center";
-                            case "Overdue":
-                              return "bg-brightblue text-xs text-white rounded-full px-2 py-2 w-36 text-center";
-                            default:
-                              return undefined;
-                          }
-                        })()}
-                      >
-                        {" "}
-                        {status}
-                      </p>
+                        <svg
+                          className="w-3 h-3"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 14 14"
+                        >
+                          <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                          />
+                        </svg>
+                        <span className="sr-only">Close modal</span>
+                      </button>
                     </div>
-                    <p className="text-grey text-xs pt-4 pb-1 font-normal ">
-                      Date Added: {createdDateFormatted}
-                    </p>
-                    <p className="text-xs font-bold text-darkblue ">
-                      Due Date:{" "}
-                      {dueDate == "Invalid Date" ? "Unknown" : dueDate}{" "}
-                    </p>
-
-                    <p className="text-sm font-normal text-grey pr-2 py-10 whitespace-pre-line leading-6">
-                      {description}
-                    </p>
-
-                    <button
-                      type="button"
-                      className="absolute bottom-3 right-3.5 bg-transparent hover:bg-lightgray hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center mr-6"
-                      onClick={handleEdit}
+                    <div
+                      id="dates-container"
+                      className="flex items-center gap-4 text-sm"
                     >
-                      {" "}
-                      <img src={editIcon} className="w-4 h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      className="absolute bottom-3 right-2.5 bg-transparent hover:bg-lightgray hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-                      onClick={() => handleDelete(taskId, status)}
+                      <div className="flex items-center gap-4">
+                        <p className="flex flex-col m-0 p-0 text-sm">
+                          {" "}
+                          <span className="text-brandgray text-xs -mb-1 p-0">
+                            Due Date
+                          </span>{" "}
+                          {dueDateFormatted}
+                        </p>{" "}
+                      </div>
+                      <span className="h-10 w-1 border-r border-brandgray opacity-50"></span>
+
+                      <div className="flex items-center gap-2">
+                        <p className="flex flex-col m-0 p-0 text-sm text-brandgray">
+                          {" "}
+                          <span className=" text-xs -mb-1 p-0">
+                            Created
+                          </span>{" "}
+                          {getRelativeTime(createdAt)}
+                        </p>{" "}
+                      </div>
+                    </div>
+                    <span className="w-full h-1 border-b border-brandgray pt-4 opacity-50"></span>
+                    <div
+                      id="task-description"
+                      className="pt-6 pb-10 text-togglegray"
                     >
-                      <img src={deleteIcon} className="w-4 h-4" />{" "}
-                    </button>
+                      <p>{description}</p>
+                    </div>
+                    <div
+                      id="modal-footer"
+                      className="flex items-center justify-between"
+                    >
+                      <div id="modal-tags" className="flex gap-2">
+                        <p
+                          className={(() => {
+                            switch (priority) {
+                              case "Low Priority":
+                                return "text-sm bg-softgreen border border-brandgreen rounded-lg px-3 h-fit py-1 text-center text-brandgreen";
+                              case "Medium Priority":
+                                return "text-sm bg-softblue border border-brandblue text-brandblue rounded-lg px-3 h-fit py-1 text-center";
+                              case "High Priority":
+                                return "text-sm bg-softyellow border border-brandyellow text-brandyellow  rounded-lg px-3 h-fit py-1 text-center";
+                              case "Urgent":
+                                return "text-sm bg-softred border border-brandred text-brandred rounded-lg px-3 h-fit py-1 text-center";
+                              default:
+                                return undefined;
+                            }
+                          })()}
+                        >
+                          {priority}
+                        </p>
+                        <p
+                          className={(() => {
+                            switch (status) {
+                              case "To Do":
+                                return "text-sm bg-gray-100 border border-brandgray rounded-lg px-3 h-fit py-1 text-center text-brandgray";
+                              case "In Progress":
+                                return "text-sm bg-softyellow border border-brandyellow text-brandyellow rounded-lg px-3 h-fit py-1 text-center";
+                              case "Completed":
+                                return "text-sm bg-softgreen border border-brandgreen text-brandgreen rounded-lg px-3 h-fit py-1 text-center ";
+                              default:
+                                return undefined;
+                            }
+                          })()}
+                        >
+                          {" "}
+                          {status}
+                        </p>
+                      </div>
+
+                      <div id="modal-footer-icons" className="flex gap-2">
+                        <button
+                          id="edit-icon"
+                          className="bg-offwhite hover:bg-gray-200 rounded-full text-sm w-9 h-9 ms-auto inline-flex justify-center items-center"
+                          onClick={handleEdit}
+                        >
+                          <svg
+                            width="30"
+                            height="31"
+                            viewBox="0 0 30 31"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="bg-transparent"
+                          >
+                            <rect
+                              y="0.0959473"
+                              width="35"
+                              height="35"
+                              rx="15"
+                              className="fill-none"
+                            />
+                            <path
+                              d="M10.582 18.7101C10.6145 18.7101 10.647 18.7068 10.6795 18.7019L13.4127 18.2226C13.4452 18.2161 13.4761 18.2014 13.4989 18.1771L20.3872 11.2887C20.4023 11.2736 20.4142 11.2558 20.4224 11.2361C20.4306 11.2165 20.4348 11.1954 20.4348 11.1741C20.4348 11.1528 20.4306 11.1318 20.4224 11.1121C20.4142 11.0924 20.4023 11.0746 20.3872 11.0596L17.6865 8.35718C17.6556 8.32631 17.615 8.31006 17.5711 8.31006C17.5272 8.31006 17.4866 8.32631 17.4557 8.35718L10.5674 15.2456C10.543 15.2699 10.5284 15.2992 10.5219 15.3317L10.0425 18.0649C10.0267 18.152 10.0323 18.2416 10.0589 18.326C10.0856 18.4103 10.1323 18.487 10.1952 18.5492C10.3025 18.6532 10.4374 18.7101 10.582 18.7101ZM11.6772 15.8761L17.5711 9.98381L18.7622 11.1749L12.8684 17.0672L11.4237 17.3223L11.6772 15.8761ZM20.6944 20.0751H8.73436C8.44673 20.0751 8.21436 20.3074 8.21436 20.5951V21.1801C8.21436 21.2516 8.27286 21.3101 8.34436 21.3101H21.0844C21.1559 21.3101 21.2144 21.2516 21.2144 21.1801V20.5951C21.2144 20.3074 20.982 20.0751 20.6944 20.0751Z"
+                              className="fill-togglegray"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          id="delete-icon"
+                          className="bg-offwhite hover:bg-gray-200 rounded-full text-sm w-9 h-9 ms-auto inline-flex justify-center items-center"
+                          onClick={() => handleDelete(taskId, status)}
+                        >
+                          <svg
+                            width="30"
+                            height="31"
+                            viewBox="0 0 30 31"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <rect
+                              y="0.0959473"
+                              width="30"
+                              height="30"
+                              rx="15"
+                            />
+                            <path
+                              d="M12.4271 9.76595H12.2917C12.3661 9.76595 12.4271 9.70745 12.4271 9.63595V9.76595H17.5729V9.63595C17.5729 9.70745 17.6339 9.76595 17.7083 9.76595H17.5729V10.9359H18.7917V9.63595C18.7917 9.06232 18.3059 8.59595 17.7083 8.59595H12.2917C11.6941 8.59595 11.2083 9.06232 11.2083 9.63595V10.9359H12.4271V9.76595ZM20.9583 10.9359H9.04167C8.74206 10.9359 8.5 11.1683 8.5 11.4559V11.9759C8.5 12.0474 8.56094 12.1059 8.63542 12.1059H9.65781L10.0759 20.6047C10.103 21.1588 10.5803 21.5959 11.1576 21.5959H18.8424C19.4214 21.5959 19.897 21.1604 19.9241 20.6047L20.3422 12.1059H21.3646C21.4391 12.1059 21.5 12.0474 21.5 11.9759V11.4559C21.5 11.1683 21.2579 10.9359 20.9583 10.9359ZM18.7121 20.4259H11.2879L10.8783 12.1059H19.1217L18.7121 20.4259Z"
+                              fill="#575757"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
