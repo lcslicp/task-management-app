@@ -1,7 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import editIcon from "../../assets/icons/edit-icon.svg";
-import deleteIcon from "../../assets/icons/delete-icon.svg";
 import LoadingSpinner from "../ui-states/loadingSpinner";
 import LoadingSpinnerBlue from "../ui-states/loadingSpinnerBlue";
 import { useDispatch, useSelector } from "react-redux";
@@ -108,18 +106,24 @@ const TaskModal = ({
     }
   };
 
-  let due = new Date(dueDate);
-  let createdDate = new Date(createdAt);
-  let dueDateFormatted = due.toLocaleDateString("default", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-  let createdDateFormatted = createdDate.toLocaleDateString("default", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  let dueDateFormatted;
+  let createdDate;
+
+  if (dueDate) {
+    let due = new Date(dueDate);
+    createdDate = new Date(createdAt);
+    dueDateFormatted = due.toLocaleDateString("default", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
+  // let createdDateFormatted = createdDate.toLocaleDateString("default", {
+  //   month: "short",
+  //   day: "numeric",
+  //   year: "numeric",
+  // });
 
   return (
     <div>
@@ -131,71 +135,130 @@ const TaskModal = ({
             className="overflow-y-auto overflow-x-hidden fixed z-50 top-0 right-0 left-0 z-50 flex justify-center items-center w-full inset-0 h-[calc(100%-1rem)] max-h-full"
           >
             <div className="relative p-4 w-full max-w-2xl max-h-full">
-              {/* <!-- Modal content --> */}
+              {/* <!-- Modal card starts here --> */}
               <div className="relative bg-white rounded-2xl shadow-sm">
+                {/* <!-- Task input modal --> */}
                 {isEditing ? (
                   <div className="py-6 px-6 lg:px-8">
-                    <form onSubmit={handleSubmit} className="space-y-6 ">
-                      <input
-                        type="text"
-                        placeholder="Enter your task title..."
-                        className="bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block w-full p-2.5 mt-6"
-                        id="title"
-                        name="title"
-                        value={title}
-                        onChange={(e) =>
-                          handleInputChange(e.target.name, e.target.value)
-                        }
-                        required
-                      />
+                    <div
+                      className="flex justify-between items-center font-medium"
+                      id="action-heading"
+                    >
+                      <h2 className="text-2xl text-brandblack">Edit Task</h2>
+                      <button
+                        type="button"
+                        className="text-gray-400 bg-offwhite hover:bg-gray-200 hover:text-gray-900 rounded-2xl text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                        onClick={handleModalClose}
+                        data-modal-hide="static-modal"
+                      >
+                        <svg
+                          className="w-3 h-3"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 14 14"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                          />
+                        </svg>
+                        <span className="sr-only">Close modal</span>
+                      </button>
+                    </div>
+                    <form onSubmit={handleSubmit} className="space-y-6 pt-4">
+                      <div className="flex flex-col" id="title-input">
+                        <label
+                          htmlFor="task-title"
+                          className="uppercase font-medium text-xs text-togglegray pb-2"
+                        >
+                          Title
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter your task title..."
+                          className="bg-offwhite border-none rounded-lg placeholder-coolgray h-10 placeholder:font-light placeholder:text-sm focus:ring-coolgray focus:ring-1"
+                          id="task-title"
+                          name="title"
+                          value={title}
+                          onChange={(e) =>
+                            handleInputChange(e.target.name, e.target.value)
+                          }
+                          required
+                        />
+                      </div>
                       <div
                         id="selections"
-                        className="flex flex-row items-center"
+                        className="flex flex-row items-center gap-5"
                       >
-                        <select
-                          name="status"
-                          className="w-32 h-8 border-none bg-darkblue text-white text-xs rounded-md mr-4 "
-                          value={status}
-                          onChange={(e) =>
-                            handleInputChange(e.target.name, e.target.value)
-                          }
-                          required
-                        >
-                          <option value="" disabled>
+                        <div id="status-dropdown" className="flex flex-col">
+                          <label
+                            htmlFor="status"
+                            className="uppercase font-medium text-xs text-togglegray pb-2"
+                          >
                             Status
-                          </option>
-                          <option value="To Do">To Do</option>
-                          <option value="In Progress">In Progress</option>
-                          <option value="Completed">Completed</option>
-                        </select>
-                        <select
-                          name="priority"
-                          className="w-32 h-8 border-darkblue text-xs rounded-md"
-                          value={priority}
-                          onChange={(e) =>
-                            handleInputChange(e.target.name, e.target.value)
-                          }
-                          required
-                        >
-                          <option value="" disabled>
+                          </label>
+                          <select
+                            name="status"
+                            className="bg-offwhite border-none rounded-lg h-8 focus:ring-coolgray focus:ring-1 text-xs"
+                            value={status}
+                            onChange={(e) =>
+                              handleInputChange(e.target.name, e.target.value)
+                            }
+                            required
+                          >
+                            <option value="" disabled>
+                              Status
+                            </option>
+                            <option value="To Do">To Do</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                          </select>
+                        </div>
+
+                        <div id="priority-dropdown" className="flex flex-col">
+                          <label
+                            htmlFor="priority"
+                            className="uppercase font-medium text-xs text-togglegray pb-2"
+                          >
                             Priority
-                          </option>
-                          <option value="Low Priority">Low Priority</option>
-                          <option value="Medium Priority">
-                            Medium Priority
-                          </option>
-                          <option value="High Priority">High Priority</option>
-                          <option value="Urgent">Urgent</option>
-                        </select>
-                        <div
-                          id="due-date"
-                          className="flex-row items-center ml-auto inline-flex"
-                        >
-                          <p className="text-sm font-bold mr-4">DUE DATE: </p>
+                          </label>
+                          <select
+                            name="priority"
+                            className="bg-offwhite border-none rounded-lg h-8 focus:ring-coolgray focus:ring-1 text-xs"
+                            value={priority}
+                            onChange={(e) =>
+                              handleInputChange(e.target.name, e.target.value)
+                            }
+                            required
+                          >
+                            <option value="" disabled>
+                              Priority
+                            </option>
+                            <option value="Low Priority">Low Priority</option>
+                            <option value="Medium Priority">
+                              Medium Priority
+                            </option>
+                            <option value="High Priority">High Priority</option>
+                            <option value="Urgent">Urgent</option>
+                          </select>
+                        </div>
+
+                        <div id="due-date" className="flex flex-col">
+                          <label
+                            htmlFor="status"
+                            className="uppercase font-medium text-xs text-togglegray pb-2"
+                          >
+                            Due Date
+                          </label>
                           <input
                             type="date"
-                            name="dueDate"
-                            className="bg-lightgray border-none text-xs rounded-md"
+                            name="due-date"
+                            id="due-date"
+                            className="bg-offwhite border-none rounded-lg h-8 focus:ring-coolgray focus:ring-1 text-xs"
                             value={dueDate}
                             onChange={(e) =>
                               handleInputChange(e.target.name, e.target.value)
@@ -203,34 +266,44 @@ const TaskModal = ({
                           />
                         </div>
                       </div>
+                      <div id="description" className="flex flex-col">
+                        <label
+                          htmlFor="description"
+                          className="uppercase font-medium text-xs text-togglegray pb-2"
+                        >
+                          Description
+                        </label>
+                        <textarea
+                          placeholder="Write your task description..."
+                          cols={30}
+                          rows={8}
+                          className=" text-hovergray text-sm rounded-lg bg-offwhite border-none rounded-lg focus:ring-coolgray focus:ring-1 block w-full p-2.5"
+                          id="description"
+                          name="description"
+                          value={description || ""}
+                          onChange={(e) =>
+                            handleInputChange(e.target.name, e.target.value)
+                          }
+                        ></textarea>
+                      </div>
 
-                      <textarea
-                        placeholder="Write your task description..."
-                        cols={30}
-                        rows={10}
-                        className="bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-blue-500 focus:border-brightblue block w-full p-2.5"
-                        id="description"
-                        name="description"
-                        value={description || ""}
-                        onChange={(e) =>
-                          handleInputChange(e.target.name, e.target.value)
-                        }
-                      ></textarea>
                       <div className="w-full flex justify-end">
-                        <div className="flex flex-row w-2/3 space-x-4">
+                        <div className="flex flex-row gap-5 justify-end">
                           <button
-                            type="submit"
-                            className="w-full text-black bg-lightgray focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center hover:brightness-90"
-                            onClick={handleModalClose}
+                            data-modal-hide="default-modal"
+                            type="button"
+                            className="py-2.5 px-5 ms-3 text-sm font-medium text-hovergray focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-togglegray focus:z-10 focus:ring-gray-100 "
                           >
                             Cancel
                           </button>
                           <button
+                            data-modal-hide="default-modal"
                             type="submit"
-                            className="w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center"
+                            className="text-white bg-brandblack hover:bg-hovergray focus:ring-4 focus:outline-nonefont-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                            onClick={handleModalClose}
                           >
                             <div>
-                              {loading ? <LoadingSpinner /> : "Save Task"}
+                              {loading ? <LoadingSpinner /> : "Update Task"}
                             </div>
                           </button>
                         </div>
@@ -242,6 +315,7 @@ const TaskModal = ({
                     <LoadingSpinnerBlue />
                   </div>
                 ) : (
+                  /* <!-- Static modal content --> */
                   <div
                     id="task_modal"
                     className="flex flex-col relative p-8 w-full max-w-2xl max-h-full"
@@ -266,9 +340,9 @@ const TaskModal = ({
                         >
                           <path
                             stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                           />
                         </svg>
@@ -282,10 +356,10 @@ const TaskModal = ({
                       <div className="flex items-center gap-4">
                         <p className="flex flex-col m-0 p-0 text-sm">
                           {" "}
-                          <span className="text-brandgray text-xs -mb-1 p-0">
+                          <span className="text-brandgray text-xs p-0">
                             Due Date
                           </span>{" "}
-                          {dueDateFormatted}
+                          {dueDateFormatted ? dueDateFormatted : "None"}
                         </p>{" "}
                       </div>
                       <span className="h-10 w-1 border-r border-brandgray opacity-50"></span>
