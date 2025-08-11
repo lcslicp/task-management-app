@@ -18,7 +18,7 @@ const Header = () => {
   const initials = firstName[0] + lastName[0];
 
   return (
-    <header className="flex items-start justify-between px-10 pt-10">
+    <header className="flex items-start justify-between px-10 pt-10 pb-4 bg-white fixed w-[85%] top-0 left-[15%] right-0 z-10">
       <div className="flex flex-col">
         <h2 className="text-3xl font-semibold text-gray">Your Task Hub</h2>
         <p className="text-gray-500 text-sm">Today is {now}.</p>

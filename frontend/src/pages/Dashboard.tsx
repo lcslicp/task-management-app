@@ -19,6 +19,7 @@ import TaskModal from "../components/tasks/TaskModal";
 
 const Dashboard = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [popup, setPopup] = useState<boolean>(false);
   const [profileModalOpen, setProfileModalOpen] = useState<boolean>(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState<boolean>(false);
   const UserData = useSelector((state: RootState) => state.user.userData);
@@ -37,11 +38,9 @@ const Dashboard = () => {
     dispatch(fetchCompletedData());
   }, []);
 
-
-
   useEffect(() => {
     dispatch(getUser());
-  }, [firstName, lastName, email, userImage ]);
+  }, [firstName, lastName, email, userImage]);
 
   return (
     <main className="flex flex-row w-full h-full">
@@ -54,8 +53,8 @@ const Dashboard = () => {
 
       <section className="flex flex-col w-[85%] ml-[15%]">
         <Header />
-        <TabNavigation />
-        <TaskInput />
+        <TabNavigation popup={popup} setPopup={setPopup} />
+        <TaskInput popup={popup} setPopup={setPopup} />
 
         <TaskModal isEditing={isEditing} setIsEditing={setIsEditing} />
         <EditProfile

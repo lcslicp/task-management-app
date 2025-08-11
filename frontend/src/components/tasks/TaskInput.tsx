@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   setTaskDescription,
   setTaskDueDate,
@@ -14,24 +14,22 @@ import {
   addInProgress,
   addTodo,
 } from "../../features/tasks/tasksSlice";
+import { useFormReset } from "../../utils/useFormReset";
 
-const TaskInput = ({}) => {
-  const [popup, setPopup] = useState(false);
+const TaskInput = ({
+  popup,
+  setPopup,
+}: {
+  popup: boolean;
+  setPopup: Dispatch<SetStateAction<boolean>>;
+}) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-  const status = useSelector((state: RootState) => state.task.status);
-  const title = useSelector((state: RootState) => state.task.title);
-  const description = useSelector((state: RootState) => state.task.description);
-  const priority = useSelector((state: RootState) => state.task.priority);
-  const dueDate = useSelector((state: RootState) => state.task.dueDate);
+  const { status, title, description, priority, dueDate } = useSelector(
+    (state: RootState) => state.task
+  );
 
-  const handleFormReset = () => {
-    dispatch(setTaskTitle(""));
-    dispatch(setTaskDescription(""));
-    dispatch(setTaskStatus(""));
-    dispatch(setTaskPriority(""));
-    dispatch(setTaskDueDate(""));
-  };
+  const resetForm = useFormReset();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,34 +47,16 @@ const TaskInput = ({}) => {
         addCompleted(task);
       }
       setLoading(false);
-      handleModalClose();
-      handleFormReset();
+      setPopup(false);
+      resetForm();
     } catch (error) {
       setLoading(false);
       console.error(error);
     }
   };
-  const handleModalOpen = () => {
-    setPopup(!popup);
-    handleFormReset();
-  };
-
-  const handleModalClose = () => {
-    setPopup(false);
-  };
 
   return (
     <div>
-      <div className="fixed right-0 top-24 pt-8 mr-12 z-10">
-        <button
-          className="block text-white bg-black hover:bg-transparent hover:text-black hover:border hover:border-black rounded-lg text-sm px-10 py-2.5 text-center"
-          type="button"
-          onClick={handleModalOpen}
-        >
-          + New Task
-        </button>
-      </div>
-
       {popup ? (
         <section>
           <div
@@ -96,7 +76,7 @@ const TaskInput = ({}) => {
                     <button
                       type="button"
                       className="text-gray-400 bg-offwhite hover:bg-gray-200 hover:text-gray-900 rounded-2xl text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                      onClick={handleModalClose}
+                      onClick={() => setPopup(false)}
                       data-modal-hide="static-modal"
                     >
                       <svg
@@ -246,7 +226,7 @@ const TaskInput = ({}) => {
                           type="button"
                           className="py-2.5 px-5 ms-3 text-sm font-medium text-hovergray focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-togglegray focus:z-10 focus:ring-gray-100 "
                           disabled={loading ? true : false}
-                          onClick={handleModalClose}
+                          onClick={() => setPopup(false)}
                         >
                           Cancel
                         </button>
@@ -257,7 +237,7 @@ const TaskInput = ({}) => {
                           } text-white bg-brandblack hover:bg-hovergray focus:ring-4 focus:outline-nonefont-medium rounded-lg text-sm px-5 py-2.5 text-center`}
                           disabled={loading ? true : false}
                         >
-                          <div>
+                          <div id="button-text">
                             {loading ? (
                               <span className="flex items-center justify-center gap-2">
                                 {" "}
