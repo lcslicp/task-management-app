@@ -1,60 +1,53 @@
-import React from "react";
+import React, { useMemo } from "react";
 import TaskCard from "../tasks/defaultTaskCard";
 import EmptyState from "../ui-states/EmptyState";
 import LoadingSpinner from "../ui-states/loadingSpinnerBlue";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 
-const ToDoTab = () => {
+const ToDoTab = ({
+  sort,
+  priorityFilter,
+}: {
+  sort: string;
+  priorityFilter: string[];
+}) => {
   const todoTasks = useSelector((state: RootState) => state.tasks.todoTasks);
-  const sort = useSelector((state: RootState) => state.tasks.sort);
-  const priorityFilter = useSelector(
-    (state: RootState) => state.tasks.priorityFilter
-  );
   const loading = useSelector((state: RootState) => state.tasks.loading);
 
-  let sortedTasks = [...todoTasks];
+  const sortedTasks = useMemo(() => {
+    let tasks = [...todoTasks];
+    if (sort === "newest") {
+      tasks.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    } else if (sort === "oldest") {
+      tasks.sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+    } else if (sort === "duedate") {
+      tasks.sort((a, b) => {
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      });
+    }
+    return tasks;
+  }, [todoTasks, sort]);
 
-  if (sort === "newest") {
-    sortedTasks = [...todoTasks].sort((a, b) => {
-      return (
-        new Date(b.createdAt).getTime() -
-        new Date(a.createdAt).getTime()
-      );
-    });
-  } else if (sort === "oldest") {
-    sortedTasks = [...todoTasks].sort((a, b) => {
-      return (
-        new Date(a.createdAt).getTime() -
-        new Date(b.createdAt).getTime()
-      );
-    });
-  } else if (sort === "duedate") {
-    sortedTasks = [...todoTasks].sort((a, b) => {
-      if (a.dueDate === "" && b.dueDate === "") {
-        return 0;
-      } else if (a.dueDate === "") {
-        return 1;
-      } else if (b.dueDate === "") {
-        return -1;
-      } else {
-        return (
-          new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
-        );
-      }
-    });
-    sortedTasks = sortedTasks
-      .filter((task) => task.createdAt !== "Invalid Date")
-      .concat(
-        sortedTasks.filter((task) => task.dueDate === "Invalid Date")
-      );
-  }
+  const filteredTasks = useMemo(() => {
+    if (priorityFilter.length === 0) return sortedTasks;
+    return sortedTasks.filter((task) => priorityFilter.includes(task.priority));
+  }, [sortedTasks, priorityFilter]);
 
   const cardColors = [
-    "bg-softerblue",
-    "bg-softeryellow",
     "bg-softergreen",
-    "bg-cardwhite",
+    "bg-softred",
+    "bg-softblue",
+    "bg-softeryellow",
+    "bg-offwhite",
   ];
 
   return (
@@ -68,9 +61,7 @@ const ToDoTab = () => {
       ) : (
         (priorityFilter.length === 0
           ? sortedTasks
-          : sortedTasks.filter((task) =>
-              priorityFilter.includes(task.priority)      
-            )
+          : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
         ).map((task, index) => {
           const bgColorClass = cardColors[index % cardColors.length];
 

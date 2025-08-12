@@ -5,13 +5,15 @@ import EmptyState from "../ui-states/EmptyState";
 import LoadingSpinner from "../ui-states/loadingSpinnerBlue";
 import { RootState } from "../../app/store";
 
-const InProgressTab = () => {
+const InProgressTab = ({
+  sort,
+  priorityFilter,
+}: {
+  sort: string;
+  priorityFilter: string[];
+}) => {
   const inProgressTasks = useSelector(
     (state: RootState) => state.tasks.inProgressTasks
-  );
-  const sort = useSelector((state: RootState) => state.tasks.sort);
-  const priorityFilter = useSelector(
-    (state: RootState) => state.tasks.priorityFilter
   );
   const loading = useSelector((state: RootState) => state.tasks.loading);
 
@@ -43,10 +45,11 @@ const InProgressTab = () => {
   }
 
   const cardColors = [
-    "bg-softerblue",
-    "bg-softeryellow",
     "bg-softergreen",
-    "bg-cardwhite",
+    "bg-softred",
+    "bg-softblue",
+    "bg-softeryellow",
+    "bg-offwhite",
   ];
 
   return (

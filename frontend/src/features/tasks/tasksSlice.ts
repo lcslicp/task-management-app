@@ -13,8 +13,6 @@ const initialState: TasksInterface = {
   todoTasks: [],
   inProgressTasks: [],
   completedTasks: [],
-  priorityFilter: [],
-  sort: "newest",
   loading: false,
   error: null,
 };
@@ -31,12 +29,6 @@ const tasksSlice = createSlice({
     },
     setCompletedTasks: (state, action) => {
       state.completedTasks = action.payload;
-    },
-    setPriorityFilter: (state, action) => {
-      state.priorityFilter = action.payload;
-    },
-    setSort: (state, action) => {
-      state.sort = action.payload;
     },
     addTodo: (state, action) => {
       state.todoTasks.push(action.payload);
@@ -129,7 +121,7 @@ const tasksSlice = createSlice({
         }
       )
       .addCase(createTask.rejected, (state, action) => {
-        state.loading = false
+        state.loading = false;
         state.error = action.payload as string;
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
@@ -190,8 +182,6 @@ export const {
   setTodoTasks,
   setInprogressTasks,
   setCompletedTasks,
-  setPriorityFilter,
-  setSort,
   addTodo,
   addInProgress,
   addCompleted,

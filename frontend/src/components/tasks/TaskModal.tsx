@@ -367,9 +367,7 @@ const TaskModal = ({
                       <div className="flex items-center gap-2">
                         <p className="flex flex-col m-0 p-0 text-sm text-brandgray">
                           {" "}
-                          <span className=" text-xs -mb-1 p-0">
-                            Created
-                          </span>{" "}
+                          <span className=" text-xs p-0">Created</span>{" "}
                           {getRelativeTime(createdAt)}
                         </p>{" "}
                       </div>
@@ -390,11 +388,11 @@ const TaskModal = ({
                           className={(() => {
                             switch (priority) {
                               case "Low Priority":
-                                return "text-sm bg-softgreen border border-brandgreen rounded-lg px-3 h-fit py-1 text-center text-brandgreen";
+                                return "text-sm bg-softgreen border border-statusgreen rounded-lg px-3 h-fit py-1 text-center text-statusgreen";
                               case "Medium Priority":
                                 return "text-sm bg-softblue border border-brandblue text-brandblue rounded-lg px-3 h-fit py-1 text-center";
                               case "High Priority":
-                                return "text-sm bg-softyellow border border-brandyellow text-brandyellow  rounded-lg px-3 h-fit py-1 text-center";
+                                return "text-sm bg-softyellow border border-darkyellow text-brandyellow  rounded-lg px-3 h-fit py-1 text-center";
                               case "Urgent":
                                 return "text-sm bg-softred border border-brandred text-brandred rounded-lg px-3 h-fit py-1 text-center";
                               default:
@@ -410,9 +408,9 @@ const TaskModal = ({
                               case "To Do":
                                 return "text-sm bg-gray-100 border border-brandgray rounded-lg px-3 h-fit py-1 text-center text-brandgray";
                               case "In Progress":
-                                return "text-sm bg-softyellow border border-brandyellow text-brandyellow rounded-lg px-3 h-fit py-1 text-center";
+                                return "text-sm bg-softyellow border border-darkyellow text-darkyellow rounded-lg px-3 h-fit py-1 text-center";
                               case "Completed":
-                                return "text-sm bg-softgreen border border-brandgreen text-brandgreen rounded-lg px-3 h-fit py-1 text-center ";
+                                return "text-sm bg-softgreen border border-statusgreen text-statusgreen rounded-lg px-3 h-fit py-1 text-center ";
                               default:
                                 return undefined;
                             }

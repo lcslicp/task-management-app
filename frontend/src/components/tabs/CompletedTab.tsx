@@ -5,13 +5,15 @@ import EmptyState from "../ui-states/EmptyState";
 import LoadingSpinner from "../ui-states/loadingSpinnerBlue";
 import { RootState } from "../../app/store";
 
-const CompletedTab = () => {
+const CompletedTab = ({
+  sort,
+  priorityFilter,
+}: {
+  sort: string;
+  priorityFilter: string[];
+}) => {
   const completedTasks = useSelector(
     (state: RootState) => state.tasks.completedTasks
-  );
-  const sort = useSelector((state: RootState) => state.tasks.sort);
-  const priorityFilter = useSelector(
-    (state: RootState) => state.tasks.priorityFilter
   );
   const loading = useSelector((state: RootState) => state.tasks.loading);
   let sortedTasks = [...completedTasks];
@@ -42,12 +44,12 @@ const CompletedTab = () => {
   }
 
   const cardColors = [
-    "bg-softerblue",
-    "bg-softeryellow",
     "bg-softergreen",
-    "bg-cardwhite",
+    "bg-softred",
+    "bg-softblue",
+    "bg-softeryellow",
+    "bg-offwhite",
   ];
-
 
   return (
     <div>

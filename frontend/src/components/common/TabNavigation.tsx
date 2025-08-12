@@ -9,9 +9,13 @@ import { RootState } from "../../app/store";
 const TabNavigation = ({
   popup,
   setPopup,
+  sort,
+  priorityFilter,
 }: {
   popup: boolean;
   setPopup: Dispatch<SetStateAction<boolean>>;
+  sort: string;
+  priorityFilter: string[];
 }) => {
   const resetForm = useFormReset();
   const { todoTasks, inProgressTasks, completedTasks } = useSelector(
@@ -23,21 +27,21 @@ const TabNavigation = ({
       key: "1",
       tabTitle: "Todo",
       numberOfCards: todoTasks.length,
-      tabContent: <ToDoTab />,
+      tabContent: <ToDoTab sort={sort} priorityFilter={priorityFilter} />,
     },
     {
       id: "2",
       key: "2",
       tabTitle: "In Progress",
       numberOfCards: inProgressTasks.length,
-      tabContent: <InProgressTab />,
+      tabContent: <InProgressTab sort={sort} priorityFilter={priorityFilter} />,
     },
     {
       id: "3",
       key: "3",
       tabTitle: "Completed",
       numberOfCards: completedTasks.length,
-      tabContent: <CompletedTab />,
+      tabContent: <CompletedTab sort={sort} priorityFilter={priorityFilter} />,
     },
   ];
   const [activeStatusTab, setActiveStatusTab] = useState<string>(tabdata[0].id);
@@ -46,19 +50,19 @@ const TabNavigation = ({
     <li
       key={id}
       onClick={() => setActiveStatusTab(tab.id)}
-      className={`font-normal px-5 py-2 ${
+      className={`font-normal py-2 ${
         activeStatusTab === tab.id
-          ? "inline-block text-brandblack border-black cursor-pointer bg-white rounded-lg"
-          : "inline-block text-coolgray cursor-pointer"
+          ? "inline-block text-brandblack border-black cursor-pointer bg-offwhite rounded-lg px-5"
+          : "inline-block text-coolgray cursor-pointer px-3"
       }`}
     >
       <h6>
         {tab.tabTitle}{" "}
         <span
-          className={` rounded-md py-1 px-2 text-white text-xs ml-1 ${
+          className={`rounded-md py-1 px-2 text-white text-xs ml-1 ${
             activeStatusTab === tab.id
               ? "bg-brandblack"
-              : "bg-softblue text-offwhite"
+              : "bg-coolgray text-offwhite"
           }`}
         >
           {tab.numberOfCards ? tab.numberOfCards : "0"}
@@ -83,29 +87,32 @@ const TabNavigation = ({
   };
 
   return (
-    <div className="">
+    <div className="px-16">
       <div
-        className="flex font-medium text-center bg-white z-10 fixed w-[85%] top-[15%] left-[15%] right-0 items-center justify-between px-10 pt-4 pb-2"
+        className="flex font-medium text-center bg-offwhite justify-between items-center p-3 z-20 m rounded-xl mt-6 mb-2"
         id="navigation"
       >
-        <ul className="bg-offwhite py-1 px-1 rounded-lg">{statusTabTitles}</ul>
+        <ul className="bg-white p-2 rounded-lg">{statusTabTitles}</ul>
         <button
-          className="text-white bg-brandblack hover:bg-hovergray focus:outline-nonefont-medium rounded-lg text-sm px-5 py-2.5 text-center cursor-pointer"
+          className="text-white bg-brandblack hover:bg-hovergray focus:outline-nonefont-medium rounded-lg text-sm px-8 py-2.5 text-center cursor-pointer"
           type="button"
           onClick={handleModalOpen}
         >
           + New Task
         </button>
       </div>
-      <div className=" pt-[18%] pb-5">
+      <div className="py-4">
         <div
           id="tab-contents"
-          className="w-full columns-3 break-inside-avoid gap-5 px-10"
+          className="w-full columns-4 break-inside-avoid gap-3"
         >
           {tabContents}
         </div>
       </div>
-      <div className="fixed w-full h-full -z-10 inset-0 border bg-offwhite"></div>
+      <div
+        className="fixed w-full h-full -z-10 inset-0 border bg-white"
+        id="background"
+      ></div>
     </div>
   );
 };

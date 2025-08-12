@@ -22,6 +22,9 @@ const Dashboard = () => {
   const [popup, setPopup] = useState<boolean>(false);
   const [profileModalOpen, setProfileModalOpen] = useState<boolean>(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState<boolean>(false);
+  const [priorityFilter, setPriorityFilter] = useState<string[]>([]);
+  const [sort, setSort] = useState<string>("newest");
+
   const UserData = useSelector((state: RootState) => state.user.userData);
   const { firstName, lastName, email, userImage } = UserData;
   const navigate = useNavigate();
@@ -48,12 +51,22 @@ const Dashboard = () => {
         className="bg-black fixed top-0 left-0 h-full w-[15%]"
         aria-label="Sidebar"
       >
-        <Sidebar />
+        <Sidebar
+          sort={sort}
+          setSort={setSort}
+          priorityFilter={priorityFilter}
+          setPriorityFilter={setPriorityFilter}
+        />
       </aside>
 
       <section className="flex flex-col w-[85%] ml-[15%]">
         <Header />
-        <TabNavigation popup={popup} setPopup={setPopup} />
+        <TabNavigation
+          popup={popup}
+          setPopup={setPopup}
+          sort={sort}
+          priorityFilter={priorityFilter}
+        />
         <TaskInput popup={popup} setPopup={setPopup} />
 
         <TaskModal isEditing={isEditing} setIsEditing={setIsEditing} />
