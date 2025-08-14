@@ -44,14 +44,6 @@ const InProgressTab = ({
       .concat(sortedTasks.filter((task) => task.dueDate === "Invalid Date"));
   }
 
-  const cardColors = [
-    "bg-softergreen",
-    "bg-softred",
-    "bg-softblue",
-    "bg-softeryellow",
-    "bg-offwhite",
-  ];
-
   return (
     <div>
       {loading ? (
@@ -69,8 +61,7 @@ const InProgressTab = ({
           ? sortedTasks
           : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
         ).map((task, index) => {
-          const bgColorClass = cardColors[index % cardColors.length];
-          return <TaskCard bgColor={bgColorClass} key={index} task={task} />;
+          return <TaskCard key={index} task={task} />;
         })
       )}
     </div>

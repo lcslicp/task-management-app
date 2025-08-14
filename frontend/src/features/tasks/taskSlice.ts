@@ -3,21 +3,21 @@ import { TaskInterface } from "../../types/task";
 import { fetchSingleTaskData } from "./taskThunks";
 
 const initialState: TaskInterface = {
-    taskId: "",
-    title: "",
-    description: "",
-    priority: "",
-    status: "",
-    dueDate: "",
-    createdAt: new Date().toISOString(),
+  _id: "",
+  title: "",
+  description: "",
+  priority: "",
+  status: "",
+  dueDate: "",
+  createdAt: new Date().toISOString(),
 };
 
 const taskSlice = createSlice({
   name: "task",
   initialState,
   reducers: {
-    setTaskId: (state, action) => {
-      state.taskId = action.payload;
+    setId: (state, action) => {
+      state._id = action.payload;
     },
     setTaskTitle: (state, action) => {
       state.title = action.payload;
@@ -39,12 +39,9 @@ const taskSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-
-      .addCase(fetchSingleTaskData.fulfilled, (state, action) => {
-        return action.payload;
-      })
-
+    builder.addCase(fetchSingleTaskData.fulfilled, (state, action) => {
+      return action.payload;
+    });
   },
 });
 
@@ -53,12 +50,11 @@ const currentTaskSlice = createSlice({
   initialState,
   reducers: {
     setCurrentTask: (state, action) => action.payload,
-    // clearCurrentTask: () => ,
-  }
-})
+  },
+});
 
 export const {
-  setTaskId,
+  setId,
   setTaskTitle,
   setTaskDescription,
   setTaskPriority,
@@ -67,10 +63,7 @@ export const {
   setTaskCreatedAt,
 } = taskSlice.actions;
 
-export const {
-  setCurrentTask,
-  // clearCurrentTask
-} = currentTaskSlice.actions;
+export const { setCurrentTask } = currentTaskSlice.actions;
 
 export default taskSlice.reducer;
 export const currentTaskReducer = currentTaskSlice.reducer;

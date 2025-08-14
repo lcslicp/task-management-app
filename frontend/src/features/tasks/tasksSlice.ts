@@ -30,37 +30,37 @@ const tasksSlice = createSlice({
     setCompletedTasks: (state, action) => {
       state.completedTasks = action.payload;
     },
-    addTodo: (state, action) => {
+    addTodo:(state, action: PayloadAction<TaskInterface>) => {
       state.todoTasks.push(action.payload);
     },
-    addInProgress: (state, action) => {
+    addInProgress: (state, action: PayloadAction<TaskInterface>) => {
       state.inProgressTasks.push(action.payload);
     },
-    addCompleted: (state, action) => {
+    addCompleted: (state, action: PayloadAction<TaskInterface>) => {
       state.completedTasks.push(action.payload);
     },
-    updateTodo: (state, action) => {
+    updateTodo: (state, action: PayloadAction<TaskInterface>) => {
       const updatedTask = action.payload;
       const index = state.todoTasks.findIndex(
-        (task) => task.taskId === updatedTask.taskId
+        (task) => task._id === updatedTask._id
       );
       if (index !== -1) {
         state.todoTasks[index] = updatedTask;
       }
     },
-    updateInProgress: (state, action) => {
+    updateInProgress: (state, action: PayloadAction<TaskInterface>) => {
       const updatedTask = action.payload;
       const index = state.inProgressTasks.findIndex(
-        (task) => task.taskId === updatedTask.taskId
+        (task) => task._id === updatedTask._id
       );
       if (index !== -1) {
         state.inProgressTasks[index] = updatedTask;
       }
     },
-    updateCompleted: (state, action) => {
+    updateCompleted: (state, action: PayloadAction<TaskInterface>) => {
       const updatedTask = action.payload;
       const index = state.completedTasks.findIndex(
-        (task) => task.taskId === updatedTask.taskId
+        (task) => task._id === updatedTask._id
       );
       if (index !== -1) {
         state.completedTasks[index] = updatedTask;
@@ -125,19 +125,19 @@ const tasksSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
-        const { taskId, taskStatus } = action.payload;
+        const { _id, taskStatus } = action.payload;
 
         if (taskStatus === "To Do") {
           state.todoTasks = state.todoTasks.filter(
-            (task) => task.taskId !== taskId
+            (task) => task._id !== _id
           );
         } else if (taskStatus === "In Progress") {
           state.inProgressTasks = state.inProgressTasks.filter(
-            (task) => task.taskId !== taskId
+            (task) => task._id !== _id
           );
         } else {
           state.completedTasks = state.completedTasks.filter(
-            (task) => task.taskId !== taskId
+            (task) => task._id !== _id
           );
         }
       })
@@ -154,7 +154,7 @@ const tasksSlice = createSlice({
         ];
         allTasks.forEach((arr) => {
           const index = arr.findIndex(
-            (task) => task.taskId === updatedTask.taskId
+            (task) => task._id === updatedTask._id
           );
           if (index !== -1) arr.splice(index, 1);
         });

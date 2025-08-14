@@ -15,9 +15,9 @@ const SearchBar = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const token = JSON.parse(localStorage.getItem("token") || "{}");
-const config = {
-  headers: { Authorization: `Bearer ${token}` },
-};
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -80,17 +80,17 @@ const config = {
                 No tasks found.
               </p>
             ) : (
-              searchResults.map((result: TaskInterface["taskData"]) => (
+              searchResults.map((result: TaskInterface) => (
                 <li
-                  key={result.taskId}
+                  key={result._id}
                   className="cursor-pointer px-10 hover:bg-offwhite pb-2"
-                  onClick={() => onOpen(result.taskId)}
+                  onClick={() => onOpen(result._id)}
                 >
                   <p className="text-base text-darkgray font-base">
-                    {result.taskTitle}
+                    {result.title}
                   </p>
                   <span className="text-xs text-coolgray font-bold uppercase">
-                    {result.taskStatus}
+                    {result.status}
                   </span>
                 </li>
               ))

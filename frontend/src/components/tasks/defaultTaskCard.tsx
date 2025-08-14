@@ -14,20 +14,14 @@ import { fetchSingleTaskData } from "../../features/tasks/taskThunks";
 import { setTaskOpen, setTaskLoading } from "../../features/tasks/taskUIslice";
 import { setCurrentTask } from "../../features/tasks/taskSlice";
 
-const TaskCard = ({
-  bgColor,
-  task,
-}: {
-  bgColor: string;
-  task: TaskInterface;
-}) => {
+const TaskCard = ({ task }: { task: TaskInterface }) => {
   type Visibility = "visible" | "hidden";
   const [dropdown, setDropdown] = useState<Visibility>("hidden");
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const config = getAuthConfig();
 
-  const { taskId, title, description, status, priority, createdAt, dueDate } =
+  const { _id, title, description, status, priority, createdAt, dueDate } =
     task;
 
   let dueDateFormatted = new Date(dueDate).toLocaleDateString("default", {
@@ -57,43 +51,20 @@ const TaskCard = ({
     let status;
     status === "To Do" ? (status = 1) : (status = 2);
     try {
-      await axios.delete(`${taskId}`, config);
+      await axios.delete(`${_id}`, config);
       status === 1
         ? dispatch(
             setTodoTasks((prevTasks: TaskInterface[]) =>
-              prevTasks.filter((task) => task.taskId !== taskId)
+              prevTasks.filter((task) => task._id !== _id)
             )
           )
         : dispatch(
             setInprogressTasks((prevTasks: TaskInterface[]) =>
-              prevTasks.filter((task) => task.taskId !== taskId)
+              prevTasks.filter((task) => task._id !== _id)
             )
           );
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  const getRelativeTime = (createdAt: string) => {
-    const now = new Date().getTime();
-    const dateCreated = new Date(createdAt).getTime();
-    const diffInMs = now - dateCreated;
-
-    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    const diffInDays = Math.floor(diffInHours / 24);
-
-    if (diffInMinutes < 1) {
-      return "Just now";
-    } else if (diffInMinutes < 60) {
-      return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
-    } else if (diffInHours < 24) {
-      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
-    } else if (diffInDays < 7) {
-      return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
-    } else {
-      const diffInWeeks = Math.floor(diffInDays / 7);
-      return `${diffInWeeks} week${diffInWeeks > 1 ? "s" : ""} ago`;
     }
   };
 
@@ -141,7 +112,20 @@ const TaskCard = ({
             id="dropdownButton"
             type="button"
             onClick={toggleTask}
-            className="bg-white hover:bg-gray-200 rounded-full text-sm w-7 h-7 ms-auto inline-flex justify-center items-center"
+            className={(() => {
+              switch (priority) {
+                case "Low Priority":
+                  return "bg-white border-[0.5px]  border-white hover:border-statusgreen rounded-full w-7 h-7 ms-auto inline-flex justify-center items-center";
+                case "Medium Priority":
+                  return "bg-white border-[0.5px] border-white hover:border-brandblue rounded-full w-7 h-7 ms-auto inline-flex justify-center items-center";
+                case "High Priority":
+                  return "bg-white border-[0.5px] border-white hover:border-darkyellow rounded-full w-7 h-7 ms-auto inline-flex justify-center items-center";
+                case "Urgent":
+                  return "bg-white border-[0.5px]  border-white hover:border-brandred rounded-full w-7 h-7 ms-auto inline-flex justify-center items-center";
+                default:
+                  return undefined;
+              }
+            })()}
           >
             <svg
               className="w-5 h-auto"
@@ -183,7 +167,7 @@ const TaskCard = ({
       {
         <div
           className="flex flex-col -mt-3"
-          onClick={() => onOpen(taskId)}
+          onClick={() => onOpen(task.taskId)}
           id="taskcard_content"
         >
           <div className="rounded-lg px-3 py-2 flex flex-col gap-2">
@@ -209,13 +193,13 @@ const TaskCard = ({
               className={(() => {
                 switch (priority) {
                   case "Low Priority":
-                    return "text-sm font-light text-statusgreen whitespace-pre-line border-b-[0.5px] border-statusgreen pb-4";
+                    return "text-sm font-light text-statusgreen whitespace-pre-line pb-4";
                   case "Medium Priority":
-                    return "text-sm font-light text-brandblue whitespace-pre-line border-b-[0.5px] border-brandblue pb-4";
+                    return "text-sm font-light text-brandblue whitespace-pre-line pb-4";
                   case "High Priority":
-                    return "text-sm font-light text-darkyellow whitespace-pre-line border-b-[0.5px] border-darkyellow pb-4";
+                    return "text-sm font-light text-darkyellow whitespace-pre-line pb-4";
                   case "Urgent":
-                    return "text-sm font-light text-brandred whitespace-pre-line border-b-[0.5px] border-brandred pb-4";
+                    return "text-sm font-light text-brandred whitespace-pre-line pb-4";
                   default:
                     return undefined;
                 }
@@ -240,13 +224,13 @@ const TaskCard = ({
             className={(() => {
               switch (priority) {
                 case "Low Priority":
-                  return "flex flex-row items-center justify-start px-3 text-statusgreen py-1";
+                  return "flex flex-row items-center justify-start px-3 text-statusgreen py-1 border-[0.5px] border-statusgreen rounded-lg w-fit text-xs";
                 case "Medium Priority":
-                  return "flex flex-row items-center justify-start px-3 text-brandblue py-1";
+                  return "flex flex-row items-center justify-start px-3 text-brandblue py-1 border-[0.5px] border-brandblue rounded-lg w-fit text-xs";
                 case "High Priority":
-                  return "flex flex-row items-center justify-start px-3 text-darkyellow py-1";
+                  return "flex flex-row items-center justify-start px-3 text-darkyellow py-1 border-[0.5px] border-darkyellow rounded-lg w-fit text-xs";
                 case "Urgent":
-                  return "flex flex-row items-center justify-start px-3 text-brandred py-1";
+                  return "flex flex-row items-center justify-start px-2 text-brandred py-1 border-[0.5px] border-brandred rounded-lg w-fit text-xs";
                 default:
                   return undefined;
               }

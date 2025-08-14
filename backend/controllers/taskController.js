@@ -26,9 +26,11 @@ const addTask = async (req, res) => {
 
 const editTask = async (req, res) => {
   const { title, description, status, priority, dueDate } = req.body;
+
   try {
     const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
+      runValidators: true,
     });
 
     if (!task) {

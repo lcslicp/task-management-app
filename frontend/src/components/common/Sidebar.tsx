@@ -26,15 +26,16 @@ const Sidebar = ({
   const [toggleSort, setToggleSort] = useState(false);
   const [toggleFilter, setToggleFilter] = useState(false);
   const [dashboardSelected, setDashboardSelected] = useState(true);
+  const [sortCheckedItems, setSortCheckedItems] = useState<
+    Record<string, boolean>
+  >({});
 
   const sortOldest = () => {
     setSort("oldest");
   };
-
   const sortDueDate = () => {
     setSort("duedate");
   };
-
   const handleLogout = () => {
     try {
       dispatch(logout());
@@ -43,7 +44,6 @@ const Sidebar = ({
       console.error("Logout error:", error);
     }
   };
-
   const toggleSortDropdown = () => {
     const newToggleState = !toggleSort;
     setToggleSort(newToggleState);
@@ -54,6 +54,10 @@ const Sidebar = ({
   };
 
   const handleSortSelected = (label: string) => {
+    setSortCheckedItems((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
     const isSelected = sort.includes(label);
     if (isSelected) {
       setSort("newest");
@@ -132,7 +136,7 @@ const Sidebar = ({
               href="/dashboard"
               className={`flex items-center justify-start w-full rounded-lg py-2 pl-4 pr-4 -ml-4 ${
                 dashboardSelected
-                  ? "text-black bg-white font-medium"
+                  ? "text-black bg-white font-normal"
                   : "text-white bg-transparent"
               }`}
             >
@@ -155,7 +159,7 @@ const Sidebar = ({
               type="button"
               className={`flex items-center justify-start rounded-lg w-full py-2 -ml-4 pl-4 hover:cursor-pointer ${
                 sort !== "newest"
-                  ? "bg-white text-black font-medium"
+                  ? "bg-white text-black font-normal"
                   : sort === "newest" && toggleSort
                   ? "bg-hovergray text-white"
                   : "bg:transparent text-white hover:bg-hovergray"
@@ -197,7 +201,7 @@ const Sidebar = ({
                       className={
                         "w-4 h-4 text-black bg-transparent border border-gray focus:ring-gray-500 checked:border-white focus:ring-0 rounded-lg cursor-pointer"
                       }
-                      checked={sort.includes(item.sortLabel)}
+                      checked={sortCheckedItems[item.sortLabel] || false}
                       key={item.id}
                       onChange={() => handleSortSelected(item.sortLabel)}
                     />
@@ -219,7 +223,7 @@ const Sidebar = ({
                 priorityFilter.length === 0 && toggleFilter
                   ? "bg-hovergray text-white"
                   : priorityFilter.length !== 0
-                  ? "bg-white text-black font-medium"
+                  ? "bg-white text-black font-normal"
                   : "bg:transparent text-white hover:bg-hovergray"
               }`}
               onClick={toggleFilterDropdown}

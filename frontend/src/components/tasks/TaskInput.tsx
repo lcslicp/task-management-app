@@ -38,13 +38,13 @@ const TaskInput = ({
       const task = await dispatch(
         createTask({ title, description, status, priority, dueDate })
       ).unwrap();
-
       if (task.status === "To Do") {
-        addTodo(task);
+        dispatch(addTodo(task));
+        
       } else if (task.status === "In Progress") {
-        addInProgress(task);
+        dispatch(addInProgress(task));
       } else {
-        addCompleted(task);
+        dispatch(addCompleted(task));
       }
       setLoading(false);
       setPopup(false);
@@ -54,6 +54,8 @@ const TaskInput = ({
       console.error(error);
     }
   };
+
+   
 
   return (
     <div>

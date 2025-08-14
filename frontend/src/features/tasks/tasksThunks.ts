@@ -1,7 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../api/axios";
 import { TaskInterface } from "../../types/task";
-import { setCompletedTasks, setInprogressTasks, setTodoTasks } from "./tasksSlice";
+import {
+  setCompletedTasks,
+  setInprogressTasks,
+  setTodoTasks,
+} from "./tasksSlice";
 
 const TODO_TASK_URL = "/tasks/todo";
 const INPROGRESS_TASK_URL = "/tasks/inprogress";
@@ -18,8 +22,8 @@ export const fetchTodoData = createAsyncThunk<TaskInterface[]>(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(TODO_TASK_URL, config);
-      setTodoTasks(response.data)
-      return response.data
+      setTodoTasks(response.data);
+      return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to fetch To Do tasks."
@@ -33,7 +37,7 @@ export const fetchInprogressData = createAsyncThunk<TaskInterface[]>(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(INPROGRESS_TASK_URL, config);
-      setInprogressTasks(response.data)
+      setInprogressTasks(response.data);
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
@@ -48,7 +52,7 @@ export const fetchCompletedData = createAsyncThunk<TaskInterface[]>(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(COMPLETED_TASK_URL, config);
-      setCompletedTasks(response.data)
+      setCompletedTasks(response.data);
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
@@ -59,53 +63,60 @@ export const fetchCompletedData = createAsyncThunk<TaskInterface[]>(
 );
 
 export const createTask = createAsyncThunk(
-    "tasks/addTask",
-    async({
-        title,
-        description,
-        status,
-        priority,
-        dueDate,
+  "tasks/addTask",
+  async (
+    {
+      title,
+      description,
+      status,
+      priority,
+      dueDate,
     }: {
-        title: string;
-        description: string;
-        status: string;
-        priority: string;
-        dueDate: string;
-    }, { rejectWithValue }) => {
-        try {
-            const response = await axios.post(
-                CREATE_TASK_URL, {title, description, status, priority, dueDate}, config
-            )
-            return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.response?.data || "Failed to create task.")
-        }
+      title: string;
+      description: string;
+      status: string;
+      priority: string;
+      dueDate: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.post(
+        CREATE_TASK_URL,
+        { title, description, status, priority, dueDate },
+        config
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Failed to create task.");
     }
-)
+  }
+);
 
 export const updateTask = createAsyncThunk(
-    "tasks/updateTask",
-    async({ id, updatedData, status}: { id: string, updatedData: TaskInterface, status: string}, thunkAPI) => {
-        const response = await axios.put(`/edit/${id}`, updatedData);
-        return response.data.task;
-    }
-  );
+  "tasks/updateTask",
+  async ({ updatedData }: { updatedData: TaskInterface }, thunkAPI) => {
+    const response = await axios.put(
+      `/edit/${updatedData._id}`,
+      updatedData,
+      config
+    );
+    return response.data.task;
+  }
+);
 
 export const deleteTask = createAsyncThunk(
-    "tasks/deleteTask",
-    async (
-      { taskId, taskStatus }: { taskId: string; taskStatus: string },
-      { rejectWithValue }
-    ) => {
-      try {
-        await axios.delete(`${taskId}`, config);
-  
-        return { taskId, taskStatus };
-      } catch (error: any) {
-        return rejectWithValue(error.response?.data || "Failed to delete task");
-      }
+  "tasks/deleteTask",
+  async (
+    { _id, taskStatus }: { _id: string; taskStatus: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      await axios.delete(`${_id}`, config);
+
+      return { _id, taskStatus };
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Failed to delete task");
     }
-  );
-
-
+  }
+);
