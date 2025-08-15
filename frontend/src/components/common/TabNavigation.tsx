@@ -1,50 +1,26 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import ToDoTab from "../tabs/ToDoTab";
-import InProgressTab from "../tabs/InProgressTab";
-import CompletedTab from "../tabs/CompletedTab";
 import { useFormReset } from "../../utils/useFormReset";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
+import { tabDataInterface } from "../../types/task";
 
 const TabNavigation = ({
   popup,
   setPopup,
-  sort,
-  priorityFilter,
+  activeStatusTab,
+  setActiveStatusTab,
+  tabdata,
 }: {
   popup: boolean;
   setPopup: Dispatch<SetStateAction<boolean>>;
-  sort: string;
-  priorityFilter: string[];
+  activeStatusTab: string;
+  setActiveStatusTab: Dispatch<SetStateAction<string>>;
+  tabdata: tabDataInterface[];
 }) => {
   const resetForm = useFormReset();
   const { todoTasks, inProgressTasks, completedTasks } = useSelector(
     (state: RootState) => state.tasks
   );
-  const tabdata = [
-    {
-      id: "1",
-      key: "1",
-      tabTitle: "Todo",
-      numberOfCards: todoTasks.length,
-      tabContent: <ToDoTab sort={sort} priorityFilter={priorityFilter} />,
-    },
-    {
-      id: "2",
-      key: "2",
-      tabTitle: "In Progress",
-      numberOfCards: inProgressTasks.length,
-      tabContent: <InProgressTab sort={sort} priorityFilter={priorityFilter} />,
-    },
-    {
-      id: "3",
-      key: "3",
-      tabTitle: "Completed",
-      numberOfCards: completedTasks.length,
-      tabContent: <CompletedTab sort={sort} priorityFilter={priorityFilter} />,
-    },
-  ];
-  const [activeStatusTab, setActiveStatusTab] = useState<string>(tabdata[0].id);
 
   const statusTabTitles = tabdata.map((tab, id) => (
     <li

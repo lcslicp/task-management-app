@@ -1,25 +1,28 @@
 import React from "react";
-import axios from "../../api/axios";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
-import {
-  setTodoTasks,
-  setInprogressTasks,
-} from "../../features/tasks/tasksSlice";
 import { TaskInterface } from "../../types/task";
-import { useNavigate } from "react-router-dom";
-import { getAuthConfig } from "../../api/axiosConfig";
 import { fetchSingleTaskData } from "../../features/tasks/taskThunks";
-import { setTaskOpen, setTaskLoading } from "../../features/tasks/taskUIslice";
+import {
+  setTaskOpen,
+  setTaskLoading,
+  setStatusMsg,
+  setStatusDisplay,
+  setStatusColor,
+} from "../../features/tasks/taskUIslice";
 import { setCurrentTask } from "../../features/tasks/taskSlice";
+import {
+  deleteTask,
+  fetchCompletedData,
+  fetchInprogressData,
+  fetchTodoData,
+} from "../../features/tasks/tasksThunks";
 
 const TaskCard = ({ task }: { task: TaskInterface }) => {
   type Visibility = "visible" | "hidden";
   const [dropdown, setDropdown] = useState<Visibility>("hidden");
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const config = getAuthConfig();
 
   const { _id, title, description, status, priority, createdAt, dueDate } =
     task;
@@ -34,6 +37,10 @@ const TaskCard = ({ task }: { task: TaskInterface }) => {
     dropdown === "hidden" ? setDropdown("visible") : setDropdown("hidden");
   };
 
+  const { statusDisplay, statusMsg, statusColor } = useSelector(
+    (state: RootState) => state.statusUI
+  );
+
   const onOpen = async (id: string) => {
     dispatch(setTaskLoading(true));
     try {
@@ -47,24 +54,31 @@ const TaskCard = ({ task }: { task: TaskInterface }) => {
     }
   };
 
-  const handleDelete = async () => {
-    let status;
-    status === "To Do" ? (status = 1) : (status = 2);
+  const handleDelete = async (_id: string, taskStatus: string) => {
     try {
-      await axios.delete(`${_id}`, config);
-      status === 1
-        ? dispatch(
-            setTodoTasks((prevTasks: TaskInterface[]) =>
-              prevTasks.filter((task) => task._id !== _id)
-            )
-          )
-        : dispatch(
-            setInprogressTasks((prevTasks: TaskInterface[]) =>
-              prevTasks.filter((task) => task._id !== _id)
-            )
-          );
+      await dispatch(deleteTask({ _id, taskStatus }));
+      dispatch(setTaskOpen(false));
+      if (taskStatus === "To Do") {
+        await dispatch(fetchTodoData());
+      } else if (taskStatus === "In Progress") {
+        await dispatch(fetchInprogressData());
+      } else {
+        await dispatch(fetchCompletedData());
+      }
+      dispatch(setStatusColor(["statusgreen", "softgreen"]));
+      dispatch(setStatusMsg("Deleted task successfully."));
+      dispatch(setStatusDisplay(true));
+      setTimeout(() => {
+        dispatch(setStatusDisplay(false));
+      }, 10000);
     } catch (error) {
       console.error(error);
+      dispatch(setStatusColor(["brandred", "softred"]));
+      dispatch(setStatusMsg("Failed to delete task. Please try again."));
+      dispatch(setStatusDisplay(true));
+      setTimeout(() => {
+        dispatch(setStatusDisplay(false));
+      }, 10000);
     }
   };
 
@@ -144,7 +158,7 @@ const TaskCard = ({ task }: { task: TaskInterface }) => {
             className="z-10"
           >
             <button
-              onClick={handleDelete}
+              onClick={() => handleDelete(task.taskId, task.status)}
               className="py-2 px-4 w-full text-sm hover:bg-cardwhite -mt-3 rounded-lg bg-white flex shadow items-center gap-2 -mb-16"
             >
               <svg

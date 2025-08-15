@@ -18,7 +18,7 @@ const LoginPage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const errRef = useRef<HTMLInputElement>(null);
 
-  const [pwd, setPwd] =useState<string>("")
+  const [pwd, setPwd] = useState<string>("");
   const UserData = useSelector((state: RootState) => state.user.userData);
   const { email } = UserData;
   const error = useSelector((state: RootState) => state.user.error);
@@ -40,7 +40,7 @@ const LoginPage = () => {
       : setPasswordVisibility("password");
   };
 
-  console.log(email, pwd)
+  console.log(email, pwd);
 
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,14 +49,13 @@ const LoginPage = () => {
 
     if (loginUser.fulfilled.match(response)) {
       dispatch(setEmail(""));
-      setPwd("")
+      setPwd("");
       navigate("/dashboard");
     } else {
       errRef.current?.focus();
-      navigate("/login")
+      navigate("/login");
     }
   };
-
 
   return (
     <section className="flex w-full h-screen" id="login-screen">

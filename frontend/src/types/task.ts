@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface TaskInterface {
   _id: string;
   title: string;
@@ -16,7 +18,21 @@ export interface TasksInterface {
   error: string | null;
 }
 
+export interface tabDataInterface {
+  id: string;
+  key: string;
+  tabTitle: string;
+  numberOfCards: number;
+  tabContent: React.ReactNode;
+}
+
 export interface TaskUIState {
   taskOpen: boolean;
   taskLoading: boolean;
+}
+
+export interface StatusUIState {
+  statusMsg: string;
+  statusDisplay: boolean;
+  statusColor: string[];
 }

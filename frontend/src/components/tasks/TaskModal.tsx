@@ -1,9 +1,14 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ModalLoading from "../ui-states/modalLoadingState";
+import ModalLoading from "../ui-states/ModalLoadingState";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
-import { setTaskOpen } from "../../features/tasks/taskUIslice";
+import {
+  setStatusColor,
+  setStatusDisplay,
+  setStatusMsg,
+  setTaskOpen,
+} from "../../features/tasks/taskUIslice";
 import {
   setTaskDueDate,
   setTaskDescription,
@@ -14,22 +19,27 @@ import {
 } from "../../features/tasks/taskSlice";
 import {
   deleteTask,
+  fetchCompletedData,
+  fetchInprogressData,
   fetchTodoData,
   updateTask,
 } from "../../features/tasks/tasksThunks";
 import { TaskInterface } from "../../types/task";
-import modalLoading from "../ui-states/modalLoadingState";
 
 const TaskModal = ({
   isEditing,
   setIsEditing,
+  setActiveStatusTab,
 }: {
   isEditing: boolean;
   setIsEditing: Dispatch<SetStateAction<boolean>>;
+  setActiveStatusTab: Dispatch<SetStateAction<string>>;
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const currentTask = useSelector((state: RootState) => state.currentTask);
-  const taskLoading = useSelector((state: RootState) => state.taskUI.taskLoading)
+  const taskLoading = useSelector(
+    (state: RootState) => state.taskUI.taskLoading
+  );
   const taskOpen = useSelector((state: RootState) => state.taskUI.taskOpen);
   const [editedTask, setEditedTask] = useState(currentTask);
   const [loading, setLoading] = useState<boolean>(false);
@@ -46,11 +56,35 @@ const TaskModal = ({
 
   const handleEdit = () => {
     setIsEditing(true);
-    dispatch(setCurrentTask(editedTask))
+    dispatch(setCurrentTask(editedTask));
   };
 
   const handleDelete = async (_id: string, taskStatus: string) => {
-    dispatch(deleteTask({ _id, taskStatus }));
+    try {
+      await dispatch(deleteTask({ _id, taskStatus }));
+      dispatch(setTaskOpen(false));
+      if (taskStatus === "To Do") {
+        dispatch(fetchTodoData());
+      } else if (taskStatus === "In Progress") {
+        dispatch(fetchInprogressData());
+      } else {
+        dispatch(fetchCompletedData());
+      }
+      dispatch(setStatusColor(["statusgreen", "softgreen"]));
+      dispatch(setStatusMsg("Deleted task successfully."));
+      dispatch(setStatusDisplay(true));
+      setTimeout(() => {
+        dispatch(setStatusDisplay(false));
+      }, 10000);
+    } catch (error) {
+      console.error(error);
+      dispatch(setStatusColor(["brandred", "softred"]));
+      dispatch(setStatusMsg("Failed to delete task. Please try again."));
+      dispatch(setStatusDisplay(true));
+      setTimeout(() => {
+        dispatch(setStatusDisplay(false));
+      }, 10000);
+    }
   };
 
   const handleInputChange = (name: string, value: string) => {
@@ -101,12 +135,32 @@ const TaskModal = ({
         const updated = updateResult.payload;
         handleUpdate(updated);
       }
+      if (updateResult.payload.status === "To Do") {
+        setActiveStatusTab("1");
+      } else if (updateResult.payload.status === "In Progress") {
+        setActiveStatusTab("2");
+      } else if (updateResult.payload.status === "Completed") {
+        setActiveStatusTab("3");
+      }
       await dispatch(fetchTodoData());
       setLoading(false);
       setIsEditing(false);
+      dispatch(setStatusColor(["statusgreen", "softgreen"]));
+
+      dispatch(setStatusMsg("Task edited successfully."));
+      dispatch(setStatusDisplay(true));
+      setTimeout(() => {
+        dispatch(setStatusDisplay(false));
+      }, 10000);
     } catch (error) {
       console.error("Update failed", error);
       setLoading(false);
+      dispatch(setStatusColor(["brandred", "softred"]));
+      dispatch(setStatusMsg("Failed to edit task. Please try again"));
+      dispatch(setStatusDisplay(true));
+      setTimeout(() => {
+        dispatch(setStatusDisplay(false));
+      }, 10000);
     }
   };
 
@@ -168,7 +222,7 @@ const TaskModal = ({
                         <span className="sr-only">Close modal</span>
                       </button>
                     </div>
-                    <form onSubmit={handleSubmit}  className="space-y-6 pt-4">
+                    <form onSubmit={handleSubmit} className="space-y-6 pt-4">
                       <div className="flex flex-col" id="title-input">
                         <label
                           htmlFor="task-title"
@@ -337,7 +391,7 @@ const TaskModal = ({
                     </form>
                   </div>
                 ) : taskLoading ? (
-                  <ModalLoading/>
+                  <ModalLoading />
                 ) : (
                   /* <!-- Static modal content --> */
                   <div
@@ -420,7 +474,7 @@ const TaskModal = ({
                               case "Medium Priority":
                                 return "text-sm bg-softblue border border-brandblue text-brandblue rounded-lg px-3 h-fit py-1 text-center";
                               case "High Priority":
-                                return "text-sm bg-softyellow border border-darkyellow text-brandyellow  rounded-lg px-3 h-fit py-1 text-center";
+                                return "text-sm bg-softyellow border border-darkyellow text-darkyellow  rounded-lg px-3 h-fit py-1 text-center";
                               case "Urgent":
                                 return "text-sm bg-softred border border-brandred text-brandred rounded-lg px-3 h-fit py-1 text-center";
                               default:

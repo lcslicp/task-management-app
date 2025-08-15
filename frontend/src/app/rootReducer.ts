@@ -1,7 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import tasksReducer from "../features/tasks/tasksSlice";
 import taskReducer, { currentTaskReducer } from "../features/tasks/taskSlice";
-import taskUIReducer from "../features/tasks/taskUIslice";
+import taskUIReducer, { statusUIReducer } from "../features/tasks/taskUIslice";
 import userReducer from "../features/auth/authSlice";
 
 const rootReducer = combineReducers({
@@ -10,6 +10,7 @@ const rootReducer = combineReducers({
   currentTask: currentTaskReducer,
   taskUI: taskUIReducer,
   user: userReducer,
+  statusUI: statusUIReducer,
 });
 
 export default rootReducer;

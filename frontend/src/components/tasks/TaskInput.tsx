@@ -7,7 +7,12 @@ import {
   setTaskTitle,
 } from "../../features/tasks/taskSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { createTask } from "../../features/tasks/tasksThunks";
+import {
+  createTask,
+  fetchCompletedData,
+  fetchInprogressData,
+  fetchTodoData,
+} from "../../features/tasks/tasksThunks";
 import { AppDispatch, RootState } from "../../app/store";
 import {
   addCompleted,
@@ -15,20 +20,26 @@ import {
   addTodo,
 } from "../../features/tasks/tasksSlice";
 import { useFormReset } from "../../utils/useFormReset";
+import {
+  setStatusColor,
+  setStatusDisplay,
+  setStatusMsg,
+} from "../../features/tasks/taskUIslice";
 
 const TaskInput = ({
   popup,
   setPopup,
+  setActiveStatusTab,
 }: {
   popup: boolean;
   setPopup: Dispatch<SetStateAction<boolean>>;
+  setActiveStatusTab: Dispatch<SetStateAction<string>>;
 }) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { status, title, description, priority, dueDate } = useSelector(
     (state: RootState) => state.task
   );
-
   const resetForm = useFormReset();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -40,22 +51,39 @@ const TaskInput = ({
       ).unwrap();
       if (task.status === "To Do") {
         dispatch(addTodo(task));
-        
+        await dispatch(fetchTodoData());
+        setActiveStatusTab("1");
       } else if (task.status === "In Progress") {
         dispatch(addInProgress(task));
+        await dispatch(fetchInprogressData());
+        setActiveStatusTab("2");
       } else {
         dispatch(addCompleted(task));
+        await dispatch(fetchCompletedData());
+        setActiveStatusTab("3");
       }
       setLoading(false);
-      setPopup(false);
       resetForm();
+      setPopup(false);
+      dispatch(setStatusColor(["statusgreen", "softgreen"]));
+      dispatch(setStatusMsg("Task created successfully"));
+      dispatch(setStatusDisplay(true));
+
+      setTimeout(() => {
+        dispatch(setStatusDisplay(false));
+      }, 10000);
     } catch (error) {
       setLoading(false);
       console.error(error);
+      console.error(error);
+      dispatch(setStatusColor(["brandred", "softred"]));
+      dispatch(setStatusMsg("Failed to create task. Please try again."));
+      dispatch(setStatusDisplay(true));
+      setTimeout(() => {
+        dispatch(setStatusDisplay(false));
+      }, 10000);
     }
   };
-
-   
 
   return (
     <div>
