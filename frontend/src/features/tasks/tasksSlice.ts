@@ -7,12 +7,14 @@ import {
   deleteTask,
   updateTask,
   createTask,
+  fetchSearchResults,
 } from "./tasksThunks";
 
 const initialState: TasksInterface = {
   todoTasks: [],
   inProgressTasks: [],
   completedTasks: [],
+  searchResults: [],
   loading: false,
   error: null,
 };
@@ -30,7 +32,10 @@ const tasksSlice = createSlice({
     setCompletedTasks: (state, action) => {
       state.completedTasks = action.payload;
     },
-    addTodo:(state, action: PayloadAction<TaskInterface>) => {
+    setSearchResults: (state, action) => {
+      state.searchResults = action.payload;
+    },
+    addTodo: (state, action: PayloadAction<TaskInterface>) => {
       state.todoTasks.push(action.payload);
     },
     addInProgress: (state, action: PayloadAction<TaskInterface>) => {
@@ -105,6 +110,16 @@ const tasksSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      .addCase(fetchSearchResults.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(fetchSearchResults.fulfilled, (state, action) => {
+        state.searchResults = action.payload;
+      })
+      .addCase(fetchSearchResults.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
       .addCase(createTask.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -128,9 +143,7 @@ const tasksSlice = createSlice({
         const { _id, taskStatus } = action.payload;
 
         if (taskStatus === "To Do") {
-          state.todoTasks = state.todoTasks.filter(
-            (task) => task._id !== _id
-          );
+          state.todoTasks = state.todoTasks.filter((task) => task._id !== _id);
         } else if (taskStatus === "In Progress") {
           state.inProgressTasks = state.inProgressTasks.filter(
             (task) => task._id !== _id
@@ -153,9 +166,7 @@ const tasksSlice = createSlice({
           state.completedTasks,
         ];
         allTasks.forEach((arr) => {
-          const index = arr.findIndex(
-            (task) => task._id === updatedTask._id
-          );
+          const index = arr.findIndex((task) => task._id === updatedTask._id);
           if (index !== -1) arr.splice(index, 1);
         });
         switch (updatedTask.taskStatus) {
@@ -182,6 +193,7 @@ export const {
   setTodoTasks,
   setInprogressTasks,
   setCompletedTasks,
+  setSearchResults,
   addTodo,
   addInProgress,
   addCompleted,

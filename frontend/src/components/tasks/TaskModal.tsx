@@ -51,8 +51,7 @@ const TaskModal = ({
     setIsEditing(false);
   };
 
-  const { _id, title, description, status, priority, createdAt, dueDate } =
-    currentTask;
+  const { _id, createdAt } = currentTask;
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -533,7 +532,7 @@ const TaskModal = ({
                         <button
                           id="delete-icon"
                           className="bg-offwhite hover:bg-gray-200 rounded-full text-sm w-9 h-9 ms-auto inline-flex justify-center items-center"
-                          onClick={() => handleDelete(_id, status)}
+                          onClick={() => handleDelete(_id, editedTask.status)}
                         >
                           <svg
                             width="30"

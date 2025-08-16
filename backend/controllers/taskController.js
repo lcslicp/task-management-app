@@ -81,7 +81,7 @@ const getTodoTasks = async (req, res) => {
     });
 
     const formattedTasks = tasks.map((task) => ({
-      taskId: task.id,
+      _id: task.id,
       title: task.title,
       description: task.description,
       priority: task.priority,
@@ -106,7 +106,7 @@ const getInProgressTasks = async (req, res) => {
     });
 
     const formattedTasks = tasks.map((task) => ({
-      taskId: task.id,
+      _id: task.id,
       title: task.title,
       description: task.description,
       priority: task.priority,
@@ -130,7 +130,7 @@ const getCompletedTasks = async (req, res) => {
       status: "Completed",
     });
     const formattedTasks = tasks.map((task) => ({
-      taskId: task.id,
+      _id: task.id,
       title: task.title,
       description: task.description,
       priority: task.priority,
@@ -170,7 +170,7 @@ const searchTasks = async (req, res) => {
       title: { $regex: query, $options: "i" },
     });
     const formattedTasks = tasks.map((task) => ({
-      taskId: task.id,
+      _id: task.id,
       title: task.title,
       description: task.description,
       priority: task.priority,

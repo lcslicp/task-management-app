@@ -4,6 +4,7 @@ import { TaskInterface } from "../../types/task";
 import {
   setCompletedTasks,
   setInprogressTasks,
+  setSearchResults,
   setTodoTasks,
 } from "./tasksSlice";
 
@@ -22,7 +23,7 @@ export const fetchTodoData = createAsyncThunk<TaskInterface[]>(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(TODO_TASK_URL, config);
-      setTodoTasks(response.data);
+      thunkAPI.dispatch(setTodoTasks(response.data));
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
@@ -37,7 +38,7 @@ export const fetchInprogressData = createAsyncThunk<TaskInterface[]>(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(INPROGRESS_TASK_URL, config);
-      setInprogressTasks(response.data);
+      thunkAPI.dispatch(setInprogressTasks(response.data));
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
@@ -52,11 +53,26 @@ export const fetchCompletedData = createAsyncThunk<TaskInterface[]>(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(COMPLETED_TASK_URL, config);
-      setCompletedTasks(response.data);
+      thunkAPI.dispatch(setCompletedTasks(response.data));
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to fetch Completed tasks."
+      );
+    }
+  }
+);
+
+export const fetchSearchResults = createAsyncThunk(
+  "tasks/searchTasks",
+  async ({ searchInput }: { searchInput: string }, thunkAPI) => {
+    try {
+      const response = await axios.get(`/search?title=${searchInput}`, config);
+      thunkAPI.dispatch(setSearchResults(response.data.slice(0, 3)));
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to fetch searched tasks."
       );
     }
   }

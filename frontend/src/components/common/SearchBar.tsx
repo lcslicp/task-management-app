@@ -2,43 +2,44 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "../../api/axios";
 import LoadingSpinner from "../ui-states/loadingSpinner";
-import { getAuthConfig } from "../../api/axiosConfig";
 import { TaskInterface } from "../../types/task";
-import { handleTaskOpen } from "../../utils/handleTaskOpen";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { AppDispatch } from "../../app/store";
+import { AppDispatch, RootState } from "../../app/store";
+import { fetchSearchResults } from "../../features/tasks/tasksThunks";
+import { fetchSingleTaskData } from "../../features/tasks/taskThunks";
+import { setCurrentTask } from "../../features/tasks/taskSlice";
+import { setTaskOpen } from "../../features/tasks/taskUIslice";
 
 const SearchBar = () => {
   const [searchInput, setSearchInput] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const searchResults = useSelector(
+    (state: RootState) => state.tasks.searchResults
+  );
 
-  const token = JSON.parse(localStorage.getItem("token") || "{}");
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const onOpen = (id: string) => {
-    dispatch(handleTaskOpen(id, navigate));
+  const onOpen = async (id: string) => {
+    const response = await dispatch(fetchSingleTaskData(id));
+    dispatch(setCurrentTask(response.payload))
+    dispatch(setTaskOpen(true));
+    navigate(`/${id}`);
   };
 
-  const fetchSearchResults = async () => {
+  const handleSearchResults = async (searchInput: string) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`/search?title=${searchInput}`, config);
-      setSearchResults(response.data.slice(0, 3));
+      await dispatch(fetchSearchResults({ searchInput })).unwrap();
       setIsLoading(false);
     } catch (error) {
-      console.error(error);
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchSearchResults();
+    handleSearchResults(searchInput);
   }, [searchInput]);
 
   return (
@@ -72,7 +73,7 @@ const SearchBar = () => {
         />
 
         {searchInput.length > 0 && (
-          <ul className="absolute bg-white rounded-xl z-50 mt-2 w-full border border-offwhite py-4">
+          <ul className="absolute bg-white rounded-xl z-30 mt-2 w-full border border-offwhite py-4">
             {isLoading ? (
               <LoadingSpinner />
             ) : searchResults.length === 0 ? (
@@ -80,9 +81,9 @@ const SearchBar = () => {
                 No tasks found.
               </p>
             ) : (
-              searchResults.map((result: TaskInterface) => (
+              searchResults.map((result:TaskInterface, index) => (
                 <li
-                  key={result._id}
+                  key={index}
                   className="cursor-pointer px-10 hover:bg-offwhite pb-2"
                   onClick={() => onOpen(result._id)}
                 >

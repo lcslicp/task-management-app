@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import TaskCard from "../tasks/defaultTaskCard";
 import EmptyState from "../ui-states/EmptyState";
 import LoadingSpinner from "../ui-states/loadingSpinnerBlue";
@@ -13,7 +13,6 @@ const ToDoTab = ({
   priorityFilter: string[];
 }) => {
   const todoTasks = useSelector((state: RootState) => state.tasks.todoTasks);
-  const loading = useSelector((state: RootState) => state.tasks.loading);
 
   const sortedTasks = useMemo(() => {
     let tasks = [...todoTasks];
@@ -44,11 +43,7 @@ const ToDoTab = ({
 
   return (
     <div>
-      {loading ? (
-        <div className="px-10 mx-40">
-          <LoadingSpinner />
-        </div>
-      ) : sortedTasks.length === 0 ? (
+      {sortedTasks.length === 0 ? (
         <EmptyState />
       ) : (
         (priorityFilter.length === 0

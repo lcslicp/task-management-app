@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../app/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../app/store";
 import { TaskInterface } from "../../types/task";
 import { fetchSingleTaskData } from "../../features/tasks/taskThunks";
 import {
@@ -24,8 +24,7 @@ const TaskCard = ({ task }: { task: TaskInterface }) => {
   const [dropdown, setDropdown] = useState<Visibility>("hidden");
   const dispatch = useDispatch<AppDispatch>();
 
-  const { _id, title, description, status, priority, createdAt, dueDate } =
-    task;
+  const { _id, title, description, status, priority, dueDate } = task;
 
   let dueDateFormatted = new Date(dueDate).toLocaleDateString("default", {
     month: "short",
@@ -36,10 +35,6 @@ const TaskCard = ({ task }: { task: TaskInterface }) => {
   const toggleTask = () => {
     dropdown === "hidden" ? setDropdown("visible") : setDropdown("hidden");
   };
-
-  const { statusDisplay, statusMsg, statusColor } = useSelector(
-    (state: RootState) => state.statusUI
-  );
 
   const onOpen = async (id: string) => {
     dispatch(setTaskLoading(true));
@@ -62,7 +57,7 @@ const TaskCard = ({ task }: { task: TaskInterface }) => {
         await dispatch(fetchTodoData());
       } else if (taskStatus === "In Progress") {
         await dispatch(fetchInprogressData());
-      } else {
+      } else if (taskStatus === "Completed") {
         await dispatch(fetchCompletedData());
       }
       dispatch(setStatusColor(["statusgreen", "softgreen"]));
@@ -158,7 +153,7 @@ const TaskCard = ({ task }: { task: TaskInterface }) => {
             className="z-10"
           >
             <button
-              onClick={() => handleDelete(task.taskId, task.status)}
+              onClick={() => handleDelete(_id, status)}
               className="py-2 px-4 w-full text-sm hover:bg-cardwhite -mt-3 rounded-lg bg-white flex shadow items-center gap-2 -mb-16"
             >
               <svg
@@ -181,7 +176,7 @@ const TaskCard = ({ task }: { task: TaskInterface }) => {
       {
         <div
           className="flex flex-col -mt-3"
-          onClick={() => onOpen(task.taskId)}
+          onClick={() => onOpen(_id)}
           id="taskcard_content"
         >
           <div className="rounded-lg px-3 py-2 flex flex-col gap-2">

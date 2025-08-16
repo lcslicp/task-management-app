@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import TaskCard from "../tasks/defaultTaskCard";
 import EmptyState from "../ui-states/EmptyState";
@@ -15,7 +15,6 @@ const InProgressTab = ({
   const inProgressTasks = useSelector(
     (state: RootState) => state.tasks.inProgressTasks
   );
-  const loading = useSelector((state: RootState) => state.tasks.loading);
 
   let sortedTasks = [...inProgressTasks];
 
@@ -46,11 +45,7 @@ const InProgressTab = ({
 
   return (
     <div>
-      {loading ? (
-        <div className="px-96 mx-40">
-          <LoadingSpinner />
-        </div>
-      ) : sortedTasks.length === 0 ||
+      {sortedTasks.length === 0 ||
         (priorityFilter.length === 0
           ? false
           : sortedTasks.filter((task) => priorityFilter.includes(task.priority))

@@ -14,6 +14,7 @@ export interface TasksInterface {
   todoTasks: TaskInterface[];
   inProgressTasks: TaskInterface[];
   completedTasks: TaskInterface[];
+  searchResults: [];
   loading: boolean;
   error: string | null;
 }

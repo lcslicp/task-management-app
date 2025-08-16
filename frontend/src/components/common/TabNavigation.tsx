@@ -1,8 +1,9 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useFormReset } from "../../utils/useFormReset";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { tabDataInterface } from "../../types/task";
+import CardSkeletonUI from "../ui-states/CardSkeletonUI";
 
 const TabNavigation = ({
   popup,
@@ -18,9 +19,7 @@ const TabNavigation = ({
   tabdata: tabDataInterface[];
 }) => {
   const resetForm = useFormReset();
-  const { todoTasks, inProgressTasks, completedTasks } = useSelector(
-    (state: RootState) => state.tasks
-  );
+  const loading = useSelector((state: RootState) => state.tasks.loading)
 
   const statusTabTitles = tabdata.map((tab, id) => (
     <li
@@ -82,7 +81,7 @@ const TabNavigation = ({
           id="tab-contents"
           className="w-full columns-4 break-inside-avoid gap-3"
         >
-          {tabContents}
+          {loading ? ( <CardSkeletonUI />) : tabContents}
         </div>
       </div>
       <div

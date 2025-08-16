@@ -47,7 +47,7 @@ const StatusPopup = ({ statusMsg }: { statusMsg: string }) => {
         </div>
         <button
           type="button"
-          className={`ms-auto -mx-1.5 -my-1.5 bg-white ${textColor} rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-blue-200 inline-flex items-center justify-center h-8 w-8`}
+          className={`ms-auto -mx-1.5 -my-1.5 bg-white ${textColor} rounded-lg p-1.5 border boder-white hover:${borderColor} inline-flex items-center justify-center h-8 w-8`}
           data-dismiss-target="#alert-1"
           aria-label="Close"
           onClick={() => dispatch(setStatusDisplay(false))}
