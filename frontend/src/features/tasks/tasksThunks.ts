@@ -13,15 +13,14 @@ const INPROGRESS_TASK_URL = "/tasks/inprogress";
 const COMPLETED_TASK_URL = "/tasks/completed";
 const CREATE_TASK_URL = "/compose/newtask";
 
-const token = JSON.parse(localStorage.getItem("token") || "{}");
-const config = {
-  headers: { Authorization: `Bearer ${token}` },
-};
-
 export const fetchTodoData = createAsyncThunk<TaskInterface[]>(
   "tasks/fetchTodoData",
   async (_, thunkAPI) => {
     try {
+      const token = JSON.parse(localStorage.getItem("token") || "{}");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
       const response = await axios.get(TODO_TASK_URL, config);
       thunkAPI.dispatch(setTodoTasks(response.data));
       return response.data;
@@ -37,6 +36,10 @@ export const fetchInprogressData = createAsyncThunk<TaskInterface[]>(
   "tasks/fetchInprogressData",
   async (_, thunkAPI) => {
     try {
+      const token = JSON.parse(localStorage.getItem("token") || "{}");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
       const response = await axios.get(INPROGRESS_TASK_URL, config);
       thunkAPI.dispatch(setInprogressTasks(response.data));
       return response.data;
@@ -52,6 +55,10 @@ export const fetchCompletedData = createAsyncThunk<TaskInterface[]>(
   "tasks/fetchCompletedData",
   async (_, thunkAPI) => {
     try {
+      const token = JSON.parse(localStorage.getItem("token") || "{}");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
       const response = await axios.get(COMPLETED_TASK_URL, config);
       thunkAPI.dispatch(setCompletedTasks(response.data));
       return response.data;
@@ -67,6 +74,10 @@ export const fetchSearchResults = createAsyncThunk(
   "tasks/searchTasks",
   async ({ searchInput }: { searchInput: string }, thunkAPI) => {
     try {
+      const token = JSON.parse(localStorage.getItem("token") || "{}");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
       const response = await axios.get(`/search?title=${searchInput}`, config);
       thunkAPI.dispatch(setSearchResults(response.data.slice(0, 3)));
       return response.data;
@@ -97,6 +108,10 @@ export const createTask = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      const token = JSON.parse(localStorage.getItem("token") || "{}");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
       const response = await axios.post(
         CREATE_TASK_URL,
         { title, description, status, priority, dueDate },
@@ -112,6 +127,10 @@ export const createTask = createAsyncThunk(
 export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async ({ updatedData }: { updatedData: TaskInterface }, thunkAPI) => {
+    const token = JSON.parse(localStorage.getItem("token") || "{}");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
     const response = await axios.put(
       `/edit/${updatedData._id}`,
       updatedData,
@@ -128,6 +147,10 @@ export const deleteTask = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      const token = JSON.parse(localStorage.getItem("token") || "{}");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
       await axios.delete(`${_id}`, config);
 
       return { _id, taskStatus };

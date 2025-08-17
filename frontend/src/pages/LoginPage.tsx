@@ -40,17 +40,17 @@ const LoginPage = () => {
       : setPasswordVisibility("password");
   };
 
-  console.log(email, pwd);
-
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(setIsUserLoading(true));
     const response = await dispatch(loginUser({ email, pwd }));
 
+    
+
     if (loginUser.fulfilled.match(response)) {
       dispatch(setEmail(""));
       setPwd("");
-      navigate("/dashboard");
+      navigate("/navigate");
     } else {
       errRef.current?.focus();
       navigate("/login");
@@ -229,7 +229,7 @@ const LoginPage = () => {
               Don't have an account?{" "}
               <Link
                 to="/signup"
-                className="text-brandblue font-semibold hover:underline"
+                className="text-statusgreen font-semibold hover:underline"
               >
                 Sign Up.
               </Link>{" "}

@@ -19,7 +19,10 @@ const TabNavigation = ({
   tabdata: tabDataInterface[];
 }) => {
   const resetForm = useFormReset();
-  const loading = useSelector((state: RootState) => state.tasks.loading)
+  const loading = useSelector((state: RootState) => state.tasks.loading);
+  const isUserLoading = useSelector(
+    (state: RootState) => state.user.isUserLoading
+  );
 
   const statusTabTitles = tabdata.map((tab, id) => (
     <li
@@ -81,7 +84,7 @@ const TabNavigation = ({
           id="tab-contents"
           className="w-full columns-4 break-inside-avoid gap-3"
         >
-          {loading ? ( <CardSkeletonUI />) : tabContents}
+          {loading && isUserLoading ? <CardSkeletonUI /> : tabContents}
         </div>
       </div>
       <div

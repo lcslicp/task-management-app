@@ -12,7 +12,7 @@ const initialState: UserInterface = {
   },
   isUserLoading: false,
   error: null,
-  token: null
+  token: null,
 };
 
 const userSlice = createSlice({
@@ -32,13 +32,13 @@ const userSlice = createSlice({
       state.userData.email = action.payload;
     },
     setUserImage: (state, action) => {
-      state.userData.userImage = action.payload
+      state.userData.userImage = action.payload;
     },
     setIsUserLoading: (state, action) => {
-      state.isUserLoading = action.payload
+      state.isUserLoading = action.payload;
     },
     setError: (state, action) => {
-      state.error = action.payload
+      state.error = action.payload;
     },
     logout: (state) => {
       state.token = null;
@@ -47,24 +47,26 @@ const userSlice = createSlice({
         email: "",
         firstName: "",
         lastName: "",
-        userImage: ""
+        userImage: "",
       };
       localStorage.removeItem("token");
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
-    .addCase(loginUser.pending, (state) => {
-      state.isUserLoading = true;
-      state.error = null;
-    }). addCase(loginUser.fulfilled, (state, action) => {
-      state.isUserLoading = false;
-      state.token = action.payload;
-      state.error = null;
-    }).addCase(loginUser.rejected, (state, action) => {
-      state.isUserLoading = false;
-      state.error = action.payload as string;
-    })
+      .addCase(loginUser.pending, (state) => {
+        state.isUserLoading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.isUserLoading = false;
+        state.token = action.payload;
+        state.error = null;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.isUserLoading = false;
+        state.error = action.payload as string;
+      })
       .addCase(getUser.pending, (state) => {
         state.isUserLoading = true;
       })
@@ -97,7 +99,15 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUserId, setFirstName, setLastName, setEmail, setUserImage, setIsUserLoading, setError, logout } =
-  userSlice.actions;
+export const {
+  setUserId,
+  setFirstName,
+  setLastName,
+  setEmail,
+  setUserImage,
+  setIsUserLoading,
+  setError,
+  logout,
+} = userSlice.actions;
 
 export default userSlice.reducer;

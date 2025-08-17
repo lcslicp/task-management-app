@@ -6,9 +6,16 @@ import logoutIcon from "../../assets/icons/logout-icon.svg";
 import githubIcon from "../../assets/icons/github-icon.svg";
 import feedbackIcon from "../../assets/icons/feedback-icon.svg";
 import DoowitLogo from "../../assets/icons/doowit-logo.svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { logout } from "../../features/auth/authSlice";
+import {
+  setCompletedTasks,
+  setInprogressTasks,
+  setTodoTasks,
+} from "../../features/tasks/tasksSlice";
+import { RootState } from "../../app/store";
+import { setStatusMsg } from "../../features/tasks/taskUIslice";
 
 const Sidebar = ({
   sort,
@@ -29,6 +36,7 @@ const Sidebar = ({
   const [sortCheckedItems, setSortCheckedItems] = useState<
     Record<string, boolean>
   >({});
+  const todoTasks = useSelector((state: RootState) => state.tasks.todoTasks);
 
   const sortOldest = () => {
     setSort("oldest");
@@ -36,14 +44,22 @@ const Sidebar = ({
   const sortDueDate = () => {
     setSort("duedate");
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    navigate("/logging-out");
     try {
-      dispatch(logout());
+      await Promise.all([
+        dispatch(setTodoTasks([])),
+        dispatch(setInprogressTasks([])),
+        dispatch(setCompletedTasks([])),
+        dispatch(logout()),
+      ]);
       navigate("/login");
     } catch (error) {
+      setStatusMsg("Failed to logout. Try again.");
       console.error("Logout error:", error);
     }
   };
+
   const toggleSortDropdown = () => {
     const newToggleState = !toggleSort;
     setToggleSort(newToggleState);

@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import TaskCard from "../tasks/defaultTaskCard";
 import EmptyState from "../ui-states/EmptyState";
-import LoadingSpinner from "../ui-states/loadingSpinnerBlue";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 

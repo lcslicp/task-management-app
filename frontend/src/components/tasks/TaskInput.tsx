@@ -134,7 +134,10 @@ const TaskInput = ({
                         htmlFor="task-title"
                         className="uppercase font-medium text-xs text-togglegray pb-2"
                       >
-                        Title
+                        Title{" "}
+                        <span className="text-xs text-coolgray italic font-light lowercase">
+                          (required)
+                        </span>
                       </label>
                       <input
                         type="text"
@@ -158,7 +161,10 @@ const TaskInput = ({
                           htmlFor="status"
                           className="uppercase font-medium text-xs text-togglegray pb-2"
                         >
-                          Status
+                          Status{" "}
+                          <span className="text-xs text-coolgray italic font-light lowercase">
+                            (required)
+                          </span>
                         </label>
 
                         <select
@@ -184,7 +190,10 @@ const TaskInput = ({
                           htmlFor="priority"
                           className="uppercase font-medium text-xs text-togglegray pb-2"
                         >
-                          Priority
+                          Priority{" "}
+                          <span className="text-xs text-coolgray italic font-light lowercase">
+                            (required)
+                          </span>
                         </label>
 
                         <select

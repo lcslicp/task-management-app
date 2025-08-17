@@ -1,13 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../api/axios";
 import jwt_decode from "jwt-decode";
-import { getToken } from "../../api/axiosConfig";
 import { UserInterface } from "../../types/user";
-
-const token = JSON.parse(localStorage.getItem("token") || "{}");
-const config = {
-  headers: { Authorization: `Bearer ${token}` },
-};
 
 export const loginUser = createAsyncThunk(
   "/login",
@@ -27,15 +21,15 @@ export const loginUser = createAsyncThunk(
         }
       );
       localStorage.setItem("token", JSON.stringify(response.data.token));
-      return response.data.token;
+      return response.data;
     } catch (error: any) {
       if (!error.response) {
         return rejectWithValue("No Server Response");
       } else if ([401].includes(error.response.status)) {
         return rejectWithValue("Invalid credentials, please try again.");
-      } else if([404].includes(error.response.status)) {
+      } else if ([404].includes(error.response.status)) {
         return rejectWithValue("User not found.");
-      }else {
+      } else {
         return rejectWithValue("Login Failed");
       }
     }
@@ -44,14 +38,17 @@ export const loginUser = createAsyncThunk(
 
 export const getUser = createAsyncThunk("auth/getUser", async (_, thunkAPI) => {
   try {
-    const token = getToken();
+    const token = JSON.parse(localStorage.getItem("token") || "{}");
+
     if (!token) {
-        console.error("No token found.")
-        return
+      return thunkAPI.rejectWithValue("No token found.");
     }
     const decoded = jwt_decode(token) as { user: string };
     const decodedId = decoded.user;
     const USER_URL = `/user/${decodedId}`;
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
     const response = await axios.get(USER_URL, config);
     const { id, firstName, lastName, email, password, userImage } =
       response.data;
@@ -71,6 +68,10 @@ export const updateUserProfile = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      const token = JSON.parse(localStorage.getItem("token") || "{}");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
       const response = await axios.put(`/edit/user/${id}`, data, config);
       return response.data;
     } catch (error: any) {

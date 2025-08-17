@@ -8,13 +8,14 @@ import Dashboard from "./pages/Dashboard";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import DemoLoadingScreen from "./components/ui-states/DemoLoadingScreen";
+import LogoutLoadingUI from "./components/ui-states/LogoutLoadingUI";
 
 function App() {
   return (
-    <Routes>    
+    <Routes>
       {/* public routes */}
       <Route element={<PublicRoutes />}>
-      <Route index element={<Navigate to="/signup" replace />} />
+        <Route index element={<Navigate to="/signup" replace />} />
         <Route path="signup" element={<SignupPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="demo-loading" element={<DemoLoadingScreen />} />
@@ -24,6 +25,7 @@ function App() {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path=":id" element={<Dashboard />} />
         <Route path="profile" element={<Dashboard />} />
+        <Route path="logging-out" element={<LogoutLoadingUI />} />
         {/* catch all  */}
       </Route>
       <Route path="*" element={<Navigate to="/signup" replace />} />

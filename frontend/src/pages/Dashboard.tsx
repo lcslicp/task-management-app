@@ -20,6 +20,8 @@ import EditProfile from "../components/auth/EditProfile";
 import ChangePassword from "../components/auth/ChangePassword";
 import TaskModal from "../components/tasks/TaskModal";
 import StatusPopup from "../components/ui-states/StatusPopup";
+import InternalServerError from "../components/ui-states/InternalServerError";
+import DashboardLoadingUI from "../components/ui-states/DashboardLoadingUI";
 import { tabDataInterface } from "../types/task";
 
 const Dashboard = () => {
@@ -29,12 +31,14 @@ const Dashboard = () => {
   const [passwordModalOpen, setPasswordModalOpen] = useState<boolean>(false);
   const [priorityFilter, setPriorityFilter] = useState<string[]>([]);
   const [sort, setSort] = useState<string>("newest");
+  const [dashboardLoading, SetDashboardLoading] = useState(false);
 
   const UserData = useSelector((state: RootState) => state.user.userData);
   const { firstName, lastName, email, userImage } = UserData;
   const statusMsg = useSelector((state: RootState) => state.statusUI.statusMsg);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const error = useSelector((state: RootState) => state.user.error);
 
   let tabdata: tabDataInterface[] = [];
   const { todoTasks, inProgressTasks, completedTasks } = useSelector(
@@ -73,10 +77,20 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchTodoData());
-    dispatch(fetchInprogressData());
-    dispatch(fetchCompletedData());
-  }, []);
+    const fetchData = async () => {
+      SetDashboardLoading(true);
+
+      await Promise.all([
+        dispatch(fetchTodoData()),
+        dispatch(fetchInprogressData()),
+        dispatch(fetchCompletedData()),
+      ]);
+
+      SetDashboardLoading(false);
+    };
+
+    fetchData();
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getUser());
@@ -96,37 +110,43 @@ const Dashboard = () => {
         />
       </aside>
 
-      <section className="flex flex-col w-[85%] ml-[15%]">
-        <Header />
-        <TabNavigation
-          popup={popup}
-          setPopup={setPopup}
-          activeStatusTab={activeStatusTab}
-          setActiveStatusTab={setActiveStatusTab}
-          tabdata={tabdata}
-        />
-        <TaskInput
-          popup={popup}
-          setPopup={setPopup}
-          setActiveStatusTab={setActiveStatusTab}
-        />
-        <StatusPopup statusMsg={statusMsg} />
-        <TaskModal
-          isEditing={isEditing}
-          setIsEditing={setIsEditing}
-          setActiveStatusTab={setActiveStatusTab}
-        />
-        <EditProfile
-          handleProfileModalClose={handleProfileModalClose}
-          profileModalOpen={profileModalOpen}
-          setPasswordModalOpen={setPasswordModalOpen}
-        />
-        <ChangePassword
-          passwordModalOpen={passwordModalOpen}
-          setPasswordModalOpen={setPasswordModalOpen}
-          setProfileModalOpen={setProfileModalOpen}
-        />
-      </section>
+      {error ? (
+        <InternalServerError />
+      ) : dashboardLoading ? (
+        <DashboardLoadingUI />
+      ) : (
+        <section className="flex flex-col w-[85%] ml-[15%]">
+          <Header />
+          <TabNavigation
+            popup={popup}
+            setPopup={setPopup}
+            activeStatusTab={activeStatusTab}
+            setActiveStatusTab={setActiveStatusTab}
+            tabdata={tabdata}
+          />
+          <TaskInput
+            popup={popup}
+            setPopup={setPopup}
+            setActiveStatusTab={setActiveStatusTab}
+          />
+          <StatusPopup statusMsg={statusMsg} />
+          <TaskModal
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            setActiveStatusTab={setActiveStatusTab}
+          />
+          <EditProfile
+            handleProfileModalClose={handleProfileModalClose}
+            profileModalOpen={profileModalOpen}
+            setPasswordModalOpen={setPasswordModalOpen}
+          />
+          <ChangePassword
+            passwordModalOpen={passwordModalOpen}
+            setPasswordModalOpen={setPasswordModalOpen}
+            setProfileModalOpen={setProfileModalOpen}
+          />
+        </section>
+      )}
     </main>
   );
 };

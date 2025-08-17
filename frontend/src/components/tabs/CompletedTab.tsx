@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import TaskCard from "../tasks/defaultTaskCard";
 import EmptyState from "../ui-states/EmptyState";
-import LoadingSpinner from "../ui-states/loadingSpinnerBlue";
 import { RootState } from "../../app/store";
 
 const CompletedTab = ({
@@ -45,10 +44,10 @@ const CompletedTab = ({
   return (
     <div>
       {sortedTasks.length === 0 ||
-        (priorityFilter.length === 0
-          ? false
-          : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
-              .length === 0) ? (
+      (priorityFilter.length === 0
+        ? false
+        : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
+            .length === 0) ? (
         <EmptyState />
       ) : (
         (priorityFilter.length === 0
