@@ -34,16 +34,17 @@ const Dashboard = () => {
   const [dashboardLoading, SetDashboardLoading] = useState(false);
 
   const UserData = useSelector((state: RootState) => state.user.userData);
-  const { firstName, lastName, email, userImage } = UserData;
-  const statusMsg = useSelector((state: RootState) => state.statusUI.statusMsg);
-  const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const error = useSelector((state: RootState) => state.user.error);
-
-  let tabdata: tabDataInterface[] = [];
+  const error = useSelector((state: RootState) => state.user.error); 
   const { todoTasks, inProgressTasks, completedTasks } = useSelector(
     (state: RootState) => state.tasks
   );
+
+  const { firstName, lastName, email, } = UserData;
+  const statusMsg = useSelector((state: RootState) => state.statusUI.statusMsg);
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
+  let tabdata: tabDataInterface[] = [];
 
   tabdata = [
     {
@@ -71,30 +72,22 @@ const Dashboard = () => {
 
   const [activeStatusTab, setActiveStatusTab] = useState<string>(tabdata[0].id);
 
-  const handleProfileModalClose = () => {
-    setProfileModalOpen(false);
-    navigate("/dashboard");
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       SetDashboardLoading(true);
-
       await Promise.all([
         dispatch(fetchTodoData()),
         dispatch(fetchInprogressData()),
         dispatch(fetchCompletedData()),
       ]);
-
       SetDashboardLoading(false);
     };
-
     fetchData();
   }, [dispatch]);
 
   useEffect(() => {
     dispatch(getUser());
-  }, [firstName, lastName, email, userImage]);
+  }, [firstName, lastName, email,]);
 
   return (
     <main className="flex flex-row w-full h-full">
@@ -116,7 +109,7 @@ const Dashboard = () => {
         <DashboardLoadingUI />
       ) : (
         <section className="flex flex-col w-[85%] ml-[15%]">
-          <Header />
+          <Header setProfileModalOpen={setProfileModalOpen} />
           <TabNavigation
             popup={popup}
             setPopup={setPopup}
@@ -136,9 +129,9 @@ const Dashboard = () => {
             setActiveStatusTab={setActiveStatusTab}
           />
           <EditProfile
-            handleProfileModalClose={handleProfileModalClose}
             profileModalOpen={profileModalOpen}
             setPasswordModalOpen={setPasswordModalOpen}
+            setProfileModalOpen={setProfileModalOpen}
           />
           <ChangePassword
             passwordModalOpen={passwordModalOpen}

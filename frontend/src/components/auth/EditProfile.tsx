@@ -6,59 +6,34 @@ import {
   setEmail,
   setFirstName,
   setLastName,
-  setUserImage,
 } from "../../features/auth/authSlice";
 import { UserInterface } from "../../types/user";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = ({
-  handleProfileModalClose,
   profileModalOpen,
   setPasswordModalOpen,
+  setProfileModalOpen
 }: {
-  handleProfileModalClose: () => void;
   profileModalOpen: boolean;
   setPasswordModalOpen: Dispatch<SetStateAction<boolean>>;
+  setProfileModalOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [fileName, setFileName] = useState<string>("No file chosen.");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>("");
   const userData = useSelector((state: RootState) => state.user.userData);
   const dispatch = useDispatch<AppDispatch>();
-  const {
-    userId: id,
-    firstName,
-    lastName,
-    email,
-    userImage,
-    password,
-  } = userData;
+  const { userId: id, firstName, lastName, email } = userData;
+  const isUserLoading = useSelector(
+    (state: RootState) => state.user.isUserLoading
+  );
+  const navigate = useNavigate();
 
-  const imageInputRef = useRef<HTMLInputElement>(null);
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
 
-  const handleFormReset = () => {
-    if (imageInputRef.current) {
-      imageInputRef.current.value = "";
-    }
-
-    setFileName("No file chosen.");
-    handleProfileModalClose();
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadedImage = e.target.files?.[0];
-
-    if (uploadedImage) {
-      setFileName(uploadedImage.name);
-      setSelectedFile(uploadedImage);
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        setImagePreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(uploadedImage);
-    }
+  const handleProfileModalClose = () => {
+    setProfileModalOpen(false);
+    navigate("/dashboard");
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,8 +43,6 @@ const EditProfile = ({
       firstName: firstNameRef.current?.value || "",
       lastName: lastNameRef.current?.value || "",
       email: emailRef.current?.value || "",
-      password: password,
-      userImage: userImage,
     };
 
     try {
@@ -78,17 +51,10 @@ const EditProfile = ({
       dispatch(setLastName(response?.data?.lastName));
       dispatch(setEmail(response?.data?.email));
       handleProfileModalClose();
+      setProfileModalOpen(false);
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleImageClick = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const input = document.getElementById(
-      "imageInput"
-    ) as HTMLInputElement | null;
-    input?.click();
   };
 
   const openPasswordModal = () => {
@@ -103,163 +69,157 @@ const EditProfile = ({
           <div
             id="edit-profile"
             tabIndex={-1}
-            className="overflow-y-auto overflow-x-hidden fixed z-50 pt-2 w-full inset-0 h-modal md:h-full"
+            className="overflow-y-auto overflow-x-hidden fixed z-50 top-0 right-0 left-0 z-50 flex justify-center items-center w-full inset-0 h-[calc(100%-1rem)] max-h-full"
           >
-            <div className="relative p-4 w-1/3 h-full md:h-auto inset-x-1/3 inset-y-16">
-              <div className="relative bg-white rounded-lg shadow">
-                <button
-                  type="button"
-                  className="absolute top-3 right-2.5 text-black bg-transparent hover:bg-lightgray hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-                  onClick={() => handleProfileModalClose()}
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                </button>
+            <div className="relative p-4 w-full max-w-2xl max-h-full">
+              <div className="relative bg-white rounded-2xl shadow-sm">
                 <div className="py-6 px-6 lg:px-8">
-                  <h1 className="text-xl font-bold tracking-tight text-darkblue pb-6 pt-2">
-                    Edit Profile
-                  </h1>
-
-                  <div className="space-y-6">
-                    <div className="flex flex-col gap-4">
-                      <form className="flex flex-row pr-8 gap-6 ">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageChange}
-                          id="imageInput"
-                          className="hidden"
-                          ref={imageInputRef}
-                        />
-                        <img
-                          src={imagePreview}
-                          alt=""
-                          className=" border-lightergray w-16 h-16 rounded-full object-cover"
-                        />
-                        <div>
-                          <p className="text-xs italic truncate w-28 max-h-10 overflow-hidden">
-                            {fileName}
-                          </p>
-
-                          <button
-                            className="text-xs  font-bold py-2 px-3 rounded-lg text-brightblue border border-brightblue text-center hover:opacity-80 self-center my-auto mr-4"
-                            onClick={() => handleImageClick}
-                          >
-                            Upload
-                          </button>
-
-                          <button
-                            type="submit"
-                            className="w-fit text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-xs font-bold text-center mt-4 px-4 py-2"
-                            style={{
-                              visibility:
-                                fileName !== "No file chosen."
-                                  ? "visible"
-                                  : "hidden",
-                            }}
-                          >
-                            Update Photo
-                          </button>
-                        </div>
-                      </form>
-
-                      <form
-                        onSubmit={handleSubmit}
-                        className="flex flex-col w-full"
+                  <div
+                    className="flex justify-between items-center font-medium"
+                    id="action-heading"
+                  >
+                    <h2 className="text-2xl text-brandblack">Edit Task</h2>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-offwhite hover:bg-gray-200 hover:text-gray-900 rounded-2xl text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                      onClick={handleProfileModalClose}
+                      data-modal-hide="static-modal"
+                    >
+                      <svg
+                        className="w-3 h-3"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 14 14"
                       >
-                        <div className="pt-4">
-                          <label
-                            htmlFor="firstName"
-                            className="text-sm opacity-50  mb-40 uppercase"
-                          >
-                            First Name
-                          </label>
-                          <input
-                            type="text"
-                            maxLength={11}
-                            className="bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block p-2.5 w-full"
-                            autoComplete="off"
-                            id="firstName"
-                            name="firstName"
-                            ref={firstNameRef}
-                            defaultValue={firstName}
-                          />
-                        </div>
-                        <div className="pt-4">
-                          <label
-                            htmlFor="lastName"
-                            className="text-sm opacity-50  mb-40 uppercase"
-                          >
-                            Last Name
-                          </label>
-                          <input
-                            type="text"
-                            maxLength={11}
-                            className="bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block p-2.5 w-full"
-                            id="lastName"
-                            name="lastName"
-                            ref={lastNameRef}
-                            defaultValue={lastName}
-                          />
-                        </div>
-                        <div className="pt-4">
-                          <label
-                            htmlFor="email"
-                            className="text-sm opacity-50  mb-40 uppercase"
-                          >
-                            Email Address
-                          </label>
-                          <input
-                            type="email"
-                            className="bg-gray-50 border border-lightgray text-black text-sm rounded-lg focus:ring-brightblue focus:border-blue-500 block p-2.5 w-full"
-                            id="email"
-                            name="email"
-                            ref={emailRef}
-                            defaultValue={email}
-                          />
-                        </div>
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                        />
+                      </svg>
+                      <span className="sr-only">Close modal</span>
+                    </button>
+                  </div>
 
-                        <div className="flex flex-row w-full space-x-4 pt-9">
-                          <button
-                            type="submit"
-                            className="w-full text-white bg-brightblue hover:bg-brighterblue focus:ring-4 focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold text-center"
-                          >
-                            Update Profile
-                          </button>
+                  <form onSubmit={handleSubmit} className="space-y-6 pt-4">
+                    <div className="flex flex-col" id="first-name">
+                      <label
+                        htmlFor="firstName"
+                        className="uppercase font-medium text-xs text-togglegray pb-2"
+                      >
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        maxLength={11}
+                        placeholder="Enter your first name..."
+                        className="bg-offwhite border-none rounded-lg placeholder-coolgray h-10 placeholder:font-light placeholder:text-sm focus:ring-coolgray focus:ring-1"
+                        autoComplete="off"
+                        id="firstName"
+                        name="firstName"
+                        ref={firstNameRef}
+                        defaultValue={firstName}
+                        required
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="lastName"
+                        className="uppercase font-medium text-xs text-togglegray pb-2"
+                      >
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        maxLength={11}
+                        className="bg-offwhite border-none rounded-lg placeholder-coolgray h-10 placeholder:font-light placeholder:text-sm focus:ring-coolgray focus:ring-1"
+                        id="lastName"
+                        name="lastName"
+                        ref={lastNameRef}
+                        defaultValue={lastName}
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="email"
+                        className="uppercase font-medium text-xs text-togglegray pb-2"
+                      >
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="Enter your email address..."
+                        className="bg-offwhite border-none rounded-lg placeholder-coolgray h-10 placeholder:font-light placeholder:text-sm focus:ring-coolgray focus:ring-1"
+                        id="email"
+                        name="email"
+                        ref={emailRef}
+                        defaultValue={email}
+                      />
+                    </div>
 
-                          <button
-                            type="button"
-                            className="w-full text-black bg-lightgray focus:outline-none focus:ring-lightgray rounded-lg text-sm font-bold px-5 py-2.5 text-center hover:brightness-90"
-                            onClick={() => handleProfileModalClose()}
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </form>
-                      <span className="pt-8 w-full border-b"></span>
-                      <div className=" pb-4 flex flex-row place-content-between items-center">
-                        <p className="text-xs font-bold opacity-80 uppercase">
-                          Change Password
-                        </p>
+                    <div className="w-full flex justify-end">
+                      <div className="flex flex-row gap-5 justify-end">
                         <button
-                          onClick={openPasswordModal}
-                          className="text-xs  font-bold py-2 px-3 rounded-lg
-                        bg-lightergray text-gray border text-center hover:opacity-80 self-center my-auto"
+                          id="cancel-btn"
+                          data-modal-hide="default-modal"
+                          type="button"
+                          className="py-2.5 px-5 ms-3 text-sm font-medium text-hovergray focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-togglegray focus:z-10 focus:ring-gray-100"
+                          onClick={handleProfileModalClose}
                         >
-                          Update Password
+                          Cancel
+                        </button>
+                        <button
+                          data-modal-hide="default-modal"
+                          type="submit"
+                          className={`${
+                            isUserLoading ? "cursor-progress" : "cursor-pointer"
+                          } text-white bg-brandblack hover:bg-hovergray focus:ring-4 focus:outline-nonefont-medium rounded-lg text-sm px-5 py-2.5 text-center`}
+                          disabled={isUserLoading ? true : false}
+                        >
+                          <div>
+                            {isUserLoading ? (
+                              <span className="flex items-center justify-center">
+                                {" "}
+                                <svg
+                                  aria-hidden="true"
+                                  role="status"
+                                  className="inline w-4 h-4 me-3 text-white animate-spin"
+                                  viewBox="0 0 100 101"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                    fill="#E5E7EB"
+                                  />
+                                  <path
+                                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>{" "}
+                                Loading...{" "}
+                              </span>
+                            ) : (
+                              "Update Profile"
+                            )}
+                          </div>
                         </button>
                       </div>
                     </div>
+                  </form>
+                  <div className=" py-6 flex flex-row place-content-between items-center border-t border-offwhite mt-6">
+                    <p className="text-xs font-bold opacity-80 uppercase">
+                      Change Password
+                    </p>
+                    <button
+                      onClick={openPasswordModal}
+                      className="text-statusgreen font-semibold hover:underline text-xs"
+                    >
+                      Update Password
+                    </button>
                   </div>
                 </div>
               </div>

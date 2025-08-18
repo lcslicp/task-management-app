@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserInterface } from "../../types/user";
-import { getUser, loginUser, updateUserProfile } from "./authThunks";
+import {
+  createUser,
+  getUser,
+  loginUser,
+  updateUserProfile,
+} from "./authThunks";
 
 const initialState: UserInterface = {
   userData: {
@@ -8,7 +13,6 @@ const initialState: UserInterface = {
     firstName: "",
     lastName: "",
     email: "",
-    userImage: "",
   },
   isUserLoading: false,
   error: null,
@@ -31,9 +35,6 @@ const userSlice = createSlice({
     setEmail: (state, action) => {
       state.userData.email = action.payload;
     },
-    setUserImage: (state, action) => {
-      state.userData.userImage = action.payload;
-    },
     setIsUserLoading: (state, action) => {
       state.isUserLoading = action.payload;
     },
@@ -47,13 +48,30 @@ const userSlice = createSlice({
         email: "",
         firstName: "",
         lastName: "",
-        userImage: "",
       };
       localStorage.removeItem("token");
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(createUser.pending, (state) => {
+        state.isUserLoading = true;
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.isUserLoading = false;
+        state.userData = {
+          userId: action.payload._id,
+          firstName: "",
+          lastName: "",
+          email: action.payload.email,
+        };
+        state.token = action.payload.token;
+        state.error = null;
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.isUserLoading = false;
+        state.error = null;
+      })
       .addCase(loginUser.pending, (state) => {
         state.isUserLoading = true;
         state.error = null;
@@ -78,7 +96,6 @@ const userSlice = createSlice({
         state.userData.firstName = firstName;
         state.userData.lastName = lastName;
         state.userData.email = email;
-        state.userData.userImage = userImage;
       })
       .addCase(getUser.rejected, (state, action) => {
         state.isUserLoading = false;
@@ -104,7 +121,6 @@ export const {
   setFirstName,
   setLastName,
   setEmail,
-  setUserImage,
   setIsUserLoading,
   setError,
   logout,

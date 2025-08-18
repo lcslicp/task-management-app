@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useSelector } from "react-redux";
 import SearchBar from "./SearchBar";
 import { RootState } from "../../app/store";
 import UserSkeletonUI from "../ui-states/UserSkeletonUI";
 
-const Header = () => {
+const Header = ({ setProfileModalOpen }: { setProfileModalOpen: Dispatch<SetStateAction<boolean>> }) => {
   const options: Intl.DateTimeFormatOptions = {
     month: "long",
     year: "numeric",
@@ -17,7 +17,7 @@ const Header = () => {
     (state: RootState) => state.user.isUserLoading
   );
 
-  const { firstName, lastName, userImage } = User.userData;
+  const { firstName, lastName, } = User.userData;
 
   const initials = firstName[0] + lastName[0];
 
@@ -36,19 +36,12 @@ const Header = () => {
             <div className="flex-grow">
               <SearchBar />
             </div>
-            <div className="flex flex-row flex-shrink-0 items-center gap-3">
-              {userImage ? (
-                <img
-                  src={""}
-                  alt="profile image"
-                  className="w-6 h-6 border-2 rounded-lg"
-                />
-              ) : (
-                <span className="w-10 h-10 bg-brandblue text-white rounded-full border-2 border-softblue flex items-center justify-center text-base font-medium">
+            <div className="flex flex-row flex-shrink-0 items-center gap-2 hover:cursor-pointer" id="user" onClick={() => setProfileModalOpen(true)}>
+              
+                <span className="w-10 h-10 bg-brandgreen text-white rounded-full border-2 border-softblue flex items-center justify-center text-base font-medium">
                   {" "}
                   {initials}
                 </span>
-              )}
 
               <p className="font-medium text-togglegray text-lg">
                 {firstName} {lastName}

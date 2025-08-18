@@ -1,26 +1,33 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios.js";
-import { AxiosError } from "axios";
 
 import doowitLogo from "../assets/icons/doowitlogo-colored.svg";
 import signupImg from "../assets/images/signup-mockup.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { createUser } from "../features/auth/authThunks.js";
+import { AppDispatch, RootState } from "../app/store.js";
+import {
+  setEmail,
+  setFirstName,
+  setLastName,
+} from "../features/auth/authSlice.js";
 
-const SIGNUP_URL = "/signup";
 const DEMO_URL = "/demouser";
 
 //Validate password
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%,.]).{8,24}$/;
 
 const SignupPage = () => {
   const userRef = useRef<HTMLInputElement>(null);
   const errRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const [userFirstName, setUserFirstName] = useState<string>("");
-  const [userLastName, setUserLastName] = useState<string>("");
-  const [userEmail, setUserEmail] = useState<string>("");
+  const { firstName, lastName, email } = useSelector(
+    (state: RootState) => state.user.userData
+  );
 
   const [pwd, setPwd] = useState<string>("");
   const [validPwd, setValidPwd] = useState<boolean>(false);
@@ -53,9 +60,9 @@ const SignupPage = () => {
   }, [pwd, matchPwd]);
 
   const handleFormReset = () => {
-    setUserFirstName("");
-    setUserLastName("");
-    setUserEmail("");
+    dispatch(setFirstName(""));
+    dispatch(setLastName(""));
+    dispatch(setEmail(""));
     setPwd("");
     setMatchPwd("");
   };
@@ -73,7 +80,7 @@ const SignupPage = () => {
   };
 
   const isPwdLengthValid = pwd.length >= 8 && pwd.length <= 24;
-  const pwdContainsSpecialChar = /[!@#$]/.test(pwd);
+  const pwdContainsSpecialChar = /[!@#$,.]/.test(pwd);
   const isPWdCharValid =
     /[a-z]/.test(pwd) &&
     /[A-Z]/.test(pwd) &&
@@ -82,43 +89,29 @@ const SignupPage = () => {
 
   const handleSignupSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     const valid = PWD_REGEX.test(pwd);
     if (!valid) {
       setErrMsg("Invalid entry, please try again.");
       return;
     }
-    try {
-      const response = await axios.post(
-        SIGNUP_URL,
-        JSON.stringify({
-          firstName: userFirstName,
-          lastName: userLastName,
-          email: userEmail,
-          password: pwd,
-        }),
+    const response = await dispatch(
+      createUser({ firstName, lastName, email, pwd })
+    );
 
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-      localStorage.setItem("token", JSON.stringify(response?.data?.token));
+    if (createUser.fulfilled.match(response)) {
       navigate("/dashboard");
       handleFormReset();
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      const err = error as AxiosError;
-      if (!err?.response) {
-        setErrMsg("No Server Response");
-        console.log(error);
-      } else if (err.response?.status === 409) {
-        setErrMsg("Email address already in use.");
+    } else if (createUser.rejected.match(response)){
+      const status = response.payload?.status;
+      if (status === 409) {
+        setErrMsg("Email address already in use.")
+      } else if (status === 400) {
+        setErrMsg("All fields are required.")
       } else {
-        setErrMsg("Failed to create account.");
+        setErrMsg("Failed to create account.")
       }
       errRef.current?.focus();
+      navigate("/signup");
     }
   };
 
@@ -218,8 +211,8 @@ const SignupPage = () => {
                 autoComplete="off"
                 placeholder="Enter your first name"
                 ref={userRef}
-                value={userFirstName}
-                onChange={(e) => setUserFirstName(e.target.value)}
+                value={firstName}
+                onChange={(e) => dispatch(setFirstName(e.target.value))}
                 required
                 className="bg-offwhite border-none rounded-lg placeholder-coolgray h-10 placeholder:font-light placeholder:text-sm focus:ring-coolgray focus:ring-1"
               />
@@ -236,8 +229,8 @@ const SignupPage = () => {
                 id="lastname"
                 autoComplete="off"
                 placeholder="Enter your last name"
-                value={userLastName}
-                onChange={(e) => setUserLastName(e.target.value)}
+                value={lastName}
+                onChange={(e) => dispatch(setLastName(e.target.value))}
                 required
                 className="bg-offwhite border-none rounded-lg placeholder-coolgray h-10 placeholder:font-light placeholder:text-sm focus:ring-coolgray focus:ring-1"
               />
@@ -254,8 +247,8 @@ const SignupPage = () => {
               type="email"
               id="email"
               placeholder="Enter your email address"
-              value={userEmail}
-              onChange={(e) => setUserEmail(e.target.value)}
+              value={email}
+              onChange={(e) => dispatch(setEmail(e.target.value))}
               required
               className="bg-offwhite border-none rounded-lg placeholder-coolgray h-10 placeholder:font-light placeholder:text-sm focus:ring-coolgray focus:ring-1"
             />
@@ -324,7 +317,7 @@ const SignupPage = () => {
             <div id="pwdnote" className={pwdFocus ? "block" : "hidden"}>
               <p className="text-xs text-darkgray pt-1 flex flex-col gap-1">
                 <span
-                  className={`flex gap-2 ${
+                  className={`flex gap-1 ${
                     !isPwdLengthValid ? "grayscale opacity-50" : ""
                   }`}
                 >
@@ -340,7 +333,7 @@ const SignupPage = () => {
                   8 to 24 characters.
                 </span>
                 <span
-                  className={`flex gap-2 ${
+                  className={`flex gap-1 ${
                     !isPWdCharValid ? "grayscale opacity-50" : ""
                   }`}
                 >
@@ -357,7 +350,7 @@ const SignupPage = () => {
                   special character.
                 </span>
                 <span
-                  className={`flex gap-2 ${
+                  className={`flex gap-1 ${
                     !pwdContainsSpecialChar ? "grayscale opacity-50" : ""
                   }`}
                 >
@@ -370,12 +363,12 @@ const SignupPage = () => {
                   >
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
                   </svg>{" "}
-                  Allowed special characters: !@#$
+                  Allowed special characters: !@#$,.
                 </span>
               </p>
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col" id="confirm-pwd">
             <label
               htmlFor="confirmpwd"
               className="uppercase font-medium text-xs text-togglegray pb-2"
@@ -450,6 +443,7 @@ const SignupPage = () => {
               className={`${
                 loading ? "cursor-progress" : "cursor-pointer"
               } bg-brandblack text-white h-10 rounded-lg w-full text-sm font-light hover:bg-hovergray mt-5`}
+              type="submit"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

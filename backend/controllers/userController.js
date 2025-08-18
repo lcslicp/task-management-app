@@ -17,7 +17,7 @@ const signup = async (req, res) => {
     return res.status(400).json({ message: "All fields are required." });
 
   const duplicate = await User.findOne({ email: email });
-  if (duplicate) return res.sendStatus(409);
+  if (duplicate) return res.status(409).json({ message: "User with this email already exists." });
 
   const hashedPwd = await bcrypt.hash(password, 10);
 
@@ -105,7 +105,6 @@ const reqUser = async (req, res) => {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
-      userImage: user.userImage,
       password: user.password,
     });
   } catch (error) {
@@ -168,10 +167,7 @@ const editUser = async (req, res) => {
     email,
     firstName,
     lastName,
-    userImage: req.file?.path.replace("frontend\\public\\", "./"),
   };
-  console.log(`req.file: ${updatedUser.userImage}`);
-  console.log(req.file);
   try {
     const user = await User.findByIdAndUpdate(req.params.id, updatedUser, {
       new: true,

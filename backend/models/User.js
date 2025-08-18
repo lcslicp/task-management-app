@@ -13,10 +13,6 @@ const UserSchema = new Schema({
     unique: true,
   },
   password: optionRequired,
-  userImage: {
-    type: String,
-    required: false,
-  },
 });
 
 const User = mongoose.model('User', UserSchema);

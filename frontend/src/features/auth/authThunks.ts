@@ -1,10 +1,45 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../api/axios";
 import jwt_decode from "jwt-decode";
-import { UserInterface } from "../../types/user";
+import { UserInterface, UserResponseInterface } from "../../types/user";
+import { ErrorResponseInterface } from "../../types/user";
+
+export const createUser = createAsyncThunk<
+  UserResponseInterface,
+  { firstName: string; lastName: string; email: string; pwd: string },
+  { rejectValue: ErrorResponseInterface }
+>(
+  "auth/signup",
+  async ({ firstName, lastName, email, pwd }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "/signup",
+        JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password: pwd,
+        }),
+        {
+          headers: {
+            "Content-type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      localStorage.setItem("token", JSON.stringify(response?.data.token));
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue({
+        status: error.response?.status,
+        message: error.response?.data?.message,
+      });
+    }
+  }
+);
 
 export const loginUser = createAsyncThunk(
-  "/login",
+  "auth/login",
   async (
     { email, pwd }: { email: string; pwd: string },
     { rejectWithValue }

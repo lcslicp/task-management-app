@@ -44,9 +44,7 @@ const LoginPage = () => {
     e.preventDefault();
     dispatch(setIsUserLoading(true));
     const response = await dispatch(loginUser({ email, pwd }));
-
     
-
     if (loginUser.fulfilled.match(response)) {
       dispatch(setEmail(""));
       setPwd("");
