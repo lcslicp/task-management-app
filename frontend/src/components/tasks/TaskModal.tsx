@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ModalLoading from "../ui-states/ModalLoadingState";
+import ModalLoading from "../ui-states/modalLoadingState";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
 import {
