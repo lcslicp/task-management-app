@@ -7,10 +7,14 @@ import React, {
 } from "react";
 import axios from "../../api/axios";
 import { AxiosError } from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { getAuthConfig } from "../../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
+import {
+  setStatusColor,
+  setStatusDisplay,
+  setStatusMsg,
+} from "../../features/tasks/taskUIslice";
 axios;
 
 const ChangePassword = ({
@@ -35,10 +39,10 @@ const ChangePassword = ({
   const [pwdUpdated, setpwdUpdated] = useState<boolean>(false);
   const oldPwdRef = useRef<HTMLInputElement>(null);
   const userId = useSelector((state: RootState) => state.user.userData.userId);
-  const config = getAuthConfig();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+  const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%,.]).{8,24}$/;
   const isPwdLengthValid = newPwd.length >= 8 && newPwd.length <= 24;
   const pwdContainsSpecialChar = /[!@#$,.]/.test(newPwd);
   const isPWdCharValid =
@@ -46,6 +50,11 @@ const ChangePassword = ({
     /[A-Z]/.test(newPwd) &&
     /\d/.test(newPwd) &&
     pwdContainsSpecialChar;
+
+  const token = JSON.parse(localStorage.getItem("token") || "{}");
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   const togglePassword = (field: string) => {
     if (field === "oldpassword") {
@@ -64,6 +73,9 @@ const ChangePassword = ({
     setpwdUpdated(false);
     setIsValidPwd(false);
     setValidMatch(false);
+    setOldPwdView("password");
+    setNewPwdView("password");
+    setConfirmNewPwdView("password");
   };
 
   const handleCancelChange = () => {
@@ -88,14 +100,34 @@ const ChangePassword = ({
     if (isValidPwd && validMatch) {
       setLoading(true);
       try {
-        await axios.put(`/edit/pwd/${userId}`, pwd, config);
+        const response = await axios.put(`/edit/pwd/${userId}`, pwd, config);
         setpwdUpdated(true);
+        setNewPwd("");
+        setConfirmPwd("");
+        dispatch(setStatusColor(["statusgreen", "softgreen"]));
+        dispatch(setStatusMsg("Password updated successfully."));
+        dispatch(setStatusDisplay(true));
+        setTimeout(() => {
+          dispatch(setStatusDisplay(false));
+        }, 10000);
+        setLoading(false);
+        handleClosePwdModal();
       } catch (error) {
         const err = error as AxiosError;
-        console.error(error);
+        console.error(err);
+        setLoading(false);
+        dispatch(setStatusColor(["brandred", "softred"]));
+        dispatch(setStatusDisplay(true));
+        if (err?.response?.status) {
+          dispatch(setStatusMsg("Old password is wrong, try again."));
+        } else {
+          dispatch(setStatusMsg("Failed to update password, try again."));
+        }
+
+        setTimeout(() => {
+          dispatch(setStatusDisplay(false));
+        }, 10000);
       }
-      setLoading(false);
-      handleClosePwdModal();
     }
   };
   return (
@@ -418,13 +450,15 @@ const ChangePassword = ({
                             </button>
                             <button
                               disabled={
-                                !isValidPwd || !validMatch || loading ? true : false
+                                !isValidPwd || !validMatch || loading
+                                  ? true
+                                  : false
                               }
                               data-modal-hide="default-modal"
-                            type="submit"
-                            className={`${
-                              loading ? "cursor-progress" : "cursor-pointer"
-                            } text-white bg-brandblack hover:bg-hovergray focus:ring-4 focus:outline-nonefont-medium rounded-lg text-sm px-5 py-2.5 text-center`}
+                              type="submit"
+                              className={`${
+                                loading ? "cursor-progress" : "cursor-pointer"
+                              } text-white bg-brandblack hover:bg-hovergray focus:ring-4 focus:outline-nonefont-medium rounded-lg text-sm px-5 py-2.5 text-center`}
                             >
                               {loading ? (
                                 <span className="flex items-center justify-center gap-2">
@@ -449,7 +483,7 @@ const ChangePassword = ({
                                   Loading...{" "}
                                 </span>
                               ) : (
-                                "Create account"
+                                "Update password"
                               )}
                             </button>
                           </div>

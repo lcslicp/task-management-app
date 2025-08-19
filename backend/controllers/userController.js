@@ -17,7 +17,10 @@ const signup = async (req, res) => {
     return res.status(400).json({ message: "All fields are required." });
 
   const duplicate = await User.findOne({ email: email });
-  if (duplicate) return res.status(409).json({ message: "User with this email already exists." });
+  if (duplicate)
+    return res
+      .status(409)
+      .json({ message: "User with this email already exists." });
 
   const hashedPwd = await bcrypt.hash(password, 10);
 
@@ -63,10 +66,9 @@ const authenticateUser = async (req, res) => {
       return res.status(400).json({ message: "All fields are required." });
 
     const foundUser = await User.findOne({ email: email });
-    if (!foundUser)
-      return res.status(404).json({ message: "User not found." });
+    if (!foundUser) return res.status(404).json({ message: "User not found." });
 
-    const matchPwd = bcrypt.compare(password, foundUser.password);
+    const matchPwd = await bcrypt.compare(password, foundUser.password);
     if (matchPwd) {
       const accessToken = jwt.sign(
         { user: foundUser._id },

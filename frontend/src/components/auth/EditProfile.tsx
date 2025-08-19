@@ -5,15 +5,21 @@ import { updateUserProfile } from "../../features/auth/authThunks";
 import {
   setEmail,
   setFirstName,
+  setIsUserLoading,
   setLastName,
 } from "../../features/auth/authSlice";
 import { UserInterface } from "../../types/user";
 import { useNavigate } from "react-router-dom";
+import {
+  setStatusColor,
+  setStatusDisplay,
+  setStatusMsg,
+} from "../../features/tasks/taskUIslice";
 
 const EditProfile = ({
   profileModalOpen,
   setPasswordModalOpen,
-  setProfileModalOpen
+  setProfileModalOpen,
 }: {
   profileModalOpen: boolean;
   setPasswordModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -44,16 +50,29 @@ const EditProfile = ({
       lastName: lastNameRef.current?.value || "",
       email: emailRef.current?.value || "",
     };
-
+    dispatch(setIsUserLoading(true));
     try {
       const response = await dispatch(updateUserProfile({ id, data })).unwrap();
       dispatch(setFirstName(response?.data?.firstName));
       dispatch(setLastName(response?.data?.lastName));
       dispatch(setEmail(response?.data?.email));
+      dispatch(setIsUserLoading(false));
       handleProfileModalClose();
+      dispatch(setStatusColor(["statusgreen", "softgreen"]));
+      dispatch(setStatusMsg("User profile edited successfully."));
+      dispatch(setStatusDisplay(true));
+      setTimeout(() => {
+        dispatch(setStatusDisplay(false));
+      }, 10000);
       setProfileModalOpen(false);
     } catch (error) {
       console.error(error);
+      dispatch(setStatusColor(["brandred", "softred"]));
+      dispatch(setStatusMsg("Failed to edit user profile, try again."));
+      dispatch(setStatusDisplay(true));
+      setTimeout(() => {
+        dispatch(setStatusDisplay(false));
+      }, 10000);
     }
   };
 
