@@ -1,3 +1,5 @@
+import React from "react";
+
 const loadingSpinner = () => {
   return <span className='loader'></span>;
 };

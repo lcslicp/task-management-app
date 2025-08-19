@@ -8,7 +8,7 @@ import errorHandler from './middleware/errorHandler.js';
 
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import verifyJWT from './middleware/veriryJWT.js';
+import verifyJWT from './middleware/verifyJWT.js';
 
 dotenv.config();
 
