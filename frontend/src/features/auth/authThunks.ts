@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../api/axios";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { UserInterface, UserResponseInterface } from "../../types/user";
 import { ErrorResponseInterface } from "../../types/user";
 
@@ -78,7 +78,7 @@ export const getUser = createAsyncThunk("auth/getUser", async (_, thunkAPI) => {
     if (!token) {
       return thunkAPI.rejectWithValue("No token found.");
     }
-    const decoded = jwt_decode(token) as { user: string };
+    const decoded = jwtDecode<{ user: string }>(token);
     const decodedId = decoded.user;
     const USER_URL = `/user/${decodedId}`;
     const config = {
