@@ -64,7 +64,7 @@ const authenticateUser = async (req, res) => {
   const foundUser = await User.findOne({ email: email });
   if (!foundUser) return res.sendStatus(404);
 
-  const matchPwd = bcrypt.compare(password, foundUser.password);
+  const matchPwd = await bcrypt.compare(password, foundUser.password);
   if (matchPwd) {
     const accessToken = jwt.sign(
       { user: foundUser._id },
