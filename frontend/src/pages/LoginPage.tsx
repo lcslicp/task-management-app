@@ -56,24 +56,24 @@ const LoginPage = () => {
   };
 
   return (
-    <section className="flex w-full h-screen" id="login-screen">
+    <section className="flex w-full 2xs:h-fit lg:h-screen 2xs:flex-col md:flex-col lg:flex-row" id="login-screen">
       <div
-        className="flex flex-col items-center justify-center gap-4 w-[45%] bg-brandblack text-white px-24 "
+        className="flex flex-col items-center justify-center gap-4 xl:w-[75%] xl:p-0 bg-brandblack text-white lg:w-[50%] xl:w-[50%] 2xs:px-8 py-16 2xs:h-screen xs:h-full"
         id="leftside-content"
       >
-        <div className="flex flex-col items-start w-fit -mb-8 pl-14">
+        <div className="flex md:flex-row  2xs:flex-col lg:flex-col items-center justify-center xl:w-full -mb-8 md:px-12 lg:p-0">
           <div
             id="leftside-copy"
-            className="flex flex-col gap-4 justify-start w-fit"
+            className="text-left flex flex-col 2xs:items-center md:items-start gap-4 xl:w-[60%] lg:w-[80%] 2xs:w-full"
           >
-            <h2 className="text-4xl font-semibold">
+            <h2 className="text-4xl font-semibold 2xs:text-center md:text-left">
               {" "}
               <span className="text-softgreen">
                 {" "}
                 Welcome Back.{" "}
               </span> <br /> Let&#39;s Get Productive.
             </h2>
-            <p className="text-base font-light text-left">
+            <p className="text-base font-light xl:w-[80%] lg:w-full 2xs:text-center md:text-left">
               Log in and take charge of your workflow. <br /> Your dashboard is
               ready.
             </p>
@@ -81,13 +81,13 @@ const LoginPage = () => {
           <img
             src={loginImage}
             alt="login page task cards mockup"
-            className=" pt-8 w-[90%] h-auto"
+            className="2xs:w-full pl-6 p-0 md:w-[50%] md:-mr-5 lg:w-[90%] xl:-ml-16 xl:w-[60%] mt-8"
           />
         </div>
       </div>
       <div
         id="rightside-content"
-        className="flex flex-col justify-center w-[45%] px-20 gap-6 mx-auto"
+        className="flex flex-col justify-center xl:w-[50%] lg:w-[50%] xl:px-20 xl:w-[80%] lg:px-8 gap-6 2xs:px-8 md:px-20 py-16"
       >
         <div id="rightside-copy" className="w-full">
           <h2 className="text-2xl font-semibold">Log in</h2>
@@ -223,7 +223,7 @@ const LoginPage = () => {
                 "Log in"
               )}
             </button>
-            <p className="text-sm text-darkgray text-center pt-2">
+            <p className="2xs:text-base text-darkgray text-center pt-4 lg:pt-2">
               Don't have an account?{" "}
               <Link
                 to="/signup"
@@ -237,10 +237,10 @@ const LoginPage = () => {
 
         <div
           id="copyright"
-          className="flex flex-col items-center gap-3 justify-end pt-10"
+          className="flex flex-col justify-center items-center gap-3"
         >
-          <img src={doowitLogo} alt="Doowit Logo" className="w-[20%]" />
-          <p className="text-coolgray text-xs font-light">
+          <img src={doowitLogo} alt="Doowit Logo" className="2xs:w-[45%] md:w-[25%]" />
+          <p className="lex flex-col justify-center items-center gap-3">
             © 2025 Doowit | All rights reserved.
           </p>
         </div>

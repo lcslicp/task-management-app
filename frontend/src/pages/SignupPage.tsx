@@ -135,19 +135,19 @@ const SignupPage = () => {
   };
 
   return (
-    <section className="flex w-full h-screen" id="signup-screen">
+    <section className="flex w-full 2xs:h-fit lg:h-screen 2xs:flex-col md:flex-col lg:flex-row" id="signup-screen">
       <div
-        className="flex flex-col items-center justify-center gap-4 w-[55%] bg-brandblack text-white"
+        className="flex flex-col items-center justify-center gap-4 xl:w-[75%] xl:p-0 bg-brandblack text-white lg:w-[50%] 2xs:px-8 py-16 2xs:h-screen xs:h-full"
         id="leftside-content"
       >
         <div
-          className="text-left flex flex-col items-start gap-4 w-[60%]"
+          className="text-left flex flex-col 2xs:items-center lg:items-start gap-4 xl:w-[60%] lg:w-[80%]"
           id="leftside-copy"
         >
-          <h2 className="text-4xl font-semibold">
+          <h2 className="text-4xl font-semibold 2xs:text-center lg:text-left">
             Make Every Task <span className="text-softgreen">Count</span>
           </h2>
-          <p className="text-base font-light w-[80%]">
+          <p className="text-base font-light xl:w-[80%] lg:w-full 2xs:text-center lg:text-left">
             From big projects to daily to-dos, get things done faster and more
             clearly.
           </p>
@@ -155,9 +155,9 @@ const SignupPage = () => {
         <img
           src={signupImg}
           alt="task card with callout details"
-          className="w-[60%] pt-8"
+          className="2xs:w-full md:w-[70%] lg:w-[90%] xl:w-[60%] pt-8"
         />
-        <p className="text-sm font-light">
+        <p className="2xs:text-base pt-2 font-light">
           Just exploring?{" "}
           <a
             href="#"
@@ -169,10 +169,10 @@ const SignupPage = () => {
         </p>
       </div>
       <div
-        className="flex flex-col justify-center w-[45%] px-20 gap-6"
+        className="flex flex-col justify-center xl:w-[50%] lg:w-[50%] xl:px-20 lg:px-8 gap-6 2xs:px-8 md:px-20 py-16"
         id="rightside-content"
       >
-        <div id="rightside-copy" className="w-full ">
+        <div id="rightside-copy" className="w-full">
           <h2 className="text-2xl font-semibold">Sign Up</h2>
           <p className="text-darkgray">Register your account.</p>
         </div>
@@ -197,8 +197,8 @@ const SignupPage = () => {
           className="w-full flex flex-col gap-4"
           id="signup-form"
         >
-          <div className="flex flex-row gap-4" id="full-name">
-            <div className="flex flex-col w-1/2">
+          <div className="flex 2xs:flex-col md:flex-row gap-4" id="full-name">
+            <div className="flex flex-col 2xs:w-full md:w-1/2">
               <label
                 htmlFor="firstname"
                 className="uppercase font-medium text-xs text-togglegray pb-2"
@@ -217,7 +217,7 @@ const SignupPage = () => {
                 className="bg-offwhite border-none rounded-lg placeholder-coolgray h-10 placeholder:font-light placeholder:text-sm focus:ring-coolgray focus:ring-1"
               />
             </div>
-            <div className="flex flex-col w-1/2">
+            <div className="flex flex-col 2xs:w-full md:w-1/2">
               <label
                 htmlFor="lastname"
                 className="uppercase font-medium text-xs text-togglegray pb-2"
@@ -471,7 +471,7 @@ const SignupPage = () => {
                 "Create account"
               )}
             </button>
-            <p className="text-sm text-darkgray text-center pt-2">
+            <p className="2xs:text-base text-darkgray text-center pt-4 lg:pt-2">
               Already have an account?{" "}
               <Link
                 to="/login"
@@ -487,8 +487,8 @@ const SignupPage = () => {
           id="copyright"
           className="flex flex-col justify-center items-center gap-3"
         >
-          <img src={doowitLogo} alt="Doowit Logo" className="w-[20%]" />
-          <p className="text-coolgray text-xs font-light">
+          <img src={doowitLogo} alt="Doowit Logo" className="2xs:w-[45%] md:w-[25%]" />
+          <p className="text-coolgray text-xs font-light text-center">
             © 2025 Doowit | All rights reserved.
           </p>
         </div>
