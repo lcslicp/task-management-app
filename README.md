@@ -6,8 +6,8 @@ Visit here: https://doowit.lcslicp.xyz/
 
 ### Tech Stack
 
-- Frontend: React, Vite, Tailwind, Flowbite
-- Backend: Node.js, Express, MongoDB
+- Frontend: Typescript, React, Vite, Redux, Tailwind, Flowbite
+- Backend: Node.js, Express, MongoDB 
 
 ### Dependencies
 
@@ -22,7 +22,12 @@ The following dependencies are required to run this project:
 - jwt-decode
 - mongoose
 - morgan
-- multer
+- axios
+- react
+- react-redux
+- react-router-dom
+- vite
+- typescript
 
 To install all the required dependencies, you can run the following command:
 
@@ -51,11 +56,12 @@ DB_HOST=sampleconnectionstring
 ### Resources
 
 1. [React docs](https://beta.reactjs.org/)
-2. [Flowbite](https://flowbite.com/docs/getting-started/introduction/)
-3. [Node.js](https://nodejs.org/en/docs/)
-4. [bycrypt](https://www.npmjs.com/package/bcrypt)
-5. [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
-6. [jwt-decode](https://www.npmjs.com/package/jwt-decode)
-7. [JWT](https://jwt.io/)
-8. [Multer](https://www.npmjs.com/package/multer)
-9. [MongoDB](https://www.mongodb.com/docs/)
+2. [Typescript](https://www.typescriptlang.org/docs/)
+3. [Redux](https://redux.js.org/introduction/getting-started)
+4. [Flowbite](https://flowbite.com/docs/getting-started/introduction/)
+5. [Node.js](https://nodejs.org/en/docs/)
+6. [bycrypt](https://www.npmjs.com/package/bcrypt)
+7. [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
+8. [jwt-decode](https://www.npmjs.com/package/jwt-decode)
+9. [JWT](https://jwt.io/)
+10. [MongoDB](https://www.mongodb.com/docs/)
