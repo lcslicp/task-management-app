@@ -313,7 +313,7 @@ const Sidebar = ({
       <div id="secondary-links">
         <ul className="space-y-2 text-sm flex flex-col">
           <li className="flex items-center font-base hover:bg-hovergray rounded-lg w-full py-2 -ml-4 pl-4 hover:cursor-pointer">
-            <a href="/dashboard" className="flex items-center">
+            <a href="mailto:lcslicp.dev@gmail.com" className="flex items-center">
               <img
                 src={feedbackIcon}
                 className="w-3 h-3 opacity-50 text-white transition duration-75"

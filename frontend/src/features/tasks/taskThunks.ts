@@ -9,10 +9,7 @@ export const fetchSingleTaskData = createAsyncThunk(
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
-      console.log(token)
       const response = await axios.get(`/task/${id}`, config);
-
-      console.log(response)
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(

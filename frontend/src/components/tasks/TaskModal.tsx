@@ -135,13 +135,16 @@ const TaskModal = ({
         handleUpdate(updated);
       }
       if (updateResult.payload.status === "To Do") {
+        await dispatch(fetchTodoData());
         setActiveStatusTab("1");
       } else if (updateResult.payload.status === "In Progress") {
+        await dispatch(fetchInprogressData());
         setActiveStatusTab("2");
       } else if (updateResult.payload.status === "Completed") {
+        await dispatch(fetchCompletedData());
         setActiveStatusTab("3");
       }
-      await dispatch(fetchTodoData());
+      
       setLoading(false);
       setIsEditing(false);
       dispatch(setStatusColor(["statusgreen", "softgreen"]));

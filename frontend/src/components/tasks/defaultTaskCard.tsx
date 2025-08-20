@@ -38,9 +38,9 @@ const TaskCard = ({ task }: { task: TaskInterface }) => {
 
   const onOpen = async (id: string) => {
     dispatch(setTaskLoading(true));
+    dispatch(setTaskOpen(true));
     try {
       const response = await dispatch(fetchSingleTaskData(id));
-      dispatch(setTaskOpen(true));
       dispatch(setCurrentTask(response.payload));
       dispatch(setTaskLoading(false));
     } catch (error) {
