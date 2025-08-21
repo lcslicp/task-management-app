@@ -240,7 +240,7 @@ const LoginPage = () => {
           className="flex flex-col justify-center items-center gap-3"
         >
           <img src={doowitLogo} alt="Doowit Logo" className="2xs:w-[45%] md:w-[25%]" />
-          <p className="lex flex-col justify-center items-center gap-3">
+          <p className="text-coolgray text-xs font-light text-center">
             © 2025 Doowit | All rights reserved.
           </p>
         </div>

@@ -90,9 +90,9 @@ const Dashboard = () => {
   }, [firstName, lastName, email,]);
 
   return (
-    <main className="flex flex-row w-full h-full">
+    <main className="flex flex-row w-full h-full justify-end">
       <aside
-        className="bg-black fixed top-0 left-0 h-full w-[15%]"
+        className="bg-black fixed top-0 left-0 h-full lg:w-48 2xs:w-20"
         aria-label="Sidebar"
       >
         <Sidebar
@@ -108,7 +108,7 @@ const Dashboard = () => {
       ) : dashboardLoading ? (
         <DashboardLoadingUI />
       ) : (
-        <section className="flex flex-col w-[85%] ml-[15%]">
+        <section className="flex flex-col w-full justify-end items-end">
           <Header setProfileModalOpen={setProfileModalOpen} />
           <TabNavigation
             popup={popup}

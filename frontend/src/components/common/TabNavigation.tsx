@@ -30,8 +30,8 @@ const TabNavigation = ({
       onClick={() => setActiveStatusTab(tab.id)}
       className={`font-normal py-2 ${
         activeStatusTab === tab.id
-          ? "inline-block text-brandblack border-black cursor-pointer bg-offwhite rounded-lg px-5"
-          : "inline-block text-coolgray cursor-pointer px-3"
+          ? "inline-block text-brandblack border-black cursor-pointer bg-offwhite rounded-lg 2xs:px-3 md:px-5"
+          : "inline-block text-coolgray cursor-pointer 2xs:px-2 md:px-3"
       }`}
     >
       <h6>
@@ -65,12 +65,12 @@ const TabNavigation = ({
   };
 
   return (
-    <div className="px-16">
+    <div className="2xs:px-8 lg:px-16 2xs:w-[calc(100%-5rem)] lg:w-[calc(100%-12rem)]">
       <div
-        className="flex font-medium text-center bg-offwhite justify-between items-center p-3 z-20 m rounded-xl mt-6 mb-2"
+        className="flex font-medium text-center bg-offwhite justify-between items-center p-3 z-20 m rounded-xl mt-6 mb-2 2xs:flex-col md:flex-row gap-3"
         id="navigation"
       >
-        <ul className="bg-white p-2 rounded-lg">{statusTabTitles}</ul>
+        <ul className="bg-white p-2 rounded-lg 2xs:w-full md:w-fit">{statusTabTitles}</ul>
         <button
           className="text-white bg-brandblack hover:bg-hovergray focus:outline-nonefont-medium rounded-lg text-sm px-8 py-2.5 text-center cursor-pointer"
           type="button"
@@ -82,7 +82,7 @@ const TabNavigation = ({
       <div className="py-4">
         <div
           id="tab-contents"
-          className="w-full columns-4 break-inside-avoid gap-3"
+          className="w-full xl:columns-4 xs:columns-2 md:columns-3 break-inside-avoid gap-3"
         >
           {loading && isUserLoading ? <CardSkeletonUI /> : tabContents}
         </div>

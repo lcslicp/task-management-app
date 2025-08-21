@@ -102,13 +102,13 @@ const TaskCard = ({ task }: { task: TaskInterface }) => {
           className={(() => {
             switch (priority) {
               case "Low Priority":
-                return "text-sm bg-white border border-statusgreen rounded-lg px-2 h-fit py-0.5 text-center flex items-center gap-1 text-statusgreen";
+                return "text-sm bg-white border border-statusgreen rounded-lg px-2 h-fit py-0.5 text-center flex items-center gap-1 text-statusgreen whitespace-nowrap";
               case "Medium Priority":
-                return "text-sm bg-white border border-brandblue  rounded-lg px-2 h-fit py-0.5 text-center flex items-center gap-1 text-brandblue";
+                return "text-sm bg-white border border-brandblue  rounded-lg px-2 h-fit py-0.5 text-center flex items-center gap-1 text-brandblue whitespace-nowrap";
               case "High Priority":
-                return "text-sm bg-white border border-darkyellow  rounded-lg px-2 h-fit py-0.5 text-center flex items-center gap-1 text-darkyellow";
+                return "text-sm bg-white border border-darkyellow  rounded-lg px-2 h-fit py-0.5 text-center flex items-center gap-1 text-darkyellow whitespace-nowrap";
               case "Urgent":
-                return "text-sm bg-white border border-brandred  rounded-lg px-2 h-fit py-0.5 text-center inline-flex items-center gap-1 text-brandred";
+                return "text-sm bg-white border border-brandred  rounded-lg px-2 h-fit py-0.5 text-center inline-flex items-center gap-1 text-brandred whitespace-nowrap";
               default:
                 return undefined;
             }
