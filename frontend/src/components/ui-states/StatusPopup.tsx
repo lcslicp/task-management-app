@@ -17,7 +17,7 @@ const StatusPopup = ({ statusMsg }: { statusMsg: string }) => {
     <div className={`${statusDisplay ? "block" : "hidden"} z-40`}>
       <div
         id="alert-1"
-        className={`flex items-center p-4 mb-4 ${textColor} rounded-lg fixed top-8 left-64 w-[80%] border ${borderColor} ${backgroundColor}`}
+        className={`flex items-center p-4 mb-4 ${textColor} rounded-lg fixed top-8 left-64 w-[70%] border ${borderColor} ${backgroundColor}`}
         role="alert"
       >
         {statusColor[0] === "statusgreen" ? (

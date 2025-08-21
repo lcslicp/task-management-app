@@ -43,8 +43,6 @@ const Dashboard = () => {
   const statusMsg = useSelector((state: RootState) => state.statusUI.statusMsg);
   const dispatch = useDispatch<AppDispatch>();
 
-   console.log(error)
-
   let tabdata: tabDataInterface[] = [];
 
   tabdata = [
