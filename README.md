@@ -4,10 +4,30 @@ Doowit is a personal task management app used to store, organize and prioritize 
 
 Visit here: https://doowit.lcslicp.xyz/
 
+**Note:** This branch uses Redux for state management. See [usestate-ver](https://github.com/lcslicp/task-management-app/tree/usestate-ver) branch for version of code that uses UseState.
+
 ### Tech Stack
 
 - Frontend: Typescript, React, Vite, Redux, Tailwind, Flowbite
-- Backend: Node.js, Express, MongoDB 
+- Backend: Node.js, Express, MongoDB
+
+### Fixes to be made
+
+- Sidebar feature responsiveness:
+  - Sort dropdown
+  - Filter dropdown
+- Status message responsiveness
+- Task card responsiveness
+
+### Features to add
+
+- Additional card dropdown options:
+  - View card (opens task modal)
+  - Edit card
+- Ability to upload and edit user image
+- Feedback form
+- "Forgot password" option on login
+- Email verification
 
 ### Dependencies
 
