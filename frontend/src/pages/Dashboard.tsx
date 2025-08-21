@@ -41,8 +41,9 @@ const Dashboard = () => {
 
   const { firstName, lastName, email, } = UserData;
   const statusMsg = useSelector((state: RootState) => state.statusUI.statusMsg);
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+
+   console.log(error)
 
   let tabdata: tabDataInterface[] = [];
 
