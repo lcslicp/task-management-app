@@ -42,7 +42,7 @@ const ToDoTab = ({
 
   return (
     <div>
-      {sortedTasks.length === 0 ? (
+      {sortedTasks.length === 0 || (filteredTasks.length === 0 ? false : sortedTasks.filter((task) => priorityFilter.includes(task.priority)).length === 0) ?  (
         <EmptyState />
       ) : (
         (priorityFilter.length === 0
