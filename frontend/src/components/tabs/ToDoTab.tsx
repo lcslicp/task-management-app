@@ -13,36 +13,41 @@ const ToDoTab = ({
 }) => {
   const todoTasks = useSelector((state: RootState) => state.tasks.todoTasks);
 
-  const sortedTasks = useMemo(() => {
-    let tasks = [...todoTasks];
-    if (sort === "newest") {
-      tasks.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-    } else if (sort === "oldest") {
-      tasks.sort(
-        (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      );
-    } else if (sort === "duedate") {
-      tasks.sort((a, b) => {
-        if (!a.dueDate) return 1;
-        if (!b.dueDate) return -1;
-        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
-      });
-    }
-    return tasks;
-  }, [todoTasks, sort]);
+  let sortedTasks = [...todoTasks];
 
-  const filteredTasks = useMemo(() => {
-    if (priorityFilter.length === 0) return sortedTasks;
-    return sortedTasks.filter((task) => priorityFilter.includes(task.priority));
-  }, [sortedTasks, priorityFilter]);
+  if (sort === "newest") {
+    sortedTasks = [...todoTasks].sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  } else if (sort === "oldest") {
+    sortedTasks = [...todoTasks].sort((a, b) => {
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    });
+  } else if (sort === "duedate") {
+    sortedTasks = [...todoTasks].sort((a, b) => {
+      if (a.dueDate === "" && b.dueDate === "") {
+        return 0;
+      } else if (a.dueDate === "") {
+        return 1;
+      } else if (b.dueDate === "") {
+        return -1;
+      } else {
+        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      }
+    });
+
+    sortedTasks = sortedTasks
+      .filter((task) => task.dueDate !== "Invalid Date")
+      .concat(sortedTasks.filter((task) => task.dueDate === "Invalid Date"));
+  }
 
   return (
     <div>
-      {sortedTasks.length === 0 || (filteredTasks.length === 0 ? false : sortedTasks.filter((task) => priorityFilter.includes(task.priority)).length === 0) ?  (
+      {sortedTasks.length === 0 ||
+      (priorityFilter.length === 0
+        ? false
+        : sortedTasks.filter((task) => priorityFilter.includes(task.priority))
+            .length === 0) ? (
         <EmptyState />
       ) : (
         (priorityFilter.length === 0
